@@ -40,9 +40,7 @@ The other commands are similar. For more information on this setup, check out
 this tutorial [docker node app](http://jdlm.info/articles/2016/03/06/lessons-building-node-app-docker.html)
 
 ## Using Docker
-Included in the base directory of the repository are files for creating a
-docker image along with docker-compose yaml files for setting up the application.
-
+For more direct control over the docker images you can use docker directly.
 To get started, make sure you have docker installed. Then, to build the docker
 image you can simply run:
 ```
@@ -52,9 +50,11 @@ This will download the repo in a temp directory and build the docker image. If
 you already have the repository downloaded, you can navigate to the base
 directory and run:
 ```
-docker build [-t siggame/ophelia] .
+docker build -t siggame/ophelia .
 ```
-This builds the docker image from the local copy of the ophelia repo.
+**Note the '.' which specifies the current directory**
+This builds the docker image from the local copy of the ophelia repo and tags
+it with the repository name "siggame/ophelia".
 
 When you're ready to run the image, you can quickly get running using:
 ```
