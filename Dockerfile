@@ -11,15 +11,15 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 # Copy over the package.json file and install all dependencies
-COPY package.json /
+COPY package.json .
 RUN npm install
 
 # Copy the actual webserver code and resources over
-COPY . /
+COPY . .
 
 # Create the siggame user, change the app folder owner and switch to that user
 RUN groupadd -r siggame && useradd -r -g siggame siggame && \
-    chown -R siggame:siggame ./
+    chown -R siggame:siggame .
 USER siggame
 
 # Set which ports are exposed for the container
