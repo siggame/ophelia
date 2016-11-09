@@ -43,4 +43,4 @@ RUN chown -R siggame:siggame $HOME/ophelia/*
 USER siggame
 
 # Start the server by executing npm start
-CMD [ "node", "./bin/www" ]
+CMD [ "npm", "start" ]
