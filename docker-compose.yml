@@ -1,0 +1,12 @@
+version: '2'
+services:
+  webserver:
+    build: .
+    image: siggame/ophelia
+    environment:
+      NODE_ENV: development
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/home/siggame/ophelia
+      - /home/siggame/ophelia/node_modules
