@@ -5,12 +5,15 @@
     "scripts": {
         "start": "node ./bin/www",
         "setup": "npm run setup:db",
-        "setup:db": "./db/setupDevelopmentDb.sh"
+        "setup:db": "./db/setupDevelopmentDb.sh",
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix ."
     },
     "dependencies": {
         "body-parser": "~1.15.2",
         "cookie-parser": "~1.4.3",
         "debug": "~2.2.0",
+        "eslint": "^3.5.0",
         "ejs": "~2.5.2",
         "express": "~4.14.0",
         "morgan": "~1.7.0",
