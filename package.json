@@ -5,7 +5,7 @@
     "scripts": {
         "start": "node ./bin/www",
         "setup": "npm run setup:db",
-        "setup:db": "./db/setupDevelopmentDb.sh",
+        "setup:db": "bash db/setupDevelopmentDb.sh",
         "lint": "eslint .",
         "lint:fix": "eslint --fix ."
     },
