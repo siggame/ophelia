@@ -5,8 +5,23 @@ services:
     image: siggame/ophelia
     environment:
       NODE_ENV: development
+      DB_USER: "ophelia"
+      DB_PASS: "ophelia"
+      DB_NAME: "ophelia"
+      DB_PORT: "5432"
+      DB_HOST: "ophelia_db_1"
     ports:
-      - '3000:3000'
+    - '3000:3000'
     volumes:
       - .:/home/siggame/ophelia
       - /home/siggame/ophelia/node_modules
+  db:
+    environment:
+      DB_USER: "ophelia"
+      DB_PASS: "ophelia"
+      DB_NAME: "ophelia"
+      DB_PORT: "5432"
+      DB_HOST: "localhost"
+    build: db/
+    ports:
+    - "5432:5432"
