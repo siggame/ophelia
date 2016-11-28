@@ -1,12 +1,10 @@
--- Drop all tables to get a fresh start
 DROP TABLE IF EXISTS "competition" CASCADE;
 DROP TABLE IF EXISTS "game" CASCADE;
 DROP TABLE IF EXISTS "invitation" CASCADE;
 DROP TABLE IF EXISTS "registration" CASCADE;
-DROP TABLE IF EXISTS "team" CASCADE
+DROP TABLE IF EXISTS "team" CASCADE;
 DROP TABLE IF EXISTS "user" CASCADE;
 
--- Create enums
 CREATE TYPE shirt_size_enum AS ENUM (
     'S', 'M', 'L', 'XL', 'XXL'
 );
@@ -23,7 +21,6 @@ CREATE TYPE invitation_response_enum AS ENUM (
     'accepted', 'declined'
 );
 
--- Create tables
 CREATE TABLE competition
 (
   id serial NOT NULL,
@@ -39,6 +36,28 @@ CREATE TABLE competition
   max_num_team_members integer, --
   CONSTRAINT competition_pk PRIMARY KEY (id),
   CONSTRAINT competition_name_is_unique UNIQUE (name)
+);
+
+
+CREATE TABLE team
+(
+  id serial NOT NULL,
+  name character varying(64) NOT NULL,
+  gitlab_id integer,
+  language client_language_enum,
+  is_paid boolean,
+  time_paid timestamp without time zone,
+  created timestamp without time zone,
+  is_eligible_to_win boolean,
+  is_embargoed boolean,
+  embargo_reason character varying(64),
+  competition integer,
+  CONSTRAINT team_pk PRIMARY KEY (id),
+  CONSTRAINT team_competition_fk FOREIGN KEY (competition)
+      REFERENCES competition (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT gitlab_id_is_unique UNIQUE (gitlab_id),
+  CONSTRAINT name_is_unique UNIQUE (name)
 );
 
 CREATE TABLE game
@@ -67,6 +86,30 @@ CREATE TABLE game
       REFERENCES team (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 );
+
+
+
+CREATE TABLE "user"
+(
+  name character varying(32),
+  username character varying(32) NOT NULL,
+  email character varying(64),
+  is_dev boolean,
+  is_full_time_student boolean,
+  is_sponsor boolean,
+  id serial NOT NULL,
+  is_previous_competitor boolean,
+  shirt_size shirt_size_enum,
+  pizza_choice pizza_choice_enum,
+  team integer,
+  CONSTRAINT user_pk PRIMARY KEY (id),
+  CONSTRAINT user_team_fk FOREIGN KEY (team)
+      REFERENCES team (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT user_email_is_unique UNIQUE (email),
+  CONSTRAINT user_username_is_unique UNIQUE (username)
+);
+
 
 CREATE TABLE invitation
 (
@@ -104,46 +147,4 @@ CREATE TABLE registration
   CONSTRAINT registration_user_fk FOREIGN KEY ("user")
       REFERENCES "user" (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
-);
-
-CREATE TABLE team
-(
-  id serial NOT NULL,
-  name character varying(64) NOT NULL,
-  gitlab_id integer,
-  language client_language_enum,
-  is_paid boolean,
-  time_paid timestamp without time zone,
-  created timestamp without time zone,
-  is_eligible_to_win boolean,
-  is_embargoed boolean,
-  embargo_reason character varying(64),
-  competition integer,
-  CONSTRAINT team_pk PRIMARY KEY (id),
-  CONSTRAINT team_competition_fk FOREIGN KEY (competition)
-      REFERENCES competition (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT gitlab_id_is_unique UNIQUE (gitlab_id),
-  CONSTRAINT name_is_unique UNIQUE (name)
-);
-
-CREATE TABLE "user"
-(
-  name character varying(32),
-  username character varying(32) NOT NULL,
-  email character varying(64),
-  is_dev boolean,
-  is_full_time_student boolean,
-  is_sponsor boolean,
-  id serial NOT NULL,
-  is_previous_competitor boolean,
-  shirt_size shirt_size_enum,
-  pizza_choice pizza_choice_enum,
-  team integer,
-  CONSTRAINT user_pk PRIMARY KEY (id),
-  CONSTRAINT user_team_fk FOREIGN KEY (team)
-      REFERENCES team (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT user_email_is_unique UNIQUE (email),
-  CONSTRAINT user_username_is_unique UNIQUE (username)
 );
