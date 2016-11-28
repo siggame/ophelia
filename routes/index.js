@@ -1,6 +1,6 @@
 var express = require("express");
 var router = express.Router();
-const util = require('util')
+const util = require("util");
 
 // Database connection
 let knex = require("knex")({
@@ -26,7 +26,7 @@ router.get("/examples/knex", function(req, res, next) {
     // Search for user with name "Alice" in db using SELECT
     knex("user").where({
         name: "Alice"
-    }, '*').asCallback((err, rows) => {
+    }, "*").asCallback((err, rows) => {
         if(err) return res.status(400).send(err);
 
         // If user with name "Alice" was not found, let's create a row in the user
@@ -37,17 +37,17 @@ router.get("/examples/knex", function(req, res, next) {
             knex("user").insert({
                 name: "Alice",
                 username: "alice",
-            }, '*').asCallback((err, rows) => {
+            }, "*").asCallback((err, rows) => {
                 if(err) return res.status(400).send(err);
 
                 message += "Created user for Alice\n\n";
-                res.status(200).send(message + util.inspect(rows[0], false, null))
+                res.status(200).send(message + util.inspect(rows[0], false, null));
             });
         }
         // User with name "Alice" was found
         else {
-            message = "Alice exists in the database!\n\n"
-            res.status(200).send(message + util.inspect(rows[0], false, null))
+            message = "Alice exists in the database!\n\n";
+            res.status(200).send(message + util.inspect(rows[0], false, null));
         }
 
 
