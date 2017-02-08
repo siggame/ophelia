@@ -42,5 +42,8 @@ RUN chown -R siggame:siggame $HOME/ophelia/*
 # Change back to the siggame user
 USER siggame
 
+# Run setup scripts
+CMD [ "npm", "run", "setup"]
+
 # Start the server by executing npm start
 CMD [ "npm", "start" ]
