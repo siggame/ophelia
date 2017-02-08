@@ -7,6 +7,10 @@
     "setup": "npm install",
     "test": "mocha test/"
   },
+  "devDependencies": {
+    "mocha": "^3.2.0",
+    "chai": "^3.5.0"
+  },
   "dependencies": {
     "body-parser": "~1.15.2",
     "cookie-parser": "~1.4.3",
@@ -15,5 +19,8 @@
     "express": "~4.14.0",
     "morgan": "~1.7.0",
     "serve-favicon": "~2.3.0"
+    "knex": "^0.12.6",
+    "lodash": "^4.17.4",
+    "pg": "^6.1.2"
   }
 }
