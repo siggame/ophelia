@@ -9,4 +9,4 @@ for megaminerai.com.
 ### Development
 ##### Using Docker
 1. `docker build . -t ophelia`
-2. `docker run ophelia`
+2. `docker run -p 3000:3000 ophelia`
