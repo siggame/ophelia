@@ -1,0 +1,19 @@
+sudo: required
+
+services:
+  - docker
+
+language: nodejs
+
+env:
+  - POSTGRES_PORT=5433
+
+before_script:
+  - npm run setup
+  - docker run --name ophelia-db --publish 5433:5432 --detach siggame/colisee-db
+
+script:
+  - npm run test
+
+after_script:
+  - docker stop ophelia-db
