@@ -3,8 +3,9 @@ LABEL maintainer "siggame@mst.edu"
 
 ADD . ophelia
 WORKDIR ophelia
-RUN npm install
+RUN npm run setup
+RUN npm run build
 
 EXPOSE 3000
 
-CMD [ "npm", "start" ]
+CMD [ "npm", "run", "quick-start" ]
