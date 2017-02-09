@@ -1,6 +1,4 @@
-import { Router } from "express";
+import * as express from "express";
+const router = express.Router();
 
-const router = Router();
-
-
-export { router as api };
+export { router };
