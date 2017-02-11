@@ -1,10 +1,11 @@
-# git
+# Don't include the git index
 .git
 .gitignore
 
-# Docker
+# Don't include the Dockerfile, this still gets sent to the docker build
+# context, but it won't be included in the app folder of the webserver
+# image
 Dockerfile
-.dockerignore
 
-# NodeJS
-node_modules/
+# Same as the Dockerfile
+.dockerignore

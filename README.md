@@ -1,48 +1,77 @@
 # Ophelia - siggame's new webserver
-[![Build Status](https://travis-ci.org/siggame/ophelia.svg?branch=master)](https://travis-ci.org/siggame/ophelia)
 
-=====
+[![Join the chat at https://gitter.im/siggame/ophelia](https://badges.gitter.im/siggame/ophelia.svg)](https://gitter.im/siggame/ophelia?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-### Table of Contents
-- [About](#about)
-- [Docker](#docker)
-- [Environment Variables](#environment-variables)
-- [Folder Structure](#folder-structure)
-- [package.json](#packagejson)
-
-====
-
-### About
 The old Django site is becoming hard to maintain so its time for a new website.
 This new site utilizes Node.js and Express to create a lightweight webserver
 for megaminerai.com.
 
-====
+## Using Docker Compose
+Using **docker-compose** is probably the easiest way to get started with docker.
+Make sure you have **docker** and **docker-compose** installed. Check out your
+distributions package manager for the actual packages to install. You may have
+to start the docker daemon.
 
-### Docker
-##### Using Docker
-1. `docker build . -t ophelia`
-2. `docker run -p {host port}:3000 ophelia`
+To build the docker image, simply navigate to the base directory of the repo and
+execute
+```
+docker-compose build
+```
+This will download the base node image, create all the image layers, and add
+an image with the name siggame/ophelia to the local dockerfile image repository.
 
-##### Docker Hub
-[Docker Hub](https://hub.docker.com/r/siggame/ophelia/) automatically will build and host the Ophelia docker image and be available to run as a container anywhere. To trigger a build, simply push new code to the master branch.
+To run the webserver with a development setup, run
+```
+docker-compose up
+```
+which will use the docker-compose.yml file to run the image and set up a few
+other things to aid in development. When you are ready to stop the webserver run
+```
+docker-compose stop
+```
+and then use
+```
+docker-compose rm
+```
+to get rid of the stopped containers.
 
-`docker run -p 3000:3000 siggame/ophelia`
+To run the webserver with a production setup, run
+```
+docker-compose -f docker-compose.prod.yml up
+```
+The other commands are similar. For more information on this setup, check out
+this tutorial [docker node app](http://jdlm.info/articles/2016/03/06/lessons-building-node-app-docker.html)
 
-====
+## Using Docker
+For more direct control over the docker images you can use docker directly.
+To get started, make sure you have docker installed. Then, to build the docker
+image you can simply run:
+```
+docker build https://github.com/siggame/ophelia.git
+```
+This will download the repo in a temp directory and build the docker image. If
+you already have the repository downloaded, you can navigate to the base
+directory and run:
+```
+docker build -t siggame/ophelia .
+```
+**Note the '.' which specifies the current directory**
+This builds the docker image from the local copy of the ophelia repo and tags
+it with the repository name "siggame/ophelia".
 
-### Environment Variables
-Environment variables can be supplied to the `docker run` command with the `-e ENV=VAR` flag
-Example: `docker run -p 3000:3000 -e GITLAB_TOKEN=abcdefg siggame/ophelia`
-
-| **name** | **description** | **default** | **notes** |
-|---|---|---|---|
-|`POSTGRES_HOST`| Database host| `localhost` | |
-|`POSTGRES_PORT`| Database port | `5432` | |
-|`POSTGRES_USERNAME`| Database username | `postgres` | |
-|`POSTGRES_PASSWORD`| Database password | `postgres` | |
-|`POSTGRES_NAME`| Database name | `postgres` |
-|`POSTGRES_DEBUG`| Enable SQL debugging? || |
-|`GITLAB_HOST`| GitLab host | `localhost` | |
-|`GITLAB_PORT`| GitLab HTTP port | `8080` | |
-|`GITLAB_TOKEN`| GitLab personal access token ||Required|
+When you're ready to run the image, you can quickly get running using:
+```
+docker run -d -p 3000:3000 --name web siggame/ophelia
+```
+This will run the container in detached mode, with the container port 3000 being
+mapped to localhost port 3000 and naming the running container instance web for
+easy manipulation. To see what containers are running, use:
+```
+docker ps
+```
+and to stop and remove the container run:
+```
+docker stop web
+docker rm web
+```
+For more info on using docker, check out the docs at [docker docs](https://docs.docker.com/engine/reference/commandline/)
