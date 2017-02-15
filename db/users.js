@@ -47,7 +47,9 @@ function insertUser(name, fullName, email, shirtSize, pizzaChoice, isStudent) {
 /**
  * updateUser - updates the information of a user specified by username
  * @param name - the username of the target
- * @param changes - a map containing the desired changes.
+ * @param changes - a map containing the desired changes. Possible values are: name, full_name, email, is_dev (bool),
+ * is_student (bool), is_sponsor (bool), is_prev_competitor (bool), shirt_size (s, m, l, xl, xxl), pizza choice (cheese,
+ * pepperoni, bacon, chicken)
  * @returns {Promise} - async function
  */
 function updateUser(name, changes) {
