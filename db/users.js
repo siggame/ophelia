@@ -23,6 +23,7 @@ const knex = require('knex')({
  * @param {string} shirtSize - Available options are 's' to 'xxl'.
  * @param pizzaChoice - Available options are 'cheese', 'pepperoni', 'bacon', and 'chicken'.
  * @param isStudent - Defaults to True in the DB, but can be set False.
+ * @returns {Promise} - async function
  */
 function insertUser(name, fullName, email, shirtSize, pizzaChoice, isStudent) {
     return new Promise((resolve, reject)=>{
@@ -38,10 +39,48 @@ function insertUser(name, fullName, email, shirtSize, pizzaChoice, isStudent) {
         }).catch((err)=>{ // On failure
             reject(err);
         });
-    })
+    });
 
 }
 
+
+/**
+ * updateUser - updates the information of a user specified by username
+ * @param name - the username of the target
+ * @param changes - a map containing the desired changes.
+ * @returns {Promise} - async function
+ */
+function updateUser(name, changes) {
+    return new Promise((resolve, reject)=>{
+        knex('user').where({ name: name }).update(changes, "*").then(()=>{
+            resolve("updated successfully");
+    }).catch((err)=> {
+            reject(err);
+        });
+    });
+}
+
+
+/**
+ * deleteUser - deletes a user from the database based on a given username
+ * @param name - username of the desired target
+ * @returns {Promise} - async function
+ */
+function deleteUser(name) {
+    return new Promise((resolve, reject)=>{
+        knex('user').where({
+            name: name
+        }).del().then(()=>{
+            resolve(name + " successfully deleted");
+        }).catch((err)=>{
+            reject(err);
+        });
+    });
+}
+
+
 module.exports = {
-    insertUser
+    insertUser,
+    updateUser,
+    deleteUser
 };
