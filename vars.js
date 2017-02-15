@@ -1,4 +1,6 @@
-let _ = require('lodash');
+"use strict";
+
+const _ = require('lodash');
 
 module.exports = {
     GITLAB_HOST : _.defaultTo(process.env.GITLAB_HOST, "localhost"),

@@ -1,3 +1,5 @@
+"use strict";
+
 const api = require('./api');
 const web = require('./web');
 const log = require('./log');
