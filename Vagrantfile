@@ -5,7 +5,7 @@
 
 Vagrant.configure("2") do |config|
 
-  config.vm.box = "ubuntu/xenial64"
+  config.vm.box = "wholebits/ubuntu17.04-64"
 
   config.vm.network "forwarded_port", guest: 3000, host: 3000
 
@@ -14,7 +14,8 @@ Vagrant.configure("2") do |config|
   
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
     sudo apt-get update
-    sudo apt-get install git
+    sudo apt-get -y install git
+    sudo apt-get -y install curl
     curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.0/install.sh | bash
     curl -sSL https://get.docker.com/ | sh
     sudo usermod -aG docker $USER
