@@ -34,3 +34,7 @@ npm-debug.log
 
 # Vagrant folder
 .vagrant/
+
+# Editor Ignores
+.idea/
+.vscode/
