@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "debug": "node ./node_modules/nodemon/bin/nodemon.js -L"
   },
   "dependencies": {
     "body-parser": "~1.15.2",
@@ -12,11 +13,13 @@
     "ejs": "~2.5.2",
     "express": "~4.14.0",
     "express-session": "^1.15.1",
+    "gitlab": "^1.7.1",
     "knex": "^0.12.6",
     "lodash": "^4.17.4",
     "morgan": "~1.7.0",
+    "nodemon": "^1.11.0",
     "pg": "^6.1.2",
-    "request": "^2.79.0",
+    "request": "^2.80.0",
     "serve-favicon": "~2.3.0"
   }
 }
