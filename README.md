@@ -1,75 +1,48 @@
-# Ophelia - siggame's new webserver
+# Ophelia - The SIG-Game Webserver
 
-The old Django site is becoming hard to maintain so its time for a new website.
-This new site utilizes Node.js and Express to create a lightweight webserver
-for megaminerai.com.
+This is the repository for SIG-Game's webserver application, the main entry point
+for competitors of MegaMinerAI.
 
-## Using Docker Compose
-Using **docker-compose** is probably the easiest way to get started with docker.
-Make sure you have **docker** and **docker-compose** installed. Check out your
-distributions package manager for the actual packages to install. You may have
-to start the docker daemon.
+## Getting Started - Developers
+For development, the project uses Vagrant in order to support multiple development
+systems while still maintaining stability across them. Check out [this](http://siggame.io)
+ post for more info on what Vagrant does.
+ 
+ First, make sure you have [Vagrant](https://www.vagrantup.com/downloads.html)
+ and [VirtualBox](https://www.virtualbox.org/wiki/Downloads) installed.
+ 
+ Windows users, it is highly recommended that you use
+ [Git Bash](https://git-scm.com/downloads) instead of Command Prompt.
+ 
+ After installing those programs, go into your project's directory and run the following:
+```
+vagrant up
+```
+This will set up a VM with everything you need to start development. Once it finishes,
+to access the box use:
 
-To build the docker image, simply navigate to the base directory of the repo and
-execute
 ```
-docker-compose build
+vagrant ssh
 ```
-This will download the base node image, create all the image layers, and add
-an image with the name siggame/ophelia to the local dockerfile image repository.
+Once you've SSH'd into the box, first change into the working directory:
+```
+cd /home/ubuntu/workspace
+```
+Note that you **should not edit these files on the VM.**
 
-To run the webserver with a development setup, run
+After you're in the working directory, run the following to start the server in debug mode: 
 ```
-docker-compose up
-```
-which will use the docker-compose.yml file to run the image and set up a few
-other things to aid in development. When you are ready to stop the webserver run
-```
-docker-compose stop
-```
-and then use
-```
-docker-compose rm
-```
-to get rid of the stopped containers.
+node run-script debug
+``` 
+You can then navigate to [localhost:3000](localhost:3000) to use the site.
 
-To run the webserver with a production setup, run
-```
-docker-compose -f docker-compose.prod.yml up
-```
-The other commands are similar. For more information on this setup, check out
-this tutorial [docker node app](http://jdlm.info/articles/2016/03/06/lessons-building-node-app-docker.html)
+Once you make changes to the files on your local machine, refresh the page in your browser
+to see your changes. 
 
-## Using Docker
-For more direct control over the docker images you can use docker directly.
-To get started, make sure you have docker installed. Then, to build the docker
-image you can simply run:
-```
-docker build https://github.com/siggame/ophelia.git
-```
-This will download the repo in a temp directory and build the docker image. If
-you already have the repository downloaded, you can navigate to the base
-directory and run:
-```
-docker build -t siggame/ophelia .
-```
-**Note the '.' which specifies the current directory**
-This builds the docker image from the local copy of the ophelia repo and tags
-it with the repository name "siggame/ophelia".
+## Running the Webserver for Production
 
-When you're ready to run the image, you can quickly get running using:
-```
-docker run -d -p 3000:3000 --name web siggame/ophelia
-```
-This will run the container in detached mode, with the container port 3000 being
-mapped to localhost port 3000 and naming the running container instance web for
-easy manipulation. To see what containers are running, use:
-```
-docker ps
-```
-and to stop and remove the container run:
-```
-docker stop web
-docker rm web
-```
-For more info on using docker, check out the docs at [docker docs](https://docs.docker.com/engine/reference/commandline/)
+--
+
+## Troubleshooting
+
+--
