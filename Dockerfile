@@ -12,7 +12,7 @@ RUN useradd --user-group --create-home --shell /sbin/nologin siggame
 ENV HOME /home/siggame
 
 # Set which port(s) are exposed for the container
-EXPOSE 3000
+EXPOSE 3001
 
 # Set the environment variable to let node know its in a production setting
 # This will enable caching in express among other things. For a dev environment,
