@@ -32,7 +32,7 @@ Note that you **should not edit these files on the VM.**
 
 After you're in the working directory, run the following to start the server in debug mode: 
 ```
-node run-script debug
+npm run-script debug
 ``` 
 You can then navigate to [localhost:3000](localhost:3000) to use the site.
 
