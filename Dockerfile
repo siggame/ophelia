@@ -1,9 +1,9 @@
 # Could use either from below, both refer to the LTS version of node 6 (aka boron)
 #FROM node:boron
-FROM node:6.9.1
+FROM node:7.10
 
 # Who to contact with questions
-MAINTAINER cwd8d@mst.edu
+MAINTAINER siggame@mst.edu
 
 # Create a user named siggame with a home directory but no login shell
 RUN useradd --user-group --create-home --shell /sbin/nologin siggame
