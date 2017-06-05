@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+    <head>
+        <%- include common/styles.ejs %>
+    </head>
+
+    <body>
+        <%- include common/navbar.ejs %>
+        <div class="container">
+            <div class="jumbotron">
+                <h1>MegaminerAI</h1>
+                <p>Some sample text to see how this looks.</p>
+            </div>
+
+        </div>
+
+        <%- include common/scripts.ejs %>
+    </body>
 </html>
