@@ -6,26 +6,26 @@
         <%- include common/navbar.ejs %>
         <div class="container login-box">
             <h1>Sign your Team up for MegaminerAI</h1>
-            <form action="/" method="post">
+            <form action="/signup" method="post">
                 <div class="form-group">
                     <label for="group-name">Group Name <span style="font-weight: normal;">(alphanumeric and underscores only)</span></label>
-                    <input type="text" class="form-control" id="group-name"><br>
+                    <input type="text" class="form-control" name="group_name"><br>
                 </div>
                 <div class="form-group">
                     <label for="email">Primary Contact's Email Address</label>
-                    <input type="email" class="form-control" id="email"><br>
+                    <input type="email" class="form-control" name="email"><br>
                 </div>
                 <div class="form-group">
                     <label for="name">Primary Contact's Full Name</label>
-                    <input type="text" class="form-control" id="name"><br>
+                    <input type="text" class="form-control" name="name"><br>
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" class="form-control" id="password"><br>
+                    <input type="password" class="form-control" name="password"><br>
                 </div>
                 <div class="form-group">
                     <label for="password-confirm">Confirm Password</label>
-                    <input type="password" class="form-control" id="password-confirm"><br>
+                    <input type="password" class="form-control" name ="password_confirm"><br>
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-default">Submit</button><br>

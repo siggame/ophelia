@@ -8,6 +8,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = "wholebits/ubuntu17.04-64"
 
   config.vm.network "forwarded_port", guest: 3000, host: 3000
+  config.vm.network "forwarded_port", guest: 5432, host: 5432
 
   config.vm.synced_folder ".", "/vagrant", disabled: true
   config.vm.synced_folder ".", "/home/ubuntu/workspace"

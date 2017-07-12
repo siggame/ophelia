@@ -16,8 +16,13 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <!-- TODO: Logic for if someone is logged in currently -->
-                <li><a href="/signup">Sign Up</a></li>
-                <li><a class="login-button" href="/login">Login</a></li>
+                <% if (typeof user != 'undefined') {%>
+                    <li><a href="/logout">Log Out</a></li>
+                    <li><a class="login-button" href="/dashboard">Dashboard</a></li>
+                <% } else {%>
+                    <li><a href="/signup">Sign Up</a></li>
+                    <li><a class="login-button" href="/login">Login</a></li>
+                <% } %>
 
             </ul>
         </div><!--/.nav-collapse -->

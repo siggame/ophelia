@@ -6,6 +6,9 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const session = require('express-session');
+const multer = require('multer');
+const upload = multer();
 
 const routers = require('./routers/index');
 
@@ -21,6 +24,11 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(session({
+    secret: "testsecrethaha",
+    resave: "false",
+    saveUninitialized: "true"
+}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Tell Express to use our routers we've made.
@@ -46,5 +54,15 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
+
+// for parsing application/json
+app.use(bodyParser.json());
+
+// for parsing application/xwww-
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// for parsing multipart/form-data
+app.use(upload.array());
+app.use(express.static('public'));
 
 module.exports = app;

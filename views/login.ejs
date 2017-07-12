@@ -5,16 +5,18 @@
         <%- include common/navbar.ejs %>
         <div class="container login-box">
             <h1>Log In to MegaminerAI</h1>
-            <form action="/login_action" method="post">
+            <form action="/login" method="post">
                 <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="text" class="form-control" id="email"><br>
+                    <label for="name">Team Name</label>
+                    <input type="text" class="form-control" name="name"><br>
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" class="form-control" id="password"><br>
+                    <input type="password" class="form-control" name="password"><br>
                 </div>
-                <button type="submit" class="btn btn-default">Submit</button>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </div>
             </form>
         </div>
 
