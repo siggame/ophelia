@@ -22,5 +22,7 @@ Vagrant.configure("2") do |config|
     sudo usermod -aG docker $USER
     source $HOME/.nvm/nvm.sh
     nvm install node
+    docker pull siggame/colisee-db:latest
+    docker run --name db --publish 5432:5432 --detach siggame/colisee-db:latest
   SHELL
 end
