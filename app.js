@@ -10,7 +10,7 @@ const session = require('express-session');
 const multer = require('multer');
 const upload = multer();
 
-const routers = require('./routers/index');
+const routers = require('./routers/init');
 
 const app = express();
 
