@@ -7,16 +7,19 @@ const _ = require('lodash');
 
 function editProfile(teamId, formData) {
     return new Promise((resolve, reject) => {
-        console.log("made it in here");
+
         let errorObject = {};
-        db.teams.getTeam(teamId).then((teamData) => {
-            console.log("team info got");
+
+        db.teams.getTeam(teamId).then((data) => {
+            let teamData = data[0];
+
             if(teamData.password !== sha256(formData.currentPass)) {
                 errorObject.incorrectPass = true;
             } else if (teamData.contact_email === formData.primaryEmail && teamData.contact_name === formData.primaryName &&
                 formData.newPass === '' && formData.newPassConfirm === '') {
                 resolve("noChanges");
             }
+
             // TODO: Sanitizing
             if(!validator.isEmail(formData.primaryEmail)) {
                 errorObject.invalidEmail = true;
