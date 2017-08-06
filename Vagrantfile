@@ -5,7 +5,7 @@
 
 Vagrant.configure("2") do |config|
 
-  config.vm.box = "wholebits/ubuntu17.04-64"
+  config.vm.box = "ubuntu/zesty64"
 
   config.vm.network "forwarded_port", guest: 3000, host: 3000
   config.vm.network "forwarded_port", guest: 5432, host: 5432
@@ -23,6 +23,5 @@ Vagrant.configure("2") do |config|
     source $HOME/.nvm/nvm.sh
     nvm install node
     docker pull siggame/colisee-db:latest
-    docker run --name db --publish 5432:5432 --detach siggame/colisee-db:latest
   SHELL
 end
