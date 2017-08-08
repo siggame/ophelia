@@ -23,6 +23,18 @@ function getTeam(teamId) {
     });
 }
 
+function getTeamByName(teamName) {
+    return new Promise((resolve, reject) => {
+        knex('team').where({
+            name: teamName
+        }).then((res) => {
+            resolve(res);
+        }).catch((res) => {
+            reject(res);
+        })
+    });
+}
+
 function editTeam(teamData) {
     // TODO: Some sort of checking on teamData
     return new Promise((resolve, reject) => {
@@ -38,5 +50,6 @@ function editTeam(teamData) {
 
 module.exports = {
     getTeam: getTeam,
+    getTeamByName: getTeamByName,
     editTeam: editTeam
 };
