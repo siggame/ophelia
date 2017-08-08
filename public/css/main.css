@@ -31,7 +31,7 @@ h1 {
 }
 
 .info-wrapper {
-    padding: 0vh 2vw;
+    padding: 0 2vw;
     margin-bottom: 2vh;
     height: 88vh;
     background-color: #FFF;
@@ -45,11 +45,63 @@ h1 {
 
 .group-info-wrapper {
     padding: 2vh 0 1vw 1vw;
-    margin:2vh 0vw;
+    margin:2vh 0;
     height: 43vh;
     border: 2px solid #000;
 }
 
 .login-button {
     background-color: #3c763d;
+}
+
+/* CSS Grid Stuff */
+
+.grid {
+    display: grid;
+}
+
+.dashboard-container {
+    padding: 0 20px;
+    grid-template-areas: "games submission"
+                         "games groupinfo";
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 15px;
+    height: 85vh;
+}
+
+.profile-container {
+    padding: 0 20px;
+    grid-template-columns: 2fr 1fr;
+    width: 50vw;
+}
+
+.profile-edit-container {
+    padding: 0 20px;
+    width: 50vw;
+}
+
+.games-grid {
+    grid-area: games;
+    /*border: 1px solid #000000;*/
+    display: grid;
+}
+
+.submission-grid {
+    grid-area: submission;
+    /*border: 1px solid #000000;*/
+}
+
+.submission-subgrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.group-info-grid {
+    grid-area: groupinfo;
+    /*border: 1px solid #000000;*/
+}
+
+.group-info-subgrid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
 }

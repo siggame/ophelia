@@ -4,7 +4,7 @@
 
 <body>
     <%- include common/navbar.ejs %>
-    <div class="container-fluid">
+    <div class="grid profile-edit-container">
         <h1>Editing <%= teamInfo.name %>'s Profile</h1>
         <form action="<%= "/team/" + teamInfo.id + "/edit" %>" method="post">
             <div class="form-group">

@@ -4,14 +4,14 @@
 
 <body>
     <%- include common/navbar.ejs %>
-    <div class="container-fluid">
-        <div style="margin-top:15px; overflow:auto;">
-            <div style="font-size:32px;" class="col-md-4">
-                <%= teamInfo.name %>'s Profile
-            </div>
-            <div class="col-md-8">
-                <a class="btn btn-default" href="<%= "/team/" + teamInfo.id + "/edit" %>">Edit Profile</a>
-            </div>
+    <div class="grid profile-container">
+        <div style="font-size:32px;">
+            <%= teamInfo.name %>'s Profile
+        </div>
+        <div class="col-md-8">
+            <% if(editPermission) { %>
+            <a class="btn btn-default" href="<%= "/team/" + teamInfo.id + "/edit" %>">Edit Profile</a>
+            <% } %>
         </div>
         <ul>
             <li>Team Name: <%= teamInfo.name %></li>
