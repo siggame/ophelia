@@ -80,6 +80,29 @@ h1 {
     width: 50vw;
 }
 
+.index-grid {
+    grid-template-areas: "jumbotron jumbotron"
+                        "blog status";
+    grid-gap: 15px;
+    padding: 0 20px;
+    height: 80vh;
+}
+
+.jumbotron-grid {
+    grid-area: jumbotron;
+    background-color: #e6e6e6;
+    padding: 10px;
+    align-items: center;
+}
+
+.blog-posts-grid {
+    grid-area: blog;
+}
+
+.status-embed-grid {
+    grid-area: status;
+}
+
 .games-grid {
     grid-area: games;
     /*border: 1px solid #000000;*/

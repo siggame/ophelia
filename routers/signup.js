@@ -10,18 +10,21 @@ router.get("/signup", (req, res)=> {
         // If a user is logged in, they shouldn't need to signup
         res.redirect('/');
     } else {
-        res.render('signup', {title: "MegaminerAI - Sign Up"});
+        res.render('signup', {title: "MegaminerAI - Sign Up", errorObject:{}});
     }
 });
 
 router.post("/signup", (req, res)=> {
     let formData = req.body;
     console.log("formData", formData);
-    signup.createUser(formData.group_name, formData.password, formData.name, formData.email, true).then((success)=>{
+    let errorObject = {};
+    signup.signup(formData.group_name, formData.password, formData.password_confirm, formData.name, formData.email, true).then((success)=>{
+        console.log("success", success);
         res.redirect('/');
     }, (err) => {
+        // TODO: Proper error handling
         console.log("something wrong", err);
-        res.redirect('/signup');
+        res.render('signup', {title: "MegaminerAI - Sign Up", errorObject:err})
     })
 
 });

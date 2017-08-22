@@ -8,10 +8,16 @@
             <h1>Sign your Team up for MegaminerAI</h1>
             <form action="/signup" method="post">
                 <div class="form-group">
+                    <% if (errorObject.duplicateUsername ) { %>
+                    <div style="color: red">That team name has already been taken. Please choose another name.</div>
+                    <% } %>
                     <label for="group-name">Group Name <span style="font-weight: normal;">(alphanumeric and underscores only)</span></label>
                     <input type="text" class="form-control" name="group_name"><br>
                 </div>
                 <div class="form-group">
+                    <% if (errorObject.invalidEmail ) { %>
+                    <div style="color: red">Passwords do not match!</div>
+                    <% } %>
                     <label for="email">Primary Contact's Email Address</label>
                     <input type="email" class="form-control" name="email"><br>
                 </div>
@@ -20,6 +26,9 @@
                     <input type="text" class="form-control" name="name"><br>
                 </div>
                 <div class="form-group">
+                    <% if (errorObject.passwordMismatch ) { %>
+                    <div style="color: red">Passwords do not match!</div>
+                    <% } %>
                     <label for="password">Password</label>
                     <input type="password" class="form-control" name="password"><br>
                 </div>

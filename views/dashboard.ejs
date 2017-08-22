@@ -4,68 +4,36 @@
 
     <body>
         <%- include common/navbar.ejs %>
-        <div class="container-fluid">
-            <div class="col-md-6 wrapper games-wrapper">
+        <!-- TODO: Convert page to CSS Grid Format -->
+        <div class="grid dashboard-container">
+            <div class="games-grid">
                 <h3>Games</h3>
-                <table class="table table-striped">
-                    <th>Oppoonent</th>
-                    <th>Timestamp</th>
-                    <th>Victory Reason</th>
-                    <th>Viz Link</th>
-                    <tr>
-                        <td>ShellAI</td>
-                        <td>2017-06-05 13:04:56</td>
-                        <td>Won by defeating enemy beavers</td>
-                        <td><a class="btn btn-info" href="http://siggame.io"><span class="glyphicon glyphicon-play-circle" aria-hidden="true" /></a></td>
-                    </tr>
-                    <tr>
-                        <td>ShellAI</td>
-                        <td>2017-06-05 13:04:56</td>
-                        <td>Won by defeating enemy beavers</td>
-                        <td><a class="btn btn-info" href="http://siggame.io"><span class="glyphicon glyphicon-play-circle" aria-hidden="true" /></a></td>
-                    </tr>
-                    <tr>
-                        <td>ShellAI</td>
-                        <td>2017-06-05 13:04:56</td>
-                        <td>Won by defeating enemy beavers</td>
-                        <td><a class="btn btn-info" href="http://siggame.io"><span class="glyphicon glyphicon-play-circle" aria-hidden="true" /></a></td>
-                    </tr>
-                    <tr>
-                        <td>ShellAI</td>
-                        <td>2017-06-05 13:04:56</td>
-                        <td>Won by defeating enemy beavers</td>
-                        <td><a class="btn btn-info" href="http://siggame.io"><span class="glyphicon glyphicon-play-circle" aria-hidden="true" /></a></td>
-                    </tr>
-                    <tr>
-                        <td>ShellAI</td>
-                        <td>2017-06-05 13:04:56</td>
-                        <td>Won by defeating enemy beavers</td>
-                        <td><a class="btn btn-info" href="http://siggame.io"><span class="glyphicon glyphicon-play-circle" aria-hidden="true" /></a></td>
-                    </tr>
-                    <tr>
-                        <td>ShellAI</td>
-                        <td>2017-06-05 13:04:56</td>
-                        <td>Won by defeating enemy beavers</td>
-                        <td><a class="btn btn-info" href="http://siggame.io"><span class="glyphicon glyphicon-play-circle" aria-hidden="true" /></a></td>
-                    </tr>
-                </table>
-                <!-- TODO: Pagination/AJAX Calls for Games -->
+                <p>Hi hello</p>
             </div>
-            <div class="col-md-6 wrapper info-wrapper">
-                <div class="wrapper submission-wrapper">
-                    <h3>Submission Status</h3>
-
-                    <div class="col-md-6">
+            <div class="submission-grid">
+                <h3>Submission Status</h3>
+                <div class="submission-subgrid">
+                    <div>
                         <h4>Latest Successful Build</h4>
                         <p>Build Tagged "Test", at 20:57, 2017-06-14</p>
                     </div>
-                    <div class="col-md-6"><h4>Past Builds</h4></div>
-                </div>
-                <div class="wrapper group-info-wrapper">
-                    <h3>Group Info</h3>
-                    <h5>Group Name:</h5>
+                    <div>
+                        <h4>Past Builds</h4>
+                    </div>
                 </div>
             </div>
+            <div class="group-info-grid">
+                <h3>Group Info</h3>
+                <div class="group-info-subgrid">
+                    <ul>
+                        <li>Team Name: <%= teamInfo.name %></li>
+                        <li>Primary Contact's Name: <%= teamInfo.contact_name %></li>
+                        <li>Primary Contact's Email: <%= teamInfo.contact_email %></li>
+                    </ul>
+                    <div>
+                        <a class="btn btn-default" href="<%= "/team/" + teamInfo.id + "/edit?source=dashboard"%>">Edit Profile</a>
+                    </div>
+                </div>
             <br />
         </div>
 
