@@ -13,29 +13,30 @@ class App extends Component {
   }
 
   componentDidMount() {
-    axios.get('/api/test')
-        .then((res) => {
-        console.log(res);
-            this.setState(res.data);
-        })
-        .catch(function (err) {
-            console.log(err);
-        });
+    // axios.get('/api/test')
+    //     .then((res) => {
+    //     console.log(res);
+    //         this.setState(res.data);
+    //     })
+    //     .catch(function (err) {
+    //         console.log(err);
+    //     });
   }
 
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-          <p>
-              test: {this.state.test}
-          </p>
+      <div className="grid index-grid">
+          <div className="jumbotron-grid jumbotron">
+              <h1>MegaminerAI</h1>
+              <p>Some sample text to see how this looks.</p>
+          </div>
+          <div className="blog-posts-grid">
+              <h3>Visit our Blog at <a href="https://medium.com/siggame">Medium</a>.</h3>
+          </div>
+          <div className="status-embed-grid">
+              <h3>View current server status <a href="http://status.megaminerai.com">here</a>.</h3>
+          </div>
+
       </div>
     );
   }
