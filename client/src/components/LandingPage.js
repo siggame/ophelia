@@ -1,28 +1,7 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-import logo from './logo.svg';
-import './App.css';
+import '../containers/App.css';
 
-class App extends Component {
-  constructor(props) {
-      super(props);
-
-      this.state = {
-          test:""
-      }
-  }
-
-  componentDidMount() {
-    // axios.get('/api/test')
-    //     .then((res) => {
-    //     console.log(res);
-    //         this.setState(res.data);
-    //     })
-    //     .catch(function (err) {
-    //         console.log(err);
-    //     });
-  }
-
+export default class LandingPage extends Component {
   render() {
     return (
       <div className="grid index-grid">
@@ -36,10 +15,7 @@ class App extends Component {
           <div className="status-embed-grid">
               <h3>View current server status <a href="http://status.megaminerai.com">here</a>.</h3>
           </div>
-
       </div>
     );
   }
 }
-
-export default App;
