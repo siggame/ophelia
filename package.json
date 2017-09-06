@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "debug": "node ./node_modules/nodemon/bin/nodemon.js -L"
+    "debug": "concurrently \"npm run server-debug\" \"cd client && npm start\"",
+    "server-debug": "node ./node_modules/nodemon/bin/nodemon.js -L"
   },
   "dependencies": {
     "body-parser": "^1.15.2",
@@ -24,5 +25,8 @@
     "request": "^2.81.0",
     "serve-favicon": "^2.4.3",
     "validator": "^8.0.0"
+  },
+  "devDependencies": {
+    "concurrently": "^3.5.0"
   }
 }
