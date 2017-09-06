@@ -23,10 +23,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Tell Express to use our routers we've made.
 app.use("/auth", routers.auth.router);
 app.use("/", routers.web.router);
 app.use("/api", routers.api.router);
 app.use("/users", routers.users.router);
+app.use("/login", routers.login.router);
+app.use("/signup", routers.signup.router);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
