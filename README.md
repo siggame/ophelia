@@ -1,5 +1,7 @@
 # Ophelia - The SIG-Game Webserver
 
+This is a test
+
 This is the repository for SIG-Game's webserver application, the main entry point
 for competitors of MegaMinerAI.
 
