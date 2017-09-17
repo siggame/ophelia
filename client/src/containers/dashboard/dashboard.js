@@ -17,7 +17,7 @@ export default class Dashboard extends React.Component {
           <SubmissionInfo />
         </div>
         <div className="group-info-grid">
-          <Profile />
+          <Profile teamName={"testTeam"} primaryContactName={"testName"} primaryContactEmail={"testEmail"} />
         </div>
         <br />
       </div>
