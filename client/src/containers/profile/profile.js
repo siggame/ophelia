@@ -5,8 +5,8 @@ export default class Profile extends React.Component {
     return (
       <div>
         <h1>{this.props.teamName} </h1>
-        <p>{this.props.primaryContactName} </p>
-        <p>{this.props.primaryContactEmail} </p>
+        <b>{this.props.primaryContactName} </b>
+        <p><b>Email: </b>{this.props.primaryContactEmail} </p>
       </div>
     )
   }
