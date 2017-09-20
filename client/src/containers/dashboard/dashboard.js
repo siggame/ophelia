@@ -8,6 +8,9 @@ import '../main.css';
 
 export default class Dashboard extends React.Component {
   render() {
+    const teamName = "testTeam"
+    const primaryContactName = "testName"
+    const primaryContactEmail = "testEmail"
     return (
       <div className="grid dashboard-container">
         <div className="games-grid">
@@ -17,7 +20,7 @@ export default class Dashboard extends React.Component {
           <SubmissionInfo />
         </div>
         <div className="group-info-grid">
-          <Profile teamName={"testTeam"} primaryContactName={"testName"} primaryContactEmail={"testEmail"} />
+          <Profile teamName={teamName} primaryContactName={primaryContactName} primaryContactEmail={primaryContactEmail} />
         </div>
         <br />
       </div>
