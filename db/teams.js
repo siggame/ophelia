@@ -1,7 +1,8 @@
 "use strict";
 // const config = require('./stuff.json') // How to "import" in JS
 const PG_UNIQUE_ERROR = "23505" // unique_violation error in postgres
-
+const DB_TEAM_UNIQUE = "teams_name_unique"
+const DB_EMAIL_UNIQUE = "teams_contact_email_unique"
 const knex = require('knex')({
     client: 'pg',
     connection: {
@@ -67,10 +68,10 @@ function createTeam(teamName, email, password, isEligible) {
            return resolve()
         }).catch((err) => {
             if(err.code === PG_UNIQUE_ERROR){ 
-                if(err.constraint === "teams_name_unique"){
+                if(err.constraint === DB_TEAM_UNIQUE){
                     return reject("Team name is already in use.")
                 }
-                else if(err.constraint === "teams_contact_email_unique"){
+                else if(err.constraint === DB_EMAIL_UNIQUE){
                     return reject("Team email is already in use.")
                 }
             }
