@@ -1,4 +1,6 @@
 "use strict";
+// const config = require('./stuff.json') // How to "import" in JS
+const PG_UNIQUE_ERROR = "23505" // unique_violation error in postgres
 
 const knex = require('knex')({
     client: 'pg',
@@ -50,25 +52,41 @@ function editTeam(teamData) {
 
 function createTeam(teamName, email, password, isEligible) {
     return new Promise((resolve, reject) => {
-        if (typeof teamName === 'undefined' || teamName !== "" ||
-            typeof email === 'undefined' || email !== "" ||
-            typeof password === 'undefined' || password !== "" ||
+        if (typeof teamName === 'undefined' || teamName === "" ||
+            typeof email === 'undefined' || email === "" ||
+            typeof password === 'undefined' || password === "" ||
             typeof isEligible === 'undefined' || typeof isEligible !== "boolean" ){
             return reject("All args. must be defined and not empty")
         }
         knex('teams').insert({
-            name: teamName, 
-            contact_email: email,
-            password: password,
-            is_eligible: isEligible
+        name: teamName, 
+        contact_email: email,
+        password: password,
+        is_eligible: isEligible
         }).then((insertId) => {
-           //woo hoo
            return resolve()
         }).catch((err) => {
-           return reject(err)
-        }) 
+            if(err.code === PG_UNIQUE_ERROR){ 
+                if(err.constraint === "teams_name_unique"){
+                    return reject("Team name is already in use.")
+                }
+                else if(err.constraint === "teams_contact_email_unique"){
+                    return reject("Team email is already in use.")
+                }
+            }
+           return reject(err) 
+        })
     });
 }
+
+createTeam("team5", "emaaaaaaail", "password", true).then(() => {
+    //woo hoo we inserted
+    console.log('Inserted.')
+}, (err) => {
+    console.log('Error ->', err)
+}).catch((err) => {
+    console.log('Catch Error ->', err)
+})
 
 module.exports = {
     createTeam: createTeam,
