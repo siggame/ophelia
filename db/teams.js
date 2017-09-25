@@ -79,15 +79,6 @@ function createTeam(teamName, email, password, isEligible) {
     });
 }
 
-createTeam("team5", "emaaaaaaail", "password", true).then(() => {
-    //woo hoo we inserted
-    console.log('Inserted.')
-}, (err) => {
-    console.log('Error ->', err)
-}).catch((err) => {
-    console.log('Catch Error ->', err)
-})
-
 module.exports = {
     createTeam: createTeam,
     getTeam: getTeam,
