@@ -26,6 +26,7 @@ function getTeam(teamId) {
 //Gets the team info by using the teamName that is passed to it
 function getSubmissionByTeamName(teamName) {
     return new Promise((resolve, reject) => {
+        //Need to join tables
         knex.select('*').from('submissions').joinRaw('natural full join teams').where('name',teamName)
             .then((res) => {
                 delete res[0]['password'];
