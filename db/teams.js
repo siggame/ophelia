@@ -9,7 +9,7 @@ const knex = require('knex')({
         password: 'siggame',
         database: 'postgres'
     }
-});
+})
 
 function getTeam(teamId) {
     return new Promise((resolve, reject) => {
@@ -25,7 +25,7 @@ function getTeam(teamId) {
 
 function getTeamByName(teamName) {
     return new Promise((resolve, reject) => {
-        knex('team').where({
+        knex('teams').where({
             name: teamName
         }).then((res) => {
             resolve(res);
@@ -33,6 +33,23 @@ function getTeamByName(teamName) {
             reject(res);
         })
     });
+}
+
+/*
+  Returns an array containing all of the usernames in the database.
+*/
+function getAllTeamNames () {
+  return new Promise((resolve, reject) => {
+    knex('teams').select('name').then((res) => {
+      let returnValue = []
+      res.forEach((row) => {
+        returnValue.push(row.name)
+      })
+      return resolve(returnValue)
+    }).catch((err) => {
+      return reject(err)
+    })
+  })
 }
 
 function editTeam(teamData) {
@@ -49,7 +66,8 @@ function editTeam(teamData) {
 }
 
 module.exports = {
-    getTeam: getTeam,
-    getTeamByName: getTeamByName,
-    editTeam: editTeam
-};
+  getTeam: getTeam,
+  getTeamByName: getTeamByName,
+  editTeam: editTeam,
+  getAllTeamNames: getAllTeamNames
+}
