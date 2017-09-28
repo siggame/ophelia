@@ -14,6 +14,7 @@ const signup = require('./signup')
 const dashboard = require('./dashboard')
 const profile = require('./profile')
 const error = require('./error')
+const medium = require('./medium')
 
 module.exports = {
   web,
@@ -21,5 +22,6 @@ module.exports = {
   signup,
   dashboard,
   profile,
-  error
+  error,
+  medium
 }
