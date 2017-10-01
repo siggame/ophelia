@@ -57,7 +57,7 @@ function createTeam (teamName, email, password, isEligible) {
             typeof email === 'undefined' || email === '' ||
             typeof password === 'undefined' || password === '' ||
             typeof isEligible === 'undefined' || typeof isEligible !== 'boolean') {
-      return reject('All args. must be defined and not empty')
+      return reject(new Error('All args. must be defined and not empty'))
     }
     knex('teams').insert({
       name: teamName,
@@ -69,9 +69,9 @@ function createTeam (teamName, email, password, isEligible) {
     }).catch((err) => {
       if (err.code === PG_UNIQUE_ERROR) {
         if (err.constraint === DB_TEAM_UNIQUE) {
-          return reject('Team name is already in use.')
+          return reject(new Error('Team name is already in use.'))
         } else if (err.constraint === DB_EMAIL_UNIQUE) {
-          return reject('Team email is already in use.')
+          return reject(new Error('Team email is already in use.'))
         }
       }
       return reject(err)
