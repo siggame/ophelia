@@ -79,6 +79,14 @@ function editTeam (teamData) {
   })
 }
 
+/**
+ * Creates a team in the 'teams' table
+ * @param teamName string, Unique name of the team being created
+ * @param email string, Unique, email of the team being created
+ * @param password string, Hashed/Encrypted password for the team
+ * @param isEligible boolean, for whether team is eligible
+ * @return {Promise} does not return anything on resolve
+ */
 function createTeam (teamName, email, password, isEligible) {
   return new Promise((resolve, reject) => {
     if (typeof teamName === 'undefined' || teamName === '' ||
