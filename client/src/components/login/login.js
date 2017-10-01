@@ -4,8 +4,20 @@ export default class Login extends React.Component {
     render() {
         return (
             <div>
-                <h1>Login</h1>
-                <p>put stuff here!</p>
+                <div className="col-md-3 col-md-offset-4">
+                    <div className="form-group">
+                        <h3>Sign In:</h3>
+                        <form>
+                        <label for="inputUsername">Username</label><br/>
+                        <input type = "username" className="form-control" id="inputUsername" placeholder = "Username"></input>
+                        </form>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword">Password</label><br/>
+                        <input type = "password" className="form-control" id="inputPassword" placeholder = "Password"></input>
+                    </div>
+                    <br/><button type = "submit" className = "btn btn-default">Submit</button>
+                </div>
             </div>
         )
     }
