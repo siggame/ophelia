@@ -2,7 +2,6 @@ const express = require('express')
 const router = express.Router()
 const db = require('../db/init')
 const team = require('../team/init')
-const _ = require('lodash')
 
 router.get('/team/:teamId', (req, res) => {
   console.log('params', req.params)
@@ -23,7 +22,7 @@ router.get('/team/:teamId/edit', (req, res) => {
     if (data[0].name !== req.session.user) {
       res.redirect('/403')
     } else {
-      res.render('edit_profile', {title: '', teamInfo: data[0], errorObject: {} })
+      res.render('edit_profile', { title: '', teamInfo: data[0], errorObject: {} })
     }
   }).catch((err) => {
     console.error(err)
@@ -32,7 +31,7 @@ router.get('/team/:teamId/edit', (req, res) => {
 
 router.post('/team/:teamId/edit', (req, res) => {
   team.profile.editProfile(req.params.teamId, req.body).then(() => {
-        // TODO: Get this actually working (redirect back to dashboard)
+    // TODO: Get this actually working (redirect back to dashboard)
     if (req.params.source === 'dashboard') {
       res.redirect('/dashboard')
     } else {
