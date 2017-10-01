@@ -29,10 +29,19 @@ function getTeam (teamId) {
 // Gets the team info by using the teamName that is passed to it
 function getSubmissionByTeamName (teamName) {
   return new Promise((resolve, reject) => {
-    if (teamName === null || typeof teamName === 'undefined') { Promise.reject(new Error('TeamName is null or undefined')) }
-    knex.select('*').from('submissions').joinRaw('natural full join teams').where('name', teamName)
+    if (teamName === null || typeof teamName === 'undefined') {
+      reject(new Error('TeamName is null or undefined'))
+    }
+    knex.select('*')
+      .from('submissions')
+      .joinRaw('natural full join teams', function () {
+        this.on('teams.id', '=', 'submissions.team_id')
+          .onIn('teams.name', teamName)
+      })
       .then((res) => {
-        delete res[0]['password']
+        for (let row of res) {
+          delete row['password']
+        }
         return resolve(res)
       }).catch((err) => {
         return reject(err)
@@ -98,5 +107,5 @@ module.exports = {
   getTeam: getTeam,
   getTeamByName: getTeamByName,
   editTeam: editTeam,
-  getSubmission: getSubmissionByTeamName
+  getSubmissionByTeamName: getSubmissionByTeamName
 }
