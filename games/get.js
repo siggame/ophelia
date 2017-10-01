@@ -1,3 +1,3 @@
-function getGames(userId, numReturned=5) {
+function getGames (userId, numReturned = 5) {
 
 }

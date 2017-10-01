@@ -1,7 +1,7 @@
-'use strict';
+'use strict'
 
-const profile = require('./profile');
+const profile = require('./profile')
 
 module.exports = {
-    profile
-};
+  profile
+}
