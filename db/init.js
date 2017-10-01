@@ -1,7 +1,7 @@
-'use strict';
+'use strict'
 
-const teams = require('./teams');
+const teams = require('./teams')
 
 module.exports = {
-    teams
-};
+  teams
+}
