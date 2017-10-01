@@ -26,14 +26,42 @@ function getTeam (teamId) {
   })
 }
 
+/**
+ * Joins teams and submissions tables together and returns resulting rows that
+ * include the given name
+ * @param teamName name of the team from the 'teams' table
+ * @return {Promise} resolves with a list of submissions under that team name
+ */
+function getSubmissionByTeamName (teamName) {
+  return new Promise((resolve, reject) => {
+    if (teamName === null || typeof teamName === 'undefined') {
+      reject(new Error('TeamName is null or undefined'))
+    }
+    knex.select('*')
+      .from('submissions')
+      .joinRaw('natural full join teams', function () {
+        this.on('teams.id', '=', 'submissions.team_id')
+          .onIn('teams.name', teamName)
+      })
+      .then((res) => {
+        for (let row of res) {
+          delete row['password']
+        }
+        return resolve(res)
+      }).catch((err) => {
+        return reject(err)
+      })
+  })
+}
+
 function getTeamByName (teamName) {
   return new Promise((resolve, reject) => {
     knex('teams').where({
       name: teamName
     }).then((res) => {
-      resolve(res)
-    }).catch((res) => {
-      reject(res)
+      return resolve(res)
+    }).catch((err) => {
+      return reject(err)
     })
   })
 }
@@ -51,6 +79,14 @@ function editTeam (teamData) {
   })
 }
 
+/**
+ * Creates a team in the 'teams' table
+ * @param teamName string, Unique name of the team being created
+ * @param email string, Unique, email of the team being created
+ * @param password string, Hashed/Encrypted password for the team
+ * @param isEligible boolean, for whether team is eligible
+ * @return {Promise} does not return anything on resolve
+ */
 function createTeam (teamName, email, password, isEligible) {
   return new Promise((resolve, reject) => {
     if (typeof teamName === 'undefined' || teamName === '' ||
@@ -83,5 +119,15 @@ module.exports = {
   createTeam: createTeam,
   getTeam: getTeam,
   getTeamByName: getTeamByName,
-  editTeam: editTeam
+  editTeam: editTeam,
+  getSubmissionByTeamName: getSubmissionByTeamName
 }
+
+getSubmissionByTeamName('testTeam').then((res) => {
+  console.log(res)
+}, (err) => {
+  console.log(err)
+}
+).catch((err) => {
+  console.log(err)
+})
