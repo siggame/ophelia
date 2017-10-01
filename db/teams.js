@@ -26,7 +26,12 @@ function getTeam (teamId) {
   })
 }
 
-// Gets the team info by using the teamName that is passed to it
+/**
+ * Joins teams and submissions tables together and returns resulting rows that
+ * include the given name
+ * @param teamName name of the team from the 'teams' table
+ * @return {Promise} resolves with a list of submissions under that team name
+ */
 function getSubmissionByTeamName (teamName) {
   return new Promise((resolve, reject) => {
     if (teamName === null || typeof teamName === 'undefined') {
@@ -109,3 +114,12 @@ module.exports = {
   editTeam: editTeam,
   getSubmissionByTeamName: getSubmissionByTeamName
 }
+
+getSubmissionByTeamName('testTeam').then((res) => {
+  console.log(res)
+}, (err) => {
+  console.log(err)
+}
+).catch((err) => {
+  console.log(err)
+})
