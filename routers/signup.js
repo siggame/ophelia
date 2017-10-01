@@ -17,6 +17,7 @@ router.get('/signup', (req, res) => {
 router.post('/signup', (req, res) => {
   let formData = req.body
   console.log('formData', formData)
+  let errorObject = {}
   signup.signup(formData.group_name, formData.password, formData.password_confirm, formData.name, formData.email, true).then((success) => {
     console.log('success', success)
     res.redirect('/')

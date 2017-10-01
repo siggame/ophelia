@@ -16,7 +16,7 @@ function login (name, pass) {
   console.log('name', name)
   return new Promise((resolve, reject) => {
     // Check username and password
-    knex('team').where({
+    let query = knex('team').where({
       name: name
     }).select('password').then((res) => {
       let correctPass = res[0].password
