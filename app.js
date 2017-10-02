@@ -34,12 +34,12 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use('/users', routers.users.router)
 app.use('/submissions', routers.submissions.router)
 app.use('/games', routers.games.router)
-app.use('/', routers.web.router)
-app.use('/', routers.login.router)
-app.use('/', routers.signup.router)
-app.use('/', routers.dashboard.router)
-app.use('/', routers.profile.router)
-app.use('/', routers.error.router)
+// app.use('/', routers.web.router)
+// app.use('/', routers.login.router)
+// app.use('/', routers.signup.router)
+// app.use('/', routers.dashboard.router)
+// app.use('/', routers.profile.router)
+// app.use('/', routers.error.router)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
