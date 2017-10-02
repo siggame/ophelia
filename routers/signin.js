@@ -3,7 +3,7 @@
 const express = require('express')
 const router = express.Router()
 const jsonwebtoken = require('jsonwebtoken')
-const jwt = require('express-jwt')
+// const jwt = require('express-jwt')
 const db = require('../db/init')
 
 // These need to be in a config/.env file
@@ -18,6 +18,7 @@ router.post(path + '/', (req, res) => {
   let status = null
   let response = {
     success: null,
+    message: '',
     token: null
   }
   if (typeof body.teamName === 'undefined' ||
@@ -29,8 +30,10 @@ router.post(path + '/', (req, res) => {
     const teamName = body.teamName
     const password = body.password
     db.teams.getTeamByName(teamName).then((team) => {
+      console.log(team)
       if (typeof team.password === 'undefined') {
         status = 500
+        response.message = 'There was a problem retrieving data from the db'
         response.success = false
       } else {
         // This won't actually work, need to run through same encrpytion/hash
@@ -48,12 +51,23 @@ router.post(path + '/', (req, res) => {
           status = 401
           response.success = false
         }
-        res.status(status).json(response)
       }
-
-      res.status(status).send(response)
-    })
+      res.status(status).json(response)
+    }, signInErrorHandler.bind(null, res))
+      .catch(signInErrorHandler.bind(null, res))
   }
 })
+
+function signInErrorHandler (res, err) {
+  const status = 500
+  let response = {
+    success: null,
+    message: '',
+    token: null
+  }
+  response.success = false
+  response.message = err
+  res.status(status).json(response)
+}
 
 module.exports = {router}
