@@ -6,10 +6,23 @@ export default class GameBadge extends Component {
 
     render() {
         const link="http://megaminerAI.com/" + this.props.gameID;
+				let bgColor = ''
+				// The Background Color of the div should be different based on what the result of the game
+				switch(this.props.result) {
+					case 'Win':
+						bgColor= '#bef5cb'
+						break
+					case 'Lose':
+						bgColor= '#fdaeb7'
+						break
+					default:
+						bgColor= '#cccccc'
+						break
+				}
 
         return(
           <div>
-            <div className = "gamebadge-wrapper col-lg-12">
+            <div style={{ backgroundColor:bgColor }} className="gamebadge-wrapper col-lg-12">
 
               <div className="gamebadge-info left">
                 <h3>{this.props.opponentName}</h3>
