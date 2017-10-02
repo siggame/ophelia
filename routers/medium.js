@@ -7,18 +7,16 @@ const path = '/medium'
 router.get(path + '/', (req, res) => {
   feed.load('https://www.medium.com/feed/@siggame', (err, rss) => {
     if (err) {
-      res.status(500)
-        .json({
-          success: false,
-          err: err,
-          data: []
-        })
+      res.status(500).json({
+        success: false,
+        err: err,
+        data: []
+      })
     } else {
-      res.status(200)
-        .json({
-          success: true,
-          data: rss.items
-        })
+      res.status(200).json({
+        success: true,
+        data: rss.items
+      })
     }
   })
 })
@@ -26,18 +24,16 @@ router.get(path + '/', (req, res) => {
 router.get(path + '/latest', (req, res) => {
   feed.load('https://www.medium.com/feed/@siggame', (err, rss) => {
     if (err) {
-      res.status(500)
-        .json({
-          success: false,
-          err: err,
-          data: []
-        })
+      res.status(500).json({
+        success: false,
+        err: err,
+        data: []
+      })
     } else {
-      res.status(200)
-        .json({
-          success: true,
-          data: rss.items.slice(0, 5)
-        })
+      res.status(200).json({
+        success: true,
+        data: rss.items.slice(0, 5)
+      })
     }
   })
 })
