@@ -16,8 +16,10 @@ const profile = require('./profile')
 const error = require('./error')
 const users = require('./users')
 const submissions = require('./submissions')
+const games = require('./games')
 
 module.exports = {
+  games,
   submissions,
   users,
   web,
