@@ -8,24 +8,26 @@
     It also needs to be included inside of app.js, next to the other 'app.use' statements.
  */
 
-const web = require('./web')
-const login = require('./login')
-const signup = require('./signup')
-const dashboard = require('./dashboard')
-const profile = require('./profile')
-const error = require('./error')
+// const web = require('./old_routers/web')
+// const login = require('./old_routers/login')
+// const signup = require('./old_routers/signup')
+// const dashboard = require('./old_routers/dashboard')
+// const profile = require('./old_routers/profile')
+// const error = require('./old_routers/error')
 const users = require('./users')
 const submissions = require('./submissions')
 const games = require('./games')
+const signin = require('./signin')
 
 module.exports = {
   games,
   submissions,
   users,
-  web,
-  login,
-  signup,
-  dashboard,
-  profile,
-  error
+  signin
+  // web,
+  // login,
+  // signup,
+  // dashboard,
+  // profile,
+  // error
 }
