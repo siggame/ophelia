@@ -15,20 +15,72 @@ body {
     border: 1px solid #000
 }
 
-h1 {
-    padding-bottom: 4vh;
-}
-
 .wrapper {
     background-color: #f2f2f2;
 }
 
-.games-wrapper {
-    padding: 2vh 2vw;
-    margin-bottom: 2vh;
-    height: 88vh;
-    border: 2px solid #000;
+.gamebadge-wrapper{
+  text-align: center;
+  margin: 0 auto;
+  background-color: rgb(240,240,240);
+  padding-bottom: 10px;
+  margin-bottom: 20px;
 }
+
+.right img{
+  border-radius: 5px;
+
+}
+.right img:hover{
+  box-shadow: 6px 6px 10px rgba(0,0,0,0.25);
+  transition: box-shadow 0.1s ease-out;
+}
+
+.gamebadge-info{
+  display: inline-block;
+}
+
+.left{
+  float: left;
+  margin-left: 2vw;
+}
+
+.middle{
+  margin-left: 2vw;
+  margin-right: 2vw;
+  max-width: 15vw;
+}
+
+.right{
+  float: right;
+  margin-top: 22.5px;
+  padding-left: 3px;
+  padding-right: 3px;
+  transition: box-shadow 0.1s ease-in;
+  border-radius: 5px;
+}
+
+/* Gamebadge tweaks for mobile */
+@media only screen and (min-width: 0px) and (max-width: 1200px){
+  .gamebadge-info{
+    display: block;
+  }
+  .middle{
+    margin-left: 0vw;
+    margin-right: 0vw;
+    max-width: none;
+  }
+
+  .left, .right{
+    float: none;
+    margin-left: 0vw;
+    margin-right: 0vw;
+  }
+
+  .left{
+    padding-top: 1px;
+  }
+}/* End of Gamebadge Tweaks for mobile*/
 
 .info-wrapper {
     padding: 0 2vw;
@@ -105,7 +157,6 @@ h1 {
 
 .games-grid {
     grid-area: games;
-    /*border: 1px solid #000000;*/
     display: grid;
 }
 
@@ -127,9 +178,4 @@ h1 {
 .group-info-subgrid {
     display: grid;
     grid-template-columns: 2fr 1fr;
-}
-
-.signup-box {
-    padding-bottom: 30px;
-    border: 2px solid #000
 }

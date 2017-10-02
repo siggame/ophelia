@@ -22,7 +22,7 @@ export default class GameBadge extends Component {
 
               <div className="gamebadge-info right">
                 <a href={link}>
-                  <img src="../../images/visit_link.png" alt="visit_link.png" height="85vh" width="85vw"/>
+                  <img src="../images/visit_link.png" alt="visit_link.png" height="85vh" width="85vw"/>
                 </a>
               </div>
 
