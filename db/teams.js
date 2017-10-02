@@ -58,8 +58,12 @@ function getTeamByName (teamName) {
   return new Promise((resolve, reject) => {
     knex('teams').where({
       name: teamName
-    }).then((res) => {
-      return resolve(res)
+    }).then((team) => {
+      if (team.length > 1) {
+        reject(new Error('More than one team with same name'))
+      } else {
+        return resolve(team[0])
+      }
     }).catch((err) => {
       return reject(err)
     })
@@ -122,12 +126,3 @@ module.exports = {
   editTeam: editTeam,
   getSubmissionByTeamName: getSubmissionByTeamName
 }
-
-getSubmissionByTeamName('testTeam').then((res) => {
-  console.log(res)
-}, (err) => {
-  console.log(err)
-}
-).catch((err) => {
-  console.log(err)
-})
