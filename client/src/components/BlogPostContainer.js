@@ -1,8 +1,8 @@
 import React from 'react'
 import Feed from 'rss-to-json'
-import BlogPosts from '../components/BlogPosts'
+import BlogPost from './BlogPost'
 
-export default class BlogPostContainer extends React.Component {
+ export default class BlogPostContainer extends React.Component {
     constructor (props) {
         super(props)
         this.state = {
@@ -19,16 +19,19 @@ export default class BlogPostContainer extends React.Component {
                 })
             } else {
                 this.setState({
-                    data: rss.items[0],
+                    data: rss.items,
                 })
             }
         })
     }
 
     render () {
+        console.log(this.state.data)
         return (
+
             <div>
-                <BlogPosts data={this.state.data} />
+
+                <BlogPost data={this.state.data} />
             </div>
         )
     }
