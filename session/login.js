@@ -15,19 +15,19 @@ const knex = require('knex')({
 function login (name, pass) {
   console.log('name', name)
   return new Promise((resolve, reject) => {
-        // Check username and password
+    // Check username and password
     let query = knex('team').where({
       name: name
     }).select('password').then((res) => {
       let correctPass = res[0].password
       if (sha256(pass) === correctPass) {
-                // Password is correct
-        resolve('Success!')
+        // Password is correct
+        return resolve('Success!')
       } else {
-        reject('Incorrect Password')
+        return reject('Incorrect Password')
       }
     }).catch((err) => {
-      reject('Team not found')
+      return reject('Team not found')
     })
   })
 }

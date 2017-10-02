@@ -7,7 +7,7 @@ const signup = require('../session/signup')
 // Handle GET requests for the Sign Up page
 router.get('/signup', (req, res) => {
   if (req.session.user) {
-        // If a user is logged in, they shouldn't need to signup
+    // If a user is logged in, they shouldn't need to signup
     res.redirect('/')
   } else {
     res.render('signup', {title: 'MegaminerAI - Sign Up', errorObject: {}})
@@ -22,7 +22,7 @@ router.post('/signup', (req, res) => {
     console.log('success', success)
     res.redirect('/')
   }, (err) => {
-        // TODO: Proper error handling
+    // TODO: Proper error handling
     console.log('something wrong', err)
     res.render('signup', {title: 'MegaminerAI - Sign Up', errorObject: err})
   })

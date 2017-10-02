@@ -7,7 +7,7 @@ const passRegex = /^(?=.*[a-z])(?=.*[0-9])(?=.{8,})/
 
 function checkUsername (username) {
   let valid = false
-    // Check if there a semicolon to sanitize
+  // Check if there a semicolon to sanitize
   if (username.includes(';')) {
     valid = false
   } else if (username.length >= usernameMinLen &&
@@ -18,9 +18,9 @@ function checkUsername (username) {
 }
 
 function checkPassword (password) {
-    // TODO ; use regex to check for password validity
+  // TODO ; use regex to check for password validity
   let valid = false
-    // Check if there a semicolon to sanitize
+  // Check if there a semicolon to sanitize
   if (password.includes(';')) {
     valid = false
   } else if (password.match(passRegex) !== null) {

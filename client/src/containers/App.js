@@ -17,7 +17,7 @@ export default class App extends React.Component {
             <Route exact path='/' component={LandingPage} />
             <Route exact path='/dashboard' component={Dashboard} />
             <Route path='/profile/:teamId' component={Profile} />
-            <Route path='/signup' component={Signup} />
+            <Route exact path='/signup' component={Signup} />
           </Switch>
         </main>
 

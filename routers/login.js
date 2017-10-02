@@ -7,7 +7,7 @@ const login = require('../session/login')
 // Handle GET requests for the Login page
 router.get('/login', (req, res) => {
   if (req.session.user) {
-        // If a user is already logged in, they don't need to login again
+    // If a user is already logged in, they don't need to login again
     res.redirect('/')
   } else {
     res.render('login', {title: 'MegaminerAI - Log In', user: req.session.user})
