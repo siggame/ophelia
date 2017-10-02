@@ -2,7 +2,9 @@ const express = require('express')
 const router = express.Router()
 const feed = require('rss-to-json')
 
-router.get('/medium', (req, res) => {
+const path = '/medium'
+
+router.get(path + '/', (req, res) => {
   feed.load('https://www.medium.com/feed/@siggame', (err, rss) => {
     if (err) {
       res.send({
@@ -19,7 +21,7 @@ router.get('/medium', (req, res) => {
   })
 })
 
-router.get('/medium/latest', (req, res) => {
+router.get(path + '/latest', (req, res) => {
   feed.load('https://www.medium.com/feed/@siggame', (err, rss) => {
     if (err) {
       res.send({
