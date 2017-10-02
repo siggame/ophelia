@@ -2,7 +2,7 @@
 
 const express = require('express')
 const router = express.Router()
-const login = require('../session/login')
+const login = require('../../session/login')
 
 // Handle GET requests for the Login page
 router.get('/login', (req, res) => {

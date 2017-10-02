@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const db = require('../db/init')
-const team = require('../team/init')
+const db = require('../../db/init')
+const team = require('../../team/init')
 
 router.get('/team/:teamId', (req, res) => {
   console.log('params', req.params)
