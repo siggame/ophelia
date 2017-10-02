@@ -32,6 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 // Tell Express to use our routers we've made.
 app.use('/users', routers.users.router)
+app.use('/submissions', routers.submissions.router)
 app.use('/', routers.web.router)
 app.use('/', routers.login.router)
 app.use('/', routers.signup.router)

@@ -15,8 +15,10 @@ const dashboard = require('./dashboard')
 const profile = require('./profile')
 const error = require('./error')
 const users = require('./users')
+const submissions = require('./submissions')
 
 module.exports = {
+  submissions,
   users,
   web,
   login,
