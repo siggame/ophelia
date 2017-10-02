@@ -1,3 +1,22 @@
-<h1><%= message %></h1>
-<h2><%= error.status %></h2>
-<pre><%= error.stack %></pre>
+<!DOCTYPE html>
+<html>
+<%- include common/header.ejs %>
+
+<body>
+<%- include common/navbar.ejs %>
+<div class="container">
+    <h1><%= error %></h1>
+
+    <p>
+        If you believe this error was given incorrectly, please
+        <a href="#">
+            contact the SIG-Game admins.
+        </a>
+    </p>
+
+</div>
+
+<%- include common/scripts.ejs %>
+</body>
+</html>
+

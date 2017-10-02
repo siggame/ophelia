@@ -1,14 +1,25 @@
 <html>
-<head>
-    <title>SIG-Game - Login</title>
-</head>
-<body>
+    <%- include common/header.ejs %>
 
-<form action="/login_action" method="post">
-    email: <input type="text" name="email"><br>
-    password: <input type="password" name="password"><br>
-    <input type="submit" value="Submit">
-</form>
+    <body>
+        <%- include common/navbar.ejs %>
+        <div class="container login-box">
+            <h1>Log In to MegaminerAI</h1>
+            <form action="/login" method="post">
+                <div class="form-group">
+                    <label for="name">Team Name</label>
+                    <input type="text" class="form-control" name="name"><br>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" name="password"><br>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </div>
+            </form>
+        </div>
 
-</body>
+        <%- include common/scripts.ejs %>
+    </body>
 </html>

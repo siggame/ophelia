@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <%- include common/header.ejs %>
+
+    <body>
+        <%- include common/navbar.ejs %>
+        <!-- TODO: Convert page to CSS Grid Format -->
+        <div class="grid dashboard-container">
+            <div class="games-grid">
+                <h3>Games</h3>
+                <p>Hi hello</p>
+            </div>
+            <div class="submission-grid">
+                <h3>Submission Status</h3>
+                <div class="submission-subgrid">
+                    <div>
+                        <h4>Latest Successful Build</h4>
+                        <p>Build Tagged "Test", at 20:57, 2017-06-14</p>
+                    </div>
+                    <div>
+                        <h4>Past Builds</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="group-info-grid">
+                <h3>Group Info</h3>
+                <div class="group-info-subgrid">
+                    <ul>
+                        <li>Team Name: <%= teamInfo.name %></li>
+                        <li>Primary Contact's Name: <%= teamInfo.contact_name %></li>
+                        <li>Primary Contact's Email: <%= teamInfo.contact_email %></li>
+                    </ul>
+                    <div>
+                        <a class="btn btn-default" href="<%= "/team/" + teamInfo.id + "/edit?source=dashboard"%>">Edit Profile</a>
+                    </div>
+                </div>
+            <br />
+        </div>
+
+        <%- include common/scripts.ejs %>
+    </body>
+</html>
