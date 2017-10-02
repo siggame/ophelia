@@ -1,5 +1,7 @@
 # Ophelia - The SIG-Game Webserver
 
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+
 This is the repository for SIG-Game's webserver application, the main entry point
 for competitors of MegaMinerAI.
 

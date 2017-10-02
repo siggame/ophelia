@@ -2,7 +2,7 @@ import React from 'react';
 import GameBadge from "../../components/GameBadge";
 
 export default class Games extends React.Component {
-  render() {
+  render () {
     return (
       <div>
         <GameBadge opponentName={"The Voodles"} result={"Win"} description={"Opponent failed to compile"} gameID={"345765356"}/>
