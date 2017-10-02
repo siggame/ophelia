@@ -1,8 +1,8 @@
 'use strict'
 
 const express = require('express')
-const validate = require('../session/validate')
-const db = require('../db/init')
+const validate = require('../../session/validate')
+const db = require('../../db/init')
 const router = express.Router()
 
 // Handle GET requests for the Login page

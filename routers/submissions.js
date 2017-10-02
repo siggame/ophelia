@@ -2,15 +2,21 @@
 
 const express = require('express')
 const router = express.Router()
-const jsonwebtoken  = require('jsonwebtoken')
-const jwt           = require('express-jwt')
 // const db = require('../db/init')
 
 // All paths in this file should start with this
-const path = '/signin'
+const path = '/submissions'
+
+router.get(path + '/', (req, res) => {
+
+})
 
 router.post(path + '/', (req, res) => {
 
+})
+
+router.get(path + '/:submissionID', (req, res) => {
+  res.send('submissionID is set to ' + req.params.submissionID)
 })
 
 module.exports = {router}
