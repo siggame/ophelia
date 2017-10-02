@@ -8,14 +8,14 @@ router.get(path + '/', (req, res) => {
   feed.load('https://www.medium.com/feed/@siggame', (err, rss) => {
     if (err) {
       res.status(500)
-        .send({
+        .json({
           success: false,
           err: err,
           data: []
         })
     } else {
       res.status(200)
-        .send({
+        .json({
           success: true,
           data: rss.items
         })
@@ -27,14 +27,14 @@ router.get(path + '/latest', (req, res) => {
   feed.load('https://www.medium.com/feed/@siggame', (err, rss) => {
     if (err) {
       res.status(500)
-        .send({
+        .json({
           success: false,
           err: err,
           data: []
         })
     } else {
       res.status(200)
-        .send({
+        .json({
           success: true,
           data: rss.items.slice(0, 5)
         })
