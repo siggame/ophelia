@@ -21,11 +21,12 @@ export default class BlogPost extends React.Component {
 
         const containerStyle = {
             width: '100%',
-            textAlign: 'center'
+            textAlign: 'center',
+            backgroundColor: '#E6E6E6',
+
 
         }
         const postStyle = {
-            backgroundColor: 'lightgray',
             padding: '5px 5px 5px 5px'
 
         }
@@ -36,12 +37,14 @@ export default class BlogPost extends React.Component {
 
             <div style = {containerStyle}>
 
+
+                <h2>Recent Blog Posts: </h2>
                 <div id ="posts" style={postStyle}>
-                    <h2>Recent Blog Posts: </h2>
                     {postArray}
 
-                    <h4>click to visit</h4>
                 </div>
+                <h4>click to visit</h4>
+
 
             </div>
 
