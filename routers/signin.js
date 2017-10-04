@@ -30,7 +30,6 @@ router.post(path + '/', (req, res) => {
     const teamName = body.teamName
     const password = body.password
     db.teams.getTeamByName(teamName).then((team) => {
-      console.log(team)
       if (typeof team.password === 'undefined') {
         status = 500
         response.message = 'There was a problem retrieving data from the db'
