@@ -31,12 +31,10 @@ app.use(session({
 app.use(express.static(path.join(__dirname, 'public')))
 
 // Tell Express to use our routers we've made.
-app.use('/', routers.web.router)
-app.use('/', routers.login.router)
-app.use('/', routers.signup.router)
-app.use('/', routers.dashboard.router)
-app.use('/', routers.profile.router)
-app.use('/', routers.error.router)
+app.use('/', routers.users.router)
+app.use('/', routers.submissions.router)
+app.use('/', routers.games.router)
+app.use('/', routers.signIn.router)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
