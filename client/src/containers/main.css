@@ -128,3 +128,8 @@ h1 {
     display: grid;
     grid-template-columns: 2fr 1fr;
 }
+
+.signup-box {
+    padding-bottom: 30px;
+    border: 2px solid #000
+}

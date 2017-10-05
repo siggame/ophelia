@@ -1,8 +1,17 @@
+'use strict'
+
 const express = require('express')
 const router = express.Router()
-const teams = require('../db/teams')
+// const db = require('../db/init')
 
-router.post('/users', (req, res) => {
+// All paths in this file should start with this
+const path = '/users'
+
+router.get(path + '/', (req, res) => {
+
+})
+
+router.post(path + '/', (req, res) => {
   const userData = req.body
   // TODO: encrypt passwords
   teams.createTeam(userData.name, userData.contactEmail, userData.password, true).then(() => {
@@ -18,4 +27,12 @@ router.post('/users', (req, res) => {
   })
 })
 
-module.exports = { router }
+router.get(path + '/:teamName', (req, res) => {
+  res.send('teamName is set to ' + req.params.teamName)
+})
+
+router.put(path + '/:teamName', (req, res) => {
+  res.send('teamName is set to ' + req.params.teamName)
+})
+
+module.exports = {router}

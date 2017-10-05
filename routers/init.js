@@ -1,3 +1,5 @@
+'use strict'
+
 /*
     This file compiles all of the different routers into one place, so we just have to export one file
     when routers are needed.
@@ -6,20 +8,14 @@
     It also needs to be included inside of app.js, next to the other 'app.use' statements.
  */
 
-const web = require('./web')
-const login = require('./login')
-const signup = require('./signup')
-const dashboard = require('./dashboard')
-const profile = require('./profile')
-const error = require('./error')
 const users = require('./users')
+const submissions = require('./submissions')
+const games = require('./games')
+const signIn = require('./signin')
 
 module.exports = {
-  web,
-  login,
-  signup,
-  dashboard,
-  profile,
-  error,
-  users
+  games,
+  submissions,
+  users,
+  signIn: signIn
 }
