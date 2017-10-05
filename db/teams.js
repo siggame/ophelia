@@ -102,14 +102,17 @@ function createTeam (teamName, email, password, isEligible) {
       is_eligible: isEligible
     }).then((insertId) => {
       return resolve()
-    }).catch((err) => {
+    }, (err) => {
       if (err.code === PG_UNIQUE_ERROR) {
         if (err.constraint === DB_TEAM_UNIQUE) {
           return reject(new Error('Team name is already in use.'))
         } else if (err.constraint === DB_EMAIL_UNIQUE) {
+          let test = new Error('Team email is already in use')
           return reject(new Error('Team email is already in use.'))
         }
       }
+      return reject(err)
+    }).catch((err) => {
       return reject(err)
     })
   })
@@ -122,12 +125,3 @@ module.exports = {
   editTeam: editTeam,
   getSubmissionByTeamName: getSubmissionByTeamName
 }
-
-getSubmissionByTeamName('testTeam').then((res) => {
-  console.log(res)
-}, (err) => {
-  console.log(err)
-}
-).catch((err) => {
-  console.log(err)
-})
