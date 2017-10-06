@@ -26,6 +26,10 @@ function getTeam (teamId) {
   })
 }
 
+/**
+ * getAllTeamNames - grabs all current teams from the database
+ * @returns {Promise} - returns an array of strings if successful that contains all team names in the database.
+ */
 function getAllTeamNames () {
   return new Promise((resolve, reject) => {
     knex('teams').select('name').then((data) => {
