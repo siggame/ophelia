@@ -26,6 +26,20 @@ function getTeam (teamId) {
   })
 }
 
+function getAllTeamNames () {
+  return new Promise((resolve, reject) => {
+    knex('teams').select('name').then((data) => {
+      let returnData = []
+      data.forEach((row) => {
+        returnData.push(row.name)
+      })
+      return resolve(returnData)
+    }).catch((err) => {
+      return reject(err)
+    })
+  })
+}
+
 /**
  * Joins teams and submissions tables together and returns resulting rows that
  * include the given name
@@ -120,7 +134,8 @@ module.exports = {
   getTeam: getTeam,
   getTeamByName: getTeamByName,
   editTeam: editTeam,
-  getSubmissionByTeamName: getSubmissionByTeamName
+  getSubmissionByTeamName: getSubmissionByTeamName,
+  getAllTeamNames: getAllTeamNames
 }
 
 getSubmissionByTeamName('testTeam').then((res) => {

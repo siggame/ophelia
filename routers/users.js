@@ -13,6 +13,11 @@ router.get(path + '/', (req, res) => {
       success: true,
       users: result
     })
+  }, (err) => {
+    res.send({
+      success: false,
+      users: []
+    })
   }).catch(() => {
     // TODO: Send the error back to give context
     res.send({
