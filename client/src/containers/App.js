@@ -5,6 +5,7 @@ import NavBar from '../components/common/navbar'
 import LandingPage from '../components/LandingPage'
 import Dashboard from './dashboard/dashboard'
 import Profile from './profile/profile'
+import Signup from '../components/signup/signup'
 
 export default class App extends React.Component {
   render () {
@@ -16,6 +17,7 @@ export default class App extends React.Component {
             <Route exact path='/' component={LandingPage} />
             <Route exact path='/dashboard' component={Dashboard} />
             <Route path='/profile/:teamId' component={Profile} />
+            <Route exact path='/signup' component={Signup} />
           </Switch>
         </main>
 

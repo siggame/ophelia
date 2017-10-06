@@ -19,7 +19,7 @@ function editProfile (teamId, formData) {
         resolve('noChanges')
       }
 
-            // TODO: Sanitizing
+      // TODO: Sanitizing
       if (!validator.isEmail(formData.primaryEmail)) {
         errorObject.invalidEmail = true
       }
@@ -30,8 +30,8 @@ function editProfile (teamId, formData) {
       if (_.size(errorObject) !== 0) {
         reject(errorObject)
       } else {
-                // Using undefined here makes knex ignore that field - if we passed a blank string,
-                // it would still edit the DB.
+        // Using undefined here makes knex ignore that field - if we passed a blank string,
+        // it would still edit the DB.
         let updateData = {
           id: teamId,
           contact_name: formData.primaryName ? formData.primaryName : undefined,

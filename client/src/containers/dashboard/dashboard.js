@@ -11,6 +11,7 @@ export default class Dashboard extends React.Component {
     const teamName = 'testTeam'
     const primaryContactName = 'testName'
     const primaryContactEmail = 'testEmail'
+
     return (
       <div className='grid dashboard-container'>
         <div className='games-grid'>

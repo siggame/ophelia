@@ -1,9 +1,14 @@
+'use strict'
+
 const express = require('express')
 const router = express.Router()
-const teams = require('../db/teams')
+const db = require('../db/init')
 
-router.get('/users', (req, res) => {
-  teams.getAllTeamNames().then((result) => {
+// All paths in this file should start with this
+const path = '/users'
+
+router.get(path + '/', (req, res) => {
+  db.teams.getAllTeamNames().then((result) => {
     res.send({
       success: true,
       users: result
@@ -17,4 +22,16 @@ router.get('/users', (req, res) => {
   })
 })
 
-module.exports = { router }
+router.post(path + '/', (req, res) => {
+
+})
+
+router.get(path + '/:teamName', (req, res) => {
+  res.send('teamName is set to ' + req.params.teamName)
+})
+
+router.put(path + '/:teamName', (req, res) => {
+  res.send('teamName is set to ' + req.params.teamName)
+})
+
+module.exports = {router}
