@@ -1,27 +1,22 @@
 const express = require('express')
 const router = express.Router()
-const feed = require('rss-to-json')
+const parser = require('rss-parser')
 
 const path = '/medium'
+
+const mediumFeed = 'http://medium.com/feed/siggame'
 
 /**
  * GET '/medium/' - gets the 5 newest posts from the SIG-Game Medium page.
  * Posts include: title, desc, link, url, created
  */
 router.get(path + '/', (req, res) => {
-  feed.load('https://www.medium.com/feed/siggame', (err, rss) => {
-    if (err) {
-      res.status(500).json({
-        success: false,
-        err: err,
-        data: []
-      })
+  parser.parseURL(mediumFeed, (err, parsed) => {
+    if (typeof err !== 'undefined' && err !== null) {
+      console.log('uh oh', err)
+      res.status(500).send('uh oh')
     } else {
-      console.log(rss)
-      res.status(200).json({
-        success: true,
-        data: rss.items.slice(0, 5)
-      })
+      res.status(200).json(parsed)
     }
   })
 })
