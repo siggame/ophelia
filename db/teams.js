@@ -120,17 +120,12 @@ function getGame (teamName) {
     if (teamName === null || typeof teamName === 'undefined') {
       reject(new Error('TeamName is null or undefined'))
     }
-    knex.select('id')
-      .from('submissions')
-      .joinRaw('natural full join teams', function () {
-      this.on('teams.id', '=', 'submissions.team_id')
-        .onIn('teams.name', teamName)
-      })
-      .where('version', '=', knex('submissions').max('version'))
+    knex('games')
+      .join('games_submissions', 'games_submissions.game_id', '=', 'games.id')
+      .join('submissions', 'submissions.id', '=', 'games_submissions.submission_id').where('version', '=', knex('submissions').max('version'))
+      .join('teams', 'teams.id', '=', 'submissions.team_id').where('teams.name', '=', teamName)
+      .select('games.status') // Just change this to what attributes need to be output
       .then((res) => {
-        for (let row of res) {
-          delete row['password']
-        }
         return resolve(res)
       }).catch((err) => {
       return reject(err)
@@ -138,49 +133,24 @@ function getGame (teamName) {
   })
 }
 
-// function getGame (teamName) {
-//   return new Promise((resolve, reject) => {
-//     if (teamName === null || typeof teamName === 'undefined') {
-//       reject(new Error('TeamName is null or undefined'))
-//     }
-//     knex.select('id')
-//       .from('games')
-//       .joinRaw('natural full join games_submissions', function () {
-//         this.on('games.id', '=', 'games_submissions.game_id')
-//       })
-//       .joinRaw('natural full join submissions', function() {
-//         this.on('submissions.id', '=', 'games_submissions.submissions_id')
-//           .onIn('submissions.version', knex('submissions').max('version'))
-//       })
-//       .joinRaw('natural full join teams', function () {
-//         this.on('teams.id', '=', 'submissions.team_id')
-//           .onIn('teams.name', teamName)
-//       })
-//       .then((res) => {
-//         return resolve(res)
-//       }).catch((err) => {
-//       return reject(err)
-//     })
-//   })
-// }
-
 module.exports = {
   createTeam: createTeam,
   getTeam: getTeam,
   getTeamByName: getTeamByName,
   editTeam: editTeam,
-  getSubmissionByTeamName: getSubmissionByTeamName
+  getSubmissionByTeamName: getSubmissionByTeamName,
+  getGame: getGame
 }
 
-getGame('team1').then((res) => {
-    console.log('I got the team sub')
-    console.log(res)
-  }, (err) => {
-    console.log(err)
-  }
-).catch((err) => {
-  console.log(err)
-})
+// getGame('team1').then((res) => {
+//     console.log('I got the team sub')
+//     console.log(res)
+//   }, (err) => {
+//     console.log(err)
+//   }
+// ).catch((err) => {
+//   console.log(err)
+// })
 
 // getSubmissionByTeamName('testTeam').then((res) => {
 //   console.log(res)
