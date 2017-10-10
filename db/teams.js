@@ -107,7 +107,6 @@ function createTeam (teamName, email, password, isEligible) {
         if (err.constraint === DB_TEAM_UNIQUE) {
           return reject(new Error('Team name is already in use.'))
         } else if (err.constraint === DB_EMAIL_UNIQUE) {
-          let test = new Error('Team email is already in use')
           return reject(new Error('Team email is already in use.'))
         }
       }

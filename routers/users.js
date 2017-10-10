@@ -11,6 +11,14 @@ router.get(path + '/', (req, res) => {
 
 })
 
+/**
+ * POST /users/
+ * Creates a user.
+ * Requires a username, email, and password.
+ * Object response:
+ * @param success - bool, indicates whether request succeeded
+ * @param message - string, gives error reason or success message
+ */
 router.post(path + '/', (req, res) => {
   const response = {
     success: false,
@@ -18,7 +26,7 @@ router.post(path + '/', (req, res) => {
   }
   const userData = req.body
   // TODO: encrypt passwords
-  db.teams.createTeam(userData.name, userData.email, userData.password, true).then(() => {
+  db.teams.createTeam(userData.username, userData.email, userData.password, true).then(() => {
     response.success = true
     response.message = 'Created user successfully'
     res.status(201).json(response)
