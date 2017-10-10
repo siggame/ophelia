@@ -24,6 +24,8 @@
     "pg": "^6.4.2",
     "react-scripts": "^1.0.13",
     "request": "^2.82.0",
+    "rss-parser": "^2.10.6",
+    "rss-to-json": "^1.0.2",
     "serve-favicon": "^2.4.4",
     "validator": "^8.2.0"
   },

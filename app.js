@@ -35,6 +35,7 @@ app.use('/', routers.users.router)
 app.use('/', routers.submissions.router)
 app.use('/', routers.games.router)
 app.use('/', routers.signIn.router)
+app.use('/', routers.medium.router)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

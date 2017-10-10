@@ -141,12 +141,3 @@ module.exports = {
   getSubmissionByTeamName: getSubmissionByTeamName,
   getAllTeamNames: getAllTeamNames
 }
-
-getSubmissionByTeamName('testTeam').then((res) => {
-  console.log(res)
-}, (err) => {
-  console.log(err)
-}
-).catch((err) => {
-  console.log(err)
-})
