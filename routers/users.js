@@ -1,6 +1,7 @@
 'use strict'
 
 const express = require('express')
+const _ = require('lodash')
 const router = express.Router()
 const db = require('../db/init')
 
@@ -12,12 +13,22 @@ router.get(path + '/', (req, res) => {
 })
 
 /**
- * POST /users/
- * Creates a user.
- * Requires a username, email, and password.
- * Object response:
- * @param success - bool, indicates whether request succeeded
- * @param message - string, gives error reason or success message
+ * Creates a user
+ * Request body format:
+ * {
+*     username: String,
+*     password: String,
+*     email: String
+* }
+ * Response body format:
+ * {
+*     success: Boolean, - true if success, false otherwise
+*     message: String - error message/success message
+* }
+ * Response codes:
+ * 201 - Successfully created
+ * 400 - User error
+ * 500 - Something went wrong
  */
 router.post(path + '/', (req, res) => {
   const response = {
@@ -25,6 +36,17 @@ router.post(path + '/', (req, res) => {
     message: ''
   }
   const userData = req.body
+  // Checking for required values
+  if(!userData.username) {
+    response.message = 'Required field username is missing or blank'
+    res.status(400).json(response)
+  } else if(!userData.email) {
+    response.message = 'Required field email is missing or blank'
+    res.status(400).json(response)
+  } else if(!userData.password) {
+    response.message = 'Required field password is missing or blank'
+    res.status(400).json(response)
+  }
   // TODO: encrypt passwords
   db.teams.createTeam(userData.username, userData.email, userData.password, true).then(() => {
     response.success = true
