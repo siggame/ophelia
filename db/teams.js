@@ -120,7 +120,7 @@ function createTeam (teamName, email, password, isEligible) {
       is_eligible: isEligible
     }).then((insertId) => {
       return resolve()
-    }).catch((err) => {
+    }, (err) => {
       if (err.code === PG_UNIQUE_ERROR) {
         if (err.constraint === DB_TEAM_UNIQUE) {
           return reject(new Error('Team name is already in use.'))
@@ -128,6 +128,8 @@ function createTeam (teamName, email, password, isEligible) {
           return reject(new Error('Team email is already in use.'))
         }
       }
+      return reject(err)
+    }).catch((err) => {
       return reject(err)
     })
   })
