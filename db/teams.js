@@ -124,7 +124,7 @@ function getGame (teamName) {
       .join('games_submissions', 'games_submissions.game_id', '=', 'games.id')
       .join('submissions', 'submissions.id', '=', 'games_submissions.submission_id').where('version', '=', knex('submissions').max('version'))
       .join('teams', 'teams.id', '=', 'submissions.team_id').where('teams.name', '=', teamName)
-      .select('games.status') // Just change this to what attributes need to be output
+      .select('games.status', 'games.win_reason', 'games.lose_reason', 'games.winner_id', 'games.log_url')
       .then((res) => {
         return resolve(res)
       }).catch((err) => {
