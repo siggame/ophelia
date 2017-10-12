@@ -19,24 +19,29 @@ router.get(path + '/:teamName', (req, res) => {
   const response = {
     success: false,
     message: '',
-    user: {
-      name: null,
-      contactEmail: null,
-      isEligible: null
-    }
+    user: null
+
   }
+
   db.teams.getTeamByName(req.params.teamName).then((data) => {
     response.success = true
-    // TODO Needs to actually extract/validate the data
-    response.user = data
-    res.json(response)
+    response.message = 'Success'
+    response.user = {
+      name: data[0].name,
+      contactEmail: data[0].contact_email,
+      isEligible: data[0].is_eligible
+    }
+
+    res.status(200).json(response)
   }, (err) => {
-    // TODO Figure out how to properly make this a string?
-    response.message = err
-    response.user = null
-    res.json(response)
+    response.message = 'User does not have access to this information.'
+    response.user = null  // outputs to postman
+    res.status(401).json(response)
+  }).catch((err) => {
+    response.success = false
+    response.message = 'Team does not exist.'
+    res.status(404).json(response)
   })
-  // TODO Needs a .catch() to handle exceptions
 })
 
 router.put(path + '/:teamName', (req, res) => {

@@ -61,6 +61,7 @@ function getTeamByName (teamName) {
     }).then((res) => {
       return resolve(res)
     }).catch((err) => {
+      console.log(err)
       return reject(err)
     })
   })
