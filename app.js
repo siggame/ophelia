@@ -9,6 +9,8 @@ const session = require('express-session')
 const multer = require('multer')
 const upload = multer()
 
+require('dotenv').config()
+
 const routers = require('./routers/init')
 
 const app = express()
