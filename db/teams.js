@@ -27,6 +27,24 @@ function getTeam (teamId) {
 }
 
 /**
+ * getAllTeamNames - grabs all current teams from the database
+ * @returns {Promise} - returns an array of strings if successful that contains all team names in the database.
+ */
+function getAllTeamNames () {
+  return new Promise((resolve, reject) => {
+    knex('teams').select('name').then((data) => {
+      let returnData = []
+      data.forEach((row) => {
+        returnData.push(row.name)
+      })
+      return resolve(returnData)
+    }).catch((err) => {
+      return reject(err)
+    })
+  })
+}
+
+/**
  * Joins teams and submissions tables together and returns resulting rows that
  * include the given name
  * @param teamName name of the team from the 'teams' table
@@ -58,12 +76,8 @@ function getTeamByName (teamName) {
   return new Promise((resolve, reject) => {
     knex('teams').where({
       name: teamName
-    }).then((team) => {
-      if (team.length > 1) {
-        reject(new Error('More than one team with same name'))
-      } else {
-        return resolve(team[0])
-      }
+    }).then((res) => {
+      return resolve(res)
     }).catch((err) => {
       return reject(err)
     })
@@ -106,7 +120,7 @@ function createTeam (teamName, email, password, isEligible) {
       is_eligible: isEligible
     }).then((insertId) => {
       return resolve()
-    }).catch((err) => {
+    }, (err) => {
       if (err.code === PG_UNIQUE_ERROR) {
         if (err.constraint === DB_TEAM_UNIQUE) {
           return reject(new Error('Team name is already in use.'))
@@ -114,6 +128,8 @@ function createTeam (teamName, email, password, isEligible) {
           return reject(new Error('Team email is already in use.'))
         }
       }
+      return reject(err)
+    }).catch((err) => {
       return reject(err)
     })
   })
@@ -124,5 +140,6 @@ module.exports = {
   getTeam: getTeam,
   getTeamByName: getTeamByName,
   editTeam: editTeam,
-  getSubmissionByTeamName: getSubmissionByTeamName
+  getSubmissionByTeamName: getSubmissionByTeamName,
+  getAllTeamNames: getAllTeamNames
 }
