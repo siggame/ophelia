@@ -80,9 +80,3 @@ module.exports = {
   encrypt,
   compare
 }
-
-// Example code, remove before merging
-const stuff = encrypt('test')
-console.log(stuff)
-const pass = compare(stuff.epass, 'test', stuff.salt, stuff.iterations)
-console.log(pass)
