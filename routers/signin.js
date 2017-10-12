@@ -5,6 +5,7 @@ const router = express.Router()
 const jsonwebtoken = require('jsonwebtoken')
 // const jwt = require('express-jwt')
 const db = require('../db/init')
+const compare = require('../session/auth').compare
 
 // These need to be in a config/.env file
 const tokenSecret = 'temporarySecret'
@@ -21,40 +22,43 @@ router.post(path + '/', (req, res) => {
     message: '',
     token: null
   }
-  if (typeof body.teamName === 'undefined' ||
-    typeof body.password === 'undefined') {
-    status = 400
-    response.success = false
-    res.status(status).send(response)
-  } else {
-    const teamName = body.teamName
-    const password = body.password
-    db.teams.getTeamByName(teamName).then((team) => {
-      if (typeof team.password === 'undefined') {
-        status = 500
-        response.message = 'There was a problem retrieving data from the db'
-        response.success = false
-      } else {
-        // This won't actually work, need to run through same encrpytion/hash
-        // that was used on account creation
-        if (password === team.password) {
-          const token = jsonwebtoken.sign({
-            username: teamName
-          }, tokenSecret, {
-            expiresIn: expired
-          })
-          status = 200
-          response.success = true
-          response.token = token
-        } else {
-          status = 401
-          response.success = false
-        }
-      }
-      res.status(status).json(response)
-    }, signInErrorHandler.bind(null, res))
-      .catch(signInErrorHandler.bind(null, res))
+  const requiredValues = ['username', 'password']
+  for (const value of requiredValues) {
+    if (typeof body[value] === 'undefined') {
+      response.message = 'Required field ' + value + ' is missing or blank'
+      return res.status(400).json(response)
+    }
   }
+  const username = body.username
+  const password = body.password
+  db.teams.getTeamByName(username).then((team) => {
+    if (typeof team.password === 'undefined') {
+      status = 500
+      response.message = 'There was a problem retrieving data from the db'
+      response.success = false
+    } else {
+      const encryptedPassword = team.password
+      const salt = team.salt
+      const iterations = team.hash_iterations
+      const role = team.role
+      if (compare(encryptedPassword, password, salt, iterations)) {
+        const token = jsonwebtoken.sign({
+          username: username,
+          role: role
+        }, tokenSecret, {
+          expiresIn: expired
+        })
+        status = 200
+        response.success = true
+        response.token = token
+      } else {
+        status = 401
+        response.success = false
+      }
+    }
+    return res.status(status).json(response)
+  }, signInErrorHandler.bind(null, res))
+    .catch(signInErrorHandler.bind(null, res))
 })
 
 function signInErrorHandler (res, err) {
