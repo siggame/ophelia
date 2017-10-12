@@ -164,7 +164,7 @@ module.exports = {
 }
 
 // getGame('team1').then((res) => {
-//     console.log('I got the team sub')
+//     console.log('I got the game')
 //     console.log(res)
 //   }, (err) => {
 //     console.log(err)
