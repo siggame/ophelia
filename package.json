@@ -27,6 +27,7 @@
     "rss-parser": "^2.10.6",
     "rss-to-json": "^1.0.2",
     "serve-favicon": "^2.4.4",
+    "validate.js": "^0.11.1",
     "validator": "^8.2.0"
   },
   "devDependencies": {
