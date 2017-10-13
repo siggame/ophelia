@@ -25,6 +25,11 @@ const path = '/login'
  *    token: String
  * }
  * where the token field is the Json Web Token created for that user's session
+ * Response codes:
+ * 200 Successfully logged in
+ * 400 Bad input, missing fields
+ * 401 Unauthorized, incorrect username or password
+ * 500 Server error
  */
 router.post(path + '/', (req, res) => {
   const body = req.body
