@@ -49,15 +49,17 @@ router.post(path + '/', (req, res) => {
   const username = body.username
   const password = body.password
   db.teams.getTeamByName(username).then((team) => {
-    if (typeof team.password === 'undefined') {
-      status = 500
-      response.message = 'There was a problem retrieving data from the db'
+    if (typeof team === 'undefined') {
+      // If the team is undefined then there must not have been a match
+      status = 401
+      response.message = ''
       response.success = false
     } else {
       const encryptedPassword = team.password
       const salt = team.salt
       const iterations = team.hash_iterations
       const role = team.role
+      // Checking to see if given password matches the one in the db
       if (compare(encryptedPassword, password, salt, iterations)) {
         const token = jsonwebtoken.sign({
           username: username,
@@ -69,6 +71,7 @@ router.post(path + '/', (req, res) => {
         response.success = true
         response.token = token
       } else {
+        // If compare failed then they must have given the wrong password
         status = 401
         response.success = false
       }
