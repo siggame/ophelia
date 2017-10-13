@@ -3,8 +3,8 @@
 const CryptoJS = require('crypto-js')
 const uuid4 = require('uuid/v4')
 
-// TODO This NEEDS to be in a secret config, not plaintext
-const AESsecret = '7661e1bf-af31-4306-8472-ea6d3702aa79'
+const AESsecret = require('../vars').PASSWORD_SECRET
+
 const maxIter = 10000
 const minIter = 4000
 
@@ -48,12 +48,20 @@ function compare (epass, pass, salt, iterations) {
  * Decrypts the passwod with the given salt using the secret key
  * @param epass password to be decrypted
  * @param salt salt to be used for decryption
- * @return {string}
+ * @return {string, null} returns either decrypted password on success
+ *    and null if it does not decrypt properly
  */
 function decrypt (epass, salt) {
   const secret = CryptoJS.SHA512(AESsecret + salt).toString()
   const pass = CryptoJS.AES.decrypt(epass, secret)
-  return pass.toString(CryptoJS.enc.Utf8)
+  try {
+    return pass.toString(CryptoJS.enc.Utf8)
+  } catch (err) {
+    if (err.message === 'Malformed UTF-8 data') {
+      return null
+    }
+    throw new Error(err)
+  }
 }
 
 /**
