@@ -10,7 +10,7 @@ const tokenSecret = require('../vars').TOKEN_SECRET
 const expired = require('../vars').TOKEN_EXPIRE_TIME
 
 // All paths in this file should start with this
-const path = '/signin'
+const path = '/login'
 
 /**
  * Expects a body with the form:
