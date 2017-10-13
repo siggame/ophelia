@@ -3,17 +3,29 @@
 const express = require('express')
 const router = express.Router()
 const jsonwebtoken = require('jsonwebtoken')
-// const jwt = require('express-jwt')
 const db = require('../db/init')
 const compare = require('../session/auth').compare
 
-// These need to be in a config/.env file
-const tokenSecret = 'temporarySecret'
-const expired = '1d' // expires in 1 day
+const tokenSecret = require('../vars').TOKEN_SECRET
+const expired = require('../vars').TOKEN_EXPIRE_TIME
 
 // All paths in this file should start with this
 const path = '/signin'
 
+/**
+ * Expects a body with the form:
+ * {
+ *    username: String,
+ *    password: String
+ * }
+ * Responds with a body of the form:
+ * {
+ *    success: Boolean,
+ *    message: String,
+ *    token: String
+ * }
+ * where the token field is the Json Web Token created for that user's session
+ */
 router.post(path + '/', (req, res) => {
   const body = req.body
   let status = null
@@ -69,7 +81,7 @@ function signInErrorHandler (res, err) {
     token: null
   }
   response.success = false
-  response.message = err
+  response.message = err.message
   res.status(status).json(response)
 }
 
