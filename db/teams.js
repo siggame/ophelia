@@ -135,6 +135,13 @@ function createTeam (teamName, email, password, isEligible) {
   })
 }
 
+/**
+ * Queries for all relevant games for a specified team name. Only retrieves
+ * games for the highest submission version
+ * @param teamName String, name of the team to grab submissions for
+ * @return {Promise} resolves when there are no errors, rejects if there is a
+ *  problem
+ */
 function getGame (teamName) {
   return new Promise((resolve, reject) => {
     if (teamName === null || typeof teamName === 'undefined') {
@@ -148,8 +155,8 @@ function getGame (teamName) {
       .then((res) => {
         return resolve(res)
       }).catch((err) => {
-      return reject(err)
-    })
+        return reject(err)
+      })
   })
 }
 
@@ -160,24 +167,5 @@ module.exports = {
   editTeam: editTeam,
   getSubmissionByTeamName: getSubmissionByTeamName,
   getGame: getGame,
-  getAllTeamNames: getAllTeamNames,
+  getAllTeamNames: getAllTeamNames
 }
-
-// getGame('team1').then((res) => {
-//     console.log('I got the game')
-//     console.log(res)
-//   }, (err) => {
-//     console.log(err)
-//   }
-// ).catch((err) => {
-//   console.log(err)
-// })
-
-// getSubmissionByTeamName('testTeam').then((res) => {
-//   console.log(res)
-// }, (err) => {
-//   console.log(err)
-// }
-// ).catch((err) => {
-//   console.log(err)
-// })
