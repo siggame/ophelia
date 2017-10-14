@@ -7,7 +7,7 @@
  * @return {Promise} resolves when there are no errors, rejects if there is a
  *  problem
  */
-function getGame (teamName) {
+function getGamesByTeamName (teamName) {
   return new Promise((resolve, reject) => {
     if (teamName === null || typeof teamName === 'undefined') {
       reject(new Error('TeamName is null or undefined'))
@@ -26,5 +26,5 @@ function getGame (teamName) {
 }
 
 module.exports = {
-  getGame
+  getGamesByTeamName
 }
