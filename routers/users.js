@@ -43,7 +43,8 @@ router.get(path + '/', (req, res) => {
  * {
 *     username: String,
 *     password: String,
-*     email: String
+*     email: String,
+*     name: String
 * }
  * Response body format:
  * {
@@ -60,23 +61,24 @@ router.post(path + '/', (req, res) => {
     success: false,
     message: ''
   }
-  const userData = req.body
+  const body = req.body
   // Checking for required values
-  const requiredValues = ['username', 'email', 'password']
+  const requiredValues = ['username', 'email', 'password', 'name']
   for (const value of requiredValues) {
-    if (typeof userData[value] === 'undefined') {
+    if (typeof body[value] === 'undefined') {
       response.message = 'Required field ' + value + ' is missing or blank'
       return res.status(400).json(response)
     }
   }
-  const passInfo = encrypt(userData.password)
+  const passInfo = encrypt(body.password)
   db.teams.createTeam(
-    userData.username,
-    userData.email,
+    body.username,
+    body.email,
     passInfo.epass,
     passInfo.salt,
     passInfo.iterations,
     'user',
+    body.name,
     true
   ).then(() => {
     response.success = true
