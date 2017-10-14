@@ -3,16 +3,8 @@
 const PG_UNIQUE_ERROR = '23505' // unique_violation error in postgres
 const DB_TEAM_UNIQUE = 'teams_name_unique'
 const DB_EMAIL_UNIQUE = 'teams_contact_email_unique'
-const knex = require('knex')({
-  client: 'pg',
-  connection: {
-    host: 'localhost',
-    port: '5432',
-    user: 'postgres',
-    password: '',
-    database: 'postgres'
-  }
-})
+
+const knex = require('./connect').knex
 
 function getTeam (teamId) {
   return new Promise((resolve, reject) => {
