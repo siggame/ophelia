@@ -20,8 +20,8 @@ function getSubmissionByTeamName (teamName) {
       .then((res) => {
         return resolve(res)
       }).catch((err) => {
-      return reject(err)
-    })
+        return reject(err)
+      })
   })
 }
 
