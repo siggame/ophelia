@@ -1,5 +1,7 @@
 'use strict'
 
+const knex = require('./connect').knex
+
 /**
  * Joins teams and submissions tables together and returns resulting rows that
  * include the given name
