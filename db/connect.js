@@ -1,12 +1,15 @@
+'use strict'
+
+const vars = require('../vars')
 
 const knex = require('knex')({
-  client: 'pg',
+  client: vars.DB_CLIENT,
   connection: {
-    host: 'localhost',
-    port: '5432',
-    user: 'postgres',
-    password: '',
-    database: 'postgres'
+    host: vars.DB_HOST,
+    port: vars.DB_PORT,
+    user: vars.DB_USER,
+    password: vars.DB_PASS,
+    database: vars.DB_NAME
   }
 })
 
