@@ -1,5 +1,7 @@
 'use strict'
 
+const knex = require('./connect').knex
+
 /**
  * Queries for all relevant games for a specified team name. Only retrieves
  * games for the highest submission version
@@ -20,8 +22,8 @@ function getGamesByTeamName (teamName) {
       .then((res) => {
         return resolve(res)
       }).catch((err) => {
-      return reject(err)
-    })
+        return reject(err)
+      })
   })
 }
 
