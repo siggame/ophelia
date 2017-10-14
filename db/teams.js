@@ -125,10 +125,10 @@ function getGame (teamName) {
 }
 
 module.exports = {
-  createTeam: createTeam,
-  getTeam: getTeam,
-  getTeamByName: getTeamByName,
-  editTeam: editTeam,
-  getGame: getGame,
-  getAllTeamNames: getAllTeamNames
+  createTeam,
+  getTeam,
+  getTeamByName,
+  editTeam,
+  getGame,
+  getAllTeamNames
 }
