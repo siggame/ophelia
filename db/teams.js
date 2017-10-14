@@ -119,6 +119,7 @@ function createTeam (
   salt,
   hashIterations,
   role,
+  name,
   isEligible) {
   return new Promise((resolve, reject) => {
     if (typeof teamName === 'undefined' || teamName === '' ||
@@ -127,6 +128,8 @@ function createTeam (
             typeof salt === 'undefined' || salt === '' ||
             typeof hashIterations === 'undefined' ||
             typeof hashIterations !== 'number' ||
+            typeof role === 'undefined' || role === '' ||
+            typeof name === 'undefined' || name === '' ||
             typeof isEligible === 'undefined' || typeof isEligible !== 'boolean') {
       return reject(new Error('All args. must be defined and not empty'))
     }
@@ -141,6 +144,7 @@ function createTeam (
       salt: salt,
       hash_iterations: hashIterations,
       role: role,
+      contact_name: name,
       is_eligible: isEligible
     }).then((insertId) => {
       return resolve()
