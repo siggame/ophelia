@@ -14,7 +14,7 @@ router.get(path + '/', (req, res) => {
     message: '',
     submissions: null
   }
-  db.teams.getSubmissionByTeamName(user).then((result) => {
+  db.submissions.getSubmissionByTeamName(user).then((result) => {
     response.success = true
     response.message = 'Data successfully retrieved'
     response.submissions = result
@@ -23,7 +23,7 @@ router.get(path + '/', (req, res) => {
     response.message = err.message
     res.status(500).json(response)
   }).catch((err) => {
-    response.message = 'An error occured: ' + err
+    response.message = 'An error occured: ' + err.message
     res.status(500).json(err)
   })
 })
