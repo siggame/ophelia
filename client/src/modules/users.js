@@ -1,6 +1,7 @@
-const validate = require('validate.js')
+import axios from 'axios'
+import validate from 'validate.js'
 
-function validateSignup(username, name, email, password, confirmPassword) {
+export function validateSignup(username, name, email, password, confirmPassword) {
   return new Promise((resolve, reject) => {
     let formData = {
       username: username,
@@ -50,16 +51,30 @@ function validateSignup(username, name, email, password, confirmPassword) {
     if(errors) {
       return reject(errors)
     } else {
-      return resolve()
+      axios.post('/users', {
+        username: username,
+        password: password,
+        email: email
+      }).then((data) => {
+        return resolve(data)
+      }).catch((err)=> {
+        return reject(err)
+      })
+
     }
   })
 }
 
-function validateLogin(username, password) {
-  // Check for SQL/XSS stuff, then send to backend
+export function validateLogin(username, password) {
+  return new Promise((resolve, reject) => {
+    axios.post('/login', {
+      username: username,
+      password: password
+    }).then((data) => {
+      return resolve(data)
+    }).catch((err) => {
+      return reject(err)
+    })
 
-}
-
-module.exports = {
-  validateSignup: validateSignup
+  })
 }
