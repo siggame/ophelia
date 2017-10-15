@@ -1,6 +1,7 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { validateLogin } from '../modules/users'
+import Auth from '../modules/auth'
 
 export default class LoginView extends React.Component {
   constructor (props) {
@@ -32,10 +33,19 @@ export default class LoginView extends React.Component {
   }
 
   handleSubmit (event) {
-    validateLogin(this.state.username, this.state.password).then((data) => {
-      console.log('success', data)
-    }, (err) => {
-      console.log(err)
+    // TODO: add loading animation of some kind
+    validateLogin(this.state.username, this.state.password).then((result) => {
+      Auth.authenticateUser(result.data.token)
+      this.setState({
+        formSubmitted: true,
+        hasErrors: false
+      })
+    }, () => {
+      this.setState({
+        formSubmitted: true
+      })
+    }).catch((err) => {
+      // TODO: handle server error
     })
     event.preventDefault()
   }
@@ -62,7 +72,6 @@ export default class LoginView extends React.Component {
         <div className='col-md-3 col-md-offset-4'>
           <h3>Sign In:</h3>
           <form>
-
             <div className='form-group'>
               <label htmlFor='username'>Username</label>
               {formError}
