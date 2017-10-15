@@ -3,11 +3,10 @@
 const express = require('express')
 const _ = require('lodash')
 const router = express.Router()
-const db = require('../db/init')
+const teams = require('../db/init').teams
 
 // All paths in this file should start with this
 const path = '/users'
-
 
 /**
  * Gets a list of all usernames
@@ -26,7 +25,7 @@ router.get(path + '/', (req, res) => {
     users: []
   }
 
-  db.teams.getAllTeamNames().then((data) => {
+  teams.getAllTeamNames().then((data) => {
     response.success = true
     response.users = data
     res.status(200).json(response)
@@ -62,18 +61,18 @@ router.post(path + '/', (req, res) => {
   }
   const userData = req.body
   // Checking for required values
-  if(!userData.username) {
+  if (!userData.username) {
     response.message = 'Required field username is missing or blank'
     res.status(400).json(response)
-  } else if(!userData.email) {
+  } else if (!userData.email) {
     response.message = 'Required field email is missing or blank'
     res.status(400).json(response)
-  } else if(!userData.password) {
+  } else if (!userData.password) {
     response.message = 'Required field password is missing or blank'
     res.status(400).json(response)
   }
   // TODO: encrypt passwords
-  db.teams.createTeam(userData.username, userData.email, userData.password, true).then(() => {
+  teams.createTeam(userData.username, userData.email, userData.password, true).then(() => {
     response.success = true
     response.message = 'Created user successfully'
     res.status(201).json(response)

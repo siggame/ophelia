@@ -2,7 +2,7 @@
 
 const express = require('express')
 const router = express.Router()
-const db = require('../db/init')
+const submissions = require('../db/init').submissions
 
 // All paths in this file should start with this
 const path = '/submissions'
@@ -14,7 +14,7 @@ router.get(path + '/', (req, res) => {
     message: '',
     submissions: null
   }
-  db.submissions.getSubmissionByTeamName(user).then((result) => {
+  submissions.getSubmissionByTeamName(user).then((result) => {
     response.success = true
     response.message = 'Data successfully retrieved'
     response.submissions = result
