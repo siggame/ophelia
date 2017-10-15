@@ -13,9 +13,10 @@ export default class Signup extends React.Component {
   }
 
   componentDidMount () {
-    axios.get('/users').then((data) => {
+    axios.get('/users/').then((response) => {
+      console.log('data', response)
       this.setState({
-        currentUsernames: data.users
+        currentUsernames: response.data.users
       })
     }, (err) => {
       console.error(err)

@@ -37,7 +37,9 @@ export function validateSignup(username, name, email, password, confirmPassword)
           message: 'must be at least 6 characters'
         }
       },
-      confirmPassword: {}
+      confirmPassword: {
+        presence: true
+      }
     }
 
     let errors = validate(formData, constraints)
@@ -51,14 +53,29 @@ export function validateSignup(username, name, email, password, confirmPassword)
     if(errors) {
       return reject(errors)
     } else {
-      axios.post('/users', {
+      axios.post('/users/', {
         username: username,
         password: password,
-        email: email
+        email: email,
+        name: name
       }).then((data) => {
         return resolve(data)
       }).catch((err)=> {
-        return reject(err)
+        let errorMessage = err.response.data.message
+        if(errorMessage === 'Team name is already in use.') {
+          return reject({
+            username: [errorMessage]
+          })
+        } else if(errorMessage === 'Team email is already in use.') {
+          return reject({
+            email: [errorMessage]
+          })
+        } else {
+          // TODO: More robust error handling here
+          return reject({
+            form: ['Something went wrong! Please contact a SIG-Game dev.']
+          })
+        }
       })
 
     }

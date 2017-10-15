@@ -44,13 +44,15 @@ export default class Signup extends Component {
   handleSubmit (event) {
     validateSignup(this.state.username, this.state.realName, this.state.email, this.state.password,
                   this.state.passwordConfirm).then(
-      () => {
+      (result) => {
+        console.log('res', result)
         this.setState({
           formSubmitted: true,
           hasErrors: false
         })
       },
       (err) => {
+        console.log('err', err)
         this.setState({
           formSubmitted: true,
           formErrors: err
@@ -145,7 +147,7 @@ export default class Signup extends Component {
             {confirmError}
             <input type='password' className='form-control' name='passwordConfirm' placeholder='Confirm Password' value={this.state.passwordConfirm} onChange={this.handleChange} />
           </div>
-          <button type='submit' onClick={this.handleSubmit} className='btn btn-default'>Submit</button>
+          <button type='submit' onClick={this.handleSubmit} className='btn btn-default' disabled={userError || emailError ? 'disabled' : ''}>Submit</button>
         </form>
       </div>
     )
