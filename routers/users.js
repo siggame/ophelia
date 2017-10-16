@@ -92,8 +92,13 @@ router.get(path + '/:teamName', (req, res) => {
     user: null
 
   }
-
+  // TODO check if user is authorized
   teams.getTeamByName(req.params.teamName).then((data) => {
+    if (data.length === 0) {
+      response.success = false;
+      response.message = 'This team does not exist'
+      return res.status(404).json(response)
+    }
     response.success = true
     response.message = 'Success'
     response.user = {
@@ -102,15 +107,15 @@ router.get(path + '/:teamName', (req, res) => {
       isEligible: data[0].is_eligible
     }
 
-    res.status(200).json(response)
+    return res.status(200).json(response)
   }, (err) => {
-    response.message = 'User does not have access to this information.'
-    response.user = null  // outputs to postman
-    res.status(401).json(response)
+    response.success = false
+    response.message = err.message
+    return res.status(500).json(response)
   }).catch((err) => {
     response.success = false
-    response.message = 'Team does not exist.'
-    res.status(404).json(response)
+    response.message = err.message
+    return res.status(500).json(response)
   })
 })
 
