@@ -10,7 +10,7 @@ export default class NavBar extends React.Component {
       </ul>
     )
 
-    if(Auth.isUserAuthenticated()) {
+    if (Auth.isUserAuthenticated()) {
       // If the user is logged in, they should have different buttons over on the right side.
       rightSection = (
         <ul className='nav navbar-nav navbar-right'>

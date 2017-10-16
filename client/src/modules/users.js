@@ -1,7 +1,7 @@
 import axios from 'axios'
 import validate from 'validate.js'
 
-export function validateSignup(username, name, email, password, confirmPassword) {
+export function validateSignup (username, name, email, password, confirmPassword) {
   return new Promise((resolve, reject) => {
     let formData = {
       username: username,
@@ -43,14 +43,14 @@ export function validateSignup(username, name, email, password, confirmPassword)
     }
 
     let errors = validate(formData, constraints)
-    if(password !== confirmPassword) {
+    if (password !== confirmPassword) {
       // If the mismatched passwords is the only error, then we need to make the error object not undefined
       if (typeof errors === 'undefined') {
         errors = {}
       }
       errors.confirmPassword = [ 'Passwords must match' ]
     }
-    if(errors) {
+    if (errors) {
       return reject(errors)
     } else {
       axios.post('/users/', {
@@ -60,13 +60,13 @@ export function validateSignup(username, name, email, password, confirmPassword)
         name: name
       }).then((data) => {
         return resolve(data)
-      }).catch((err)=> {
+      }).catch((err) => {
         let errorMessage = err.response.data.message
-        if(errorMessage === 'Team name is already in use.') {
+        if (errorMessage === 'Team name is already in use.') {
           return reject({
             username: [errorMessage]
           })
-        } else if(errorMessage === 'Team email is already in use.') {
+        } else if (errorMessage === 'Team email is already in use.') {
           return reject({
             email: [errorMessage]
           })
@@ -77,12 +77,11 @@ export function validateSignup(username, name, email, password, confirmPassword)
           })
         }
       })
-
     }
   })
 }
 
-export function validateLogin(username, password) {
+export function validateLogin (username, password) {
   return new Promise((resolve, reject) => {
     axios.post('/login', {
       username: username,
@@ -92,6 +91,5 @@ export function validateLogin(username, password) {
     }).catch((err) => {
       return reject(err)
     })
-
   })
 }

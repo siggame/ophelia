@@ -3,11 +3,11 @@ import Auth from '../modules/auth'
 import { Redirect } from 'react-router-dom'
 
 export default class Logout extends React.Component {
-  componentDidMount() {
+  componentDidMount () {
     Auth.deauthenticateUser()
   }
 
-  render() {
+  render () {
     return (
       <Redirect to={'/'} />
     )

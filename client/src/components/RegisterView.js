@@ -31,7 +31,6 @@ export default class RegisterView extends Component {
     const value = target.type === 'checkbox' ? target.checked : target.value
     const name = target.name
 
-
     this.setState({
       [name]: value
     })
@@ -70,7 +69,7 @@ export default class RegisterView extends Component {
     if (this.state.formSubmitted) {
       if (this.state.hasErrors) {
         _.each(this.state.formErrors, (value, key) => {
-          switch(key) {
+          switch (key) {
             case 'username':
               userError = (
                 <span style={{ color: 'red', marginLeft: 10 }}>{value[0]}</span>
@@ -135,13 +134,13 @@ export default class RegisterView extends Component {
           </div>
           <div className='form-group'>
             <label htmlFor='realName'>Primary Contact's Name</label>
-            <input type='text' className='form-control' name="realName" placeholder='Primary Contact Name' value={this.state.realName} onChange={this.handleChange} />
+            <input type='text' className='form-control' name='realName' placeholder='Primary Contact Name' value={this.state.realName} onChange={this.handleChange} />
           </div>
-            <div className='form-group'>
-              <label htmlFor='password'>Password</label>
-              {passwordError}
-              <input type='password' className='form-control' name='password' placeholder='Password' value={this.state.password} onChange={this.handleChange} />
-            </div>
+          <div className='form-group'>
+            <label htmlFor='password'>Password</label>
+            {passwordError}
+            <input type='password' className='form-control' name='password' placeholder='Password' value={this.state.password} onChange={this.handleChange} />
+          </div>
           <div className='form-group'>
             <label htmlFor='passwordConfirm'>Confirm Password</label>
             {confirmError}

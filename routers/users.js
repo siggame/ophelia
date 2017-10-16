@@ -62,10 +62,11 @@ router.post(path + '/', (req, res) => {
   const body = req.body
   // Checking for required values
   const requiredValues = ['username', 'email', 'password', 'name']
-    for (const value of requiredValues) {
-     if(typeof body[value] === 'undefined') {
-    response.message = 'Required field ' + value + ' is missing or blank'
-    returnres.status(400).json(response)}
+  for (const value of requiredValues) {
+    if (typeof body[value] === 'undefined') {
+      response.message = 'Required field ' + value + ' is missing or blank'
+      return res.status(400).json(response)
+    }
   }
   const passInfo = encrypt(body.password)
   teams.createTeam(
@@ -82,8 +83,8 @@ router.post(path + '/', (req, res) => {
     response.message = 'Created user successfully'
     res.status(201).json(response)
   }).catch((err) => {
-    if(err.message === db.teams.DUPLICATE_NAME_MESSAGE || err.message === db.teams.DUPLICATE_EMAIL_MESSAGE ||
-      err.message === db.teams.MISSING_FIELD_MESSAGE) {
+    if (err.message === teams.DUPLICATE_NAME_MESSAGE || err.message === teams.DUPLICATE_EMAIL_MESSAGE ||
+      err.message === teams.MISSING_FIELD_MESSAGE) {
       response.message = err.message
       return res.status(400).json(response)
     }
@@ -105,7 +106,7 @@ router.get(path + '/:teamName', (req, res) => {
   // TODO check if user is authorized
   teams.getTeamByName(req.params.teamName).then((data) => {
     if (data.length === 0) {
-      response.success = false;
+      response.success = false
       response.message = 'This team does not exist'
       return res.status(404).json(response)
     }

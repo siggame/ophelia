@@ -7,11 +7,11 @@ export default class LoginView extends React.Component {
   constructor (props) {
     super(props)
 
-     this.state = {
+    this.state = {
       username: '',
       password: '',
       formSubmitted: false,
-      hasErrors: true,
+      hasErrors: true
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -26,7 +26,6 @@ export default class LoginView extends React.Component {
     const value = target.value
     const name = target.name
 
-
     this.setState({
       [name]: value
     })
@@ -40,14 +39,12 @@ export default class LoginView extends React.Component {
         formSubmitted: true,
         hasErrors: false
       })
-    }, () => {
+    }).catch(() => {
       this.setState({
         formSubmitted: true
       })
-    }).catch((err) => {
-      // TODO: handle server error
+      event.preventDefault()
     })
-    event.preventDefault()
   }
 
   render () {

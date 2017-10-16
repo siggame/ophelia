@@ -11,7 +11,7 @@ class Auth {
     localStorage.removeItem('token')
   }
 
-  static getToken() {
+  static getToken () {
     return localStorage.getItem('token')
   }
 }

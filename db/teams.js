@@ -8,7 +8,6 @@ const DUPLICATE_EMAIL_MESSAGE = 'Team email is already in use.'
 const MISSING_FIELD_MESSAGE = 'All args. must be defined and not empty'
 const knex = require('./connect').knex
 
-
 function getTeam (teamId) {
   return new Promise((resolve, reject) => {
     knex('teams').where({
