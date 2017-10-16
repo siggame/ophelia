@@ -93,7 +93,7 @@ router.get(path + '/:teamName', (req, res) => {
 
   }
 
-  db.teams.getTeamByName(req.params.teamName).then((data) => {
+  teams.getTeamByName(req.params.teamName).then((data) => {
     response.success = true
     response.message = 'Success'
     response.user = {
