@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom'
 import { validateSignup } from '../modules/users'
 import '../containers/main.css'
 
-export default class Signup extends Component {
+export default class RegisterView extends Component {
   constructor (props) {
     super(props)
 
@@ -44,21 +44,19 @@ export default class Signup extends Component {
   handleSubmit (event) {
     validateSignup(this.state.username, this.state.realName, this.state.email, this.state.password,
                   this.state.passwordConfirm).then(
-      (result) => {
-        console.log('res', result)
+      () => {
         this.setState({
           formSubmitted: true,
           hasErrors: false
         })
-      },
-      (err) => {
-        console.log('err', err)
+      }).catch((err) => {
         this.setState({
           formSubmitted: true,
           formErrors: err
         })
       }
     )
+    // Prevents the default HTML behavior from happening, so we can control how the form is submitted.
     event.preventDefault()
   }
 
@@ -67,6 +65,7 @@ export default class Signup extends Component {
     let emailError
     let passwordError
     let confirmError
+    let formError
 
     if (this.state.formSubmitted) {
       if (this.state.hasErrors) {
@@ -92,6 +91,11 @@ export default class Signup extends Component {
                 <span style={{ color: 'red', marginLeft: 10 }}>{value[0]}</span>
               )
               break
+            case 'form':
+              formError = (
+                <span style={{ color: 'red' }}>{value[0]}</span>
+              )
+              break
             default:
               break
           }
@@ -112,17 +116,13 @@ export default class Signup extends Component {
         <span style={{ color: 'red', marginLeft: 10 }}>Team Name is already taken!</span>
       )
     }
-    if (this.props.currentEmails.indexOf(this.state.email) !== -1) {
-      emailError = (
-        <span style={{ color: 'red', marginLeft: 10 }}>Email is already taken!</span>
-      )
-    }
 
     // TODO: Make inputs and errors into components
     return (
       <div className='container signup-box'>
         <h1>{'Sign up for ' + this.props.competitionName + '!'}</h1>
         <form>
+          {formError}
           <div className='form-group'>
             <label htmlFor='username'>Team Name</label>
             {userError}
@@ -147,15 +147,14 @@ export default class Signup extends Component {
             {confirmError}
             <input type='password' className='form-control' name='passwordConfirm' placeholder='Confirm Password' value={this.state.passwordConfirm} onChange={this.handleChange} />
           </div>
-          <button type='submit' onClick={this.handleSubmit} className='btn btn-default' disabled={userError || emailError ? 'disabled' : ''}>Submit</button>
+          <button type='submit' onClick={this.handleSubmit} className='btn btn-default' disabled={this.state.formSubmitted && this.state.hasErrors ? 'disabled' : ''}>Submit</button>
         </form>
       </div>
     )
   }
 }
 
-Signup.defaultProps = {
+RegisterView.defaultProps = {
   currentUsernames: [],
-  currentEmails: [],
   competitionName: 'MegaminerAI'
 }

@@ -3,6 +3,10 @@
 const PG_UNIQUE_ERROR = '23505' // unique_violation error in postgres
 const DB_TEAM_UNIQUE = 'teams_name_unique'
 const DB_EMAIL_UNIQUE = 'teams_contact_email_unique'
+const DUPLICATE_NAME_MESSAGE = 'Team name is already in use.'
+const DUPLICATE_EMAIL_MESSAGE = 'Team email is already in use.'
+const MISSING_FIELD_MESSAGE = 'All args. must be defined and not empty'
+
 const knex = require('knex')({
   client: 'pg',
   connection: {
@@ -109,6 +113,7 @@ function editTeam (teamData) {
  * @param salt string, salt used to Hash/Encrypt the password
  * @param hashIterations number, number used for PBKDF2 hashing
  * @param role string, role for the user, must be either 'user' or 'admin'
+ * @param name string, the real name of the user
  * @param isEligible boolean, for whether team is eligible
  * @return {Promise} does not return anything on resolve
  */
@@ -146,18 +151,16 @@ function createTeam (
       role: role,
       contact_name: name,
       is_eligible: isEligible
-    }).then((insertId) => {
+    }).then(() => {
       return resolve()
     }, (err) => {
       if (err.code === PG_UNIQUE_ERROR) {
         if (err.constraint === DB_TEAM_UNIQUE) {
-          return reject(new Error('Team name is already in use.'))
+          return reject(new Error(DUPLICATE_NAME_MESSAGE))
         } else if (err.constraint === DB_EMAIL_UNIQUE) {
-          return reject(new Error('Team email is already in use.'))
+          return reject(new Error(DUPLICATE_EMAIL_MESSAGE))
         }
       }
-      return reject(err)
-    }).catch((err) => {
       return reject(err)
     })
   })
@@ -169,5 +172,8 @@ module.exports = {
   getTeamByName: getTeamByName,
   editTeam: editTeam,
   getSubmissionByTeamName: getSubmissionByTeamName,
-  getAllTeamNames: getAllTeamNames
+  getAllTeamNames: getAllTeamNames,
+  DUPLICATE_EMAIL_MESSAGE: DUPLICATE_EMAIL_MESSAGE,
+  DUPLICATE_NAME_MESSAGE: DUPLICATE_NAME_MESSAGE,
+  MISSING_FIELD_MESSAGE: MISSING_FIELD_MESSAGE
 }

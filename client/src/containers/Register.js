@@ -1,8 +1,8 @@
 import React from 'react'
 import axios from 'axios'
-import SignupView from '../components/SignupView'
+import SignupView from '../components/RegisterView'
 
-export default class Signup extends React.Component {
+export default class Register extends React.Component {
   constructor (props) {
     super(props)
 
@@ -14,7 +14,6 @@ export default class Signup extends React.Component {
 
   componentDidMount () {
     axios.get('/users/').then((response) => {
-      console.log('data', response)
       this.setState({
         currentUsernames: response.data.users
       })

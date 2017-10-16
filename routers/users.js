@@ -30,8 +30,6 @@ router.get(path + '/', (req, res) => {
     response.success = true
     response.users = data
     res.status(200).json(response)
-  }, (err) => {
-    res.status(500).json(response)
   }).catch(() => {
     res.status(500).json(response)
   })
@@ -84,12 +82,17 @@ router.post(path + '/', (req, res) => {
     response.success = true
     response.message = 'Created user successfully'
     res.status(201).json(response)
-  }, (err) => {
-    response.message = err.message
-    res.status(400).json(response)
+  }).catch((err) => {
+    if(err.message === db.teams.DUPLICATE_NAME_MESSAGE || err.message === db.teams.DUPLICATE_EMAIL_MESSAGE ||
+      err.message === db.teams.MISSING_FIELD_MESSAGE) {
+      response.message = err.message
+      return res.status(400).json(response)
+    }
+    // Throw any other errors, these are server related errors and are handled below
+    throw err
   }).catch((err) => {
     response.message = err.message
-    res.status(400).json(response)
+    res.status(500).json(response)
   })
 })
 

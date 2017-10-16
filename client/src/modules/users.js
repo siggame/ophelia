@@ -71,9 +71,9 @@ export function validateSignup(username, name, email, password, confirmPassword)
             email: [errorMessage]
           })
         } else {
-          // TODO: More robust error handling here
+          console.error(errorMessage)
           return reject({
-            form: ['Something went wrong! Please contact a SIG-Game dev.']
+            form: ['Something went wrong! Please contact a SIG-Game dev, and try again in a little bit.']
           })
         }
       })
