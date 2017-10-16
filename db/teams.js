@@ -3,16 +3,8 @@
 const PG_UNIQUE_ERROR = '23505' // unique_violation error in postgres
 const DB_TEAM_UNIQUE = 'teams_name_unique'
 const DB_EMAIL_UNIQUE = 'teams_contact_email_unique'
-const knex = require('knex')({
-  client: 'pg',
-  connection: {
-    host: 'localhost',
-    port: '5432',
-    user: 'postgres',
-    password: '',
-    database: 'postgres'
-  }
-})
+
+const knex = require('./connect').knex
 
 function getTeam (teamId) {
   return new Promise((resolve, reject) => {
@@ -27,30 +19,20 @@ function getTeam (teamId) {
 }
 
 /**
- * Joins teams and submissions tables together and returns resulting rows that
- * include the given name
- * @param teamName name of the team from the 'teams' table
- * @return {Promise} resolves with a list of submissions under that team name
+ * getAllTeamNames - grabs all current teams from the database
+ * @returns {Promise} - returns an array of strings if successful that contains all team names in the database.
  */
-function getSubmissionByTeamName (teamName) {
+function getAllTeamNames () {
   return new Promise((resolve, reject) => {
-    if (teamName === null || typeof teamName === 'undefined') {
-      reject(new Error('TeamName is null or undefined'))
-    }
-    knex.select('*')
-      .from('submissions')
-      .joinRaw('natural full join teams', function () {
-        this.on('teams.id', '=', 'submissions.team_id')
-          .onIn('teams.name', teamName)
+    knex('teams').select('name').then((data) => {
+      let returnData = []
+      data.forEach((row) => {
+        returnData.push(row.name)
       })
-      .then((res) => {
-        for (let row of res) {
-          delete row['password']
-        }
-        return resolve(res)
-      }).catch((err) => {
-        return reject(err)
-      })
+      return resolve(returnData)
+    }).catch((err) => {
+      return reject(err)
+    })
   })
 }
 
@@ -102,7 +84,7 @@ function createTeam (teamName, email, password, isEligible) {
       is_eligible: isEligible
     }).then((insertId) => {
       return resolve()
-    }).catch((err) => {
+    }, (err) => {
       if (err.code === PG_UNIQUE_ERROR) {
         if (err.constraint === DB_TEAM_UNIQUE) {
           return reject(new Error('Team name is already in use.'))
@@ -111,23 +93,16 @@ function createTeam (teamName, email, password, isEligible) {
         }
       }
       return reject(err)
+    }).catch((err) => {
+      return reject(err)
     })
   })
 }
 
 module.exports = {
-  createTeam: createTeam,
-  getTeam: getTeam,
-  getTeamByName: getTeamByName,
-  editTeam: editTeam,
-  getSubmissionByTeamName: getSubmissionByTeamName
+  createTeam,
+  getTeam,
+  getTeamByName,
+  editTeam,
+  getAllTeamNames
 }
-
-getSubmissionByTeamName('testTeam').then((res) => {
-  console.log(res)
-}, (err) => {
-  console.log(err)
-}
-).catch((err) => {
-  console.log(err)
-})
