@@ -6,17 +6,8 @@ const DB_EMAIL_UNIQUE = 'teams_contact_email_unique'
 const DUPLICATE_NAME_MESSAGE = 'Team name is already in use.'
 const DUPLICATE_EMAIL_MESSAGE = 'Team email is already in use.'
 const MISSING_FIELD_MESSAGE = 'All args. must be defined and not empty'
+const knex = require('./connect').knex
 
-const knex = require('knex')({
-  client: 'pg',
-  connection: {
-    host: 'localhost',
-    port: '5432',
-    user: 'postgres',
-    password: '',
-    database: 'postgres'
-  }
-})
 
 function getTeam (teamId) {
   return new Promise((resolve, reject) => {
@@ -45,34 +36,6 @@ function getAllTeamNames () {
     }).catch((err) => {
       return reject(err)
     })
-  })
-}
-
-/**
- * Joins teams and submissions tables together and returns resulting rows that
- * include the given name
- * @param teamName name of the team from the 'teams' table
- * @return {Promise} resolves with a list of submissions under that team name
- */
-function getSubmissionByTeamName (teamName) {
-  return new Promise((resolve, reject) => {
-    if (teamName === null || typeof teamName === 'undefined') {
-      reject(new Error('TeamName is null or undefined'))
-    }
-    knex.select('*')
-      .from('submissions')
-      .joinRaw('natural full join teams', function () {
-        this.on('teams.id', '=', 'submissions.team_id')
-          .onIn('teams.name', teamName)
-      })
-      .then((res) => {
-        for (let row of res) {
-          delete row['password']
-        }
-        return resolve(res)
-      }).catch((err) => {
-        return reject(err)
-      })
   })
 }
 
@@ -153,7 +116,7 @@ function createTeam (
       is_eligible: isEligible
     }).then(() => {
       return resolve()
-    }, (err) => {
+    }).catch((err) => {
       if (err.code === PG_UNIQUE_ERROR) {
         if (err.constraint === DB_TEAM_UNIQUE) {
           return reject(new Error(DUPLICATE_NAME_MESSAGE))
@@ -167,12 +130,11 @@ function createTeam (
 }
 
 module.exports = {
-  createTeam: createTeam,
-  getTeam: getTeam,
-  getTeamByName: getTeamByName,
-  editTeam: editTeam,
-  getSubmissionByTeamName: getSubmissionByTeamName,
-  getAllTeamNames: getAllTeamNames,
+  createTeam,
+  getTeam,
+  getTeamByName,
+  editTeam,
+  getAllTeamNames,
   DUPLICATE_EMAIL_MESSAGE: DUPLICATE_EMAIL_MESSAGE,
   DUPLICATE_NAME_MESSAGE: DUPLICATE_NAME_MESSAGE,
   MISSING_FIELD_MESSAGE: MISSING_FIELD_MESSAGE
