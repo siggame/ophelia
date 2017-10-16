@@ -48,11 +48,45 @@ function getTeamByName (teamName) {
   })
 }
 
-function editTeam (teamData) {
+/**
+ * Function to edit a Team row in the database
+ * @param teamName name of the team to be modified
+ * @param dataToUpdate Object of data to update. Each field is optional but must
+ *  have at least one filled out
+ *    {
+ *      name: String,
+ *      email: String,
+ *      password: String
+ *    }
+ * @return {Promise} Resolves on success and rejects if invalid data is provided
+ *  as well as when there are any errors
+ */
+function editTeam (teamName, dataToUpdate) {
+  const teamData = {}
     // TODO: Some sort of checking on teamData
   return new Promise((resolve, reject) => {
+    if (typeof dataToUpdate === 'undefined') {
+      return reject(new Error('No data to edit provided'))
+    }
+    for (const dataName in dataToUpdate) {
+      if (dataToUpdate.hasOwnProperty(dataName)) {
+        switch (dataName) {
+          case 'name':
+            teamData.contact_name = dataToUpdate[dataName]
+            break
+          case 'email':
+            teamData.contact_email = dataToUpdate[dataName]
+            break
+          case 'password':
+            teamData.password = dataToUpdate[dataName]
+            break
+          default:
+            return reject(new Error('Can only edit name, email, and password'))
+        }
+      }
+    }
     knex('teams').where({
-      id: teamData.id
+      name: teamName
     }).update(teamData).then((res) => {
       resolve(res)
     }).catch((err) => {
