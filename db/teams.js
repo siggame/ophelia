@@ -63,7 +63,6 @@ function getTeamByName (teamName) {
  */
 function editTeam (teamName, dataToUpdate) {
   const teamData = {}
-    // TODO: Some sort of checking on teamData
   return new Promise((resolve, reject) => {
     if (typeof dataToUpdate === 'undefined') {
       return reject(new Error('No data to edit provided'))
