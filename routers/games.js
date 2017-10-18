@@ -2,7 +2,7 @@
 
 const express = require('express')
 const router = express.Router()
-const db = require('../db/init')
+const games = require('../db/init').games
 
 // All paths in this file should start with this
 const path = '/games'
@@ -15,7 +15,7 @@ router.get(path + '/', (req, res) => {
 		games: []
 	}
 	// if user is auth'ed:
-	db.teams.getGame(teamName).then((result) => {
+	games.getGamesByTeamName(teamName).then((result) => {
 		// maybe check if res is empty
 	    response.success = true
 	    response.message = 'Games successfully retrieved'
