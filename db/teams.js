@@ -3,16 +3,8 @@
 const PG_UNIQUE_ERROR = '23505' // unique_violation error in postgres
 const DB_TEAM_UNIQUE = 'teams_name_unique'
 const DB_EMAIL_UNIQUE = 'teams_contact_email_unique'
-const knex = require('knex')({
-  client: 'pg',
-  connection: {
-    host: 'localhost',
-    port: '5432',
-    user: 'postgres',
-    password: '',
-    database: 'postgres'
-  }
-})
+
+const knex = require('./connect').knex
 
 function getTeam (teamId) {
   return new Promise((resolve, reject) => {
@@ -41,34 +33,6 @@ function getAllTeamNames () {
     }).catch((err) => {
       return reject(err)
     })
-  })
-}
-
-/**
- * Joins teams and submissions tables together and returns resulting rows that
- * include the given name
- * @param teamName name of the team from the 'teams' table
- * @return {Promise} resolves with a list of submissions under that team name
- */
-function getSubmissionByTeamName (teamName) {
-  return new Promise((resolve, reject) => {
-    if (teamName === null || typeof teamName === 'undefined') {
-      reject(new Error('TeamName is null or undefined'))
-    }
-    knex.select('*')
-      .from('submissions')
-      .joinRaw('natural full join teams', function () {
-        this.on('teams.id', '=', 'submissions.team_id')
-          .onIn('teams.name', teamName)
-      })
-      .then((res) => {
-        for (let row of res) {
-          delete row['password']
-        }
-        return resolve(res)
-      }).catch((err) => {
-        return reject(err)
-      })
   })
 }
 
@@ -130,24 +94,6 @@ function createTeam (teamName, email, password, isEligible) {
       }
       return reject(err)
     }).catch((err) => {
-      return reject(err)
-    })
-  })
-}
-
-function getGame (teamName) {
-  return new Promise((resolve, reject) => {
-    if (teamName === null || typeof teamName === 'undefined') {
-      reject(new Error('TeamName is null or undefined'))
-    }
-    knex('games')
-      .join('games_submissions', 'games_submissions.game_id', '=', 'games.id')
-      .join('submissions', 'submissions.id', '=', 'games_submissions.submission_id').where('version', '=', knex('submissions').max('version'))
-      .join('teams', 'teams.id', '=', 'submissions.team_id').where('teams.name', '=', teamName)
-      .select('games.status', 'games.win_reason', 'games.lose_reason', 'games.winner_id', 'games.log_url')
-      .then((res) => {
-        return resolve(res)
-      }).catch((err) => {
       return reject(err)
     })
   })
