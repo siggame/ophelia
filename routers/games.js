@@ -8,29 +8,30 @@ const db = require('../db/init')
 const path = '/games'
 
 router.get(path + '/', (req, res) => {
-	var teamName = 'fix me'
-	var games = [];
-	var success
-	var message = ''
-	// if user is auth'ed
-	//	get his teamName
-	db.teams.getGame(teamName).then((res) => {
+	const teamName = 'fix me'
+	const response = {
+		success: false,
+		message: '',
+		games: []
+	}
+	// if user is auth'ed:
+	db.teams.getGame(teamName).then((result) => {
 		// maybe check if res is empty
-	    games = res
-	   	success = 200
-	   	message = 'OK'
-	  }, (err) => {
-	    success = 500
-	 	message = 'Unknown internal error'
-	  }
-	).catch((err) => {
-	  success = 500
-	  message = 'Unknown internal error'
+	    response.success = true
+	    response.message = 'Games successfully retrieved'
+	    resposne.games = result
+	    res.status(200).json(response)
+	}, (err) => {
+		response.message = err.message
+		res.status(500).json(response)
+	}).catch((err) => {
+		response.message = 'An error occured: ' + err.message
+		res.status(500).json(err)
 	})
 	// else
 	//	success = 401
 	// 	message = 'Not authorized'
-	return {success, message, games} // not sure if this is the right syntax
+	
 })
 
 router.get(path + '/:gameID', (req, res) => {
