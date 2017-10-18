@@ -162,22 +162,3 @@ module.exports = {
   getGame: getGame,
   getAllTeamNames: getAllTeamNames,
 }
-
-// getGame('team1').then((res) => {
-//     console.log('I got the game')
-//     console.log(res)
-//   }, (err) => {
-//     console.log(err)
-//   }
-// ).catch((err) => {
-//   console.log(err)
-// })
-
-// getSubmissionByTeamName('testTeam').then((res) => {
-//   console.log(res)
-// }, (err) => {
-//   console.log(err)
-// }
-// ).catch((err) => {
-//   console.log(err)
-// })
