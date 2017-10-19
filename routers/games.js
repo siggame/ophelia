@@ -19,7 +19,7 @@ router.get(path + '/', (req, res) => {
 		// maybe check if res is empty
 	    response.success = true
 	    response.message = 'Games successfully retrieved'
-	    resposne.games = result
+	    response.games = result
 	    res.status(200).json(response)
 	}, (err) => {
 		response.message = err.message
@@ -35,7 +35,25 @@ router.get(path + '/', (req, res) => {
 })
 
 router.get(path + '/:gameID', (req, res) => {
-  res.send('gameID is set to ' + req.params.gameID)
+	// orginally here
+	// res.send('gameID is set to ' + req.params.gameID)
+	gameId = req.params.gameID
+	const response = {
+		success: false,
+		message: '',
+		game: null
+	}
+	games.getGameById(gameId).then((result) => {
+		response.success = true
+		response.message = 'Game #' + gameId + ' successfully retrieved'
+		response.game = result
+	}, (err) =>{
+		response.message = err.message
+		res.status(500).json(response)
+	}).catch((err) => {
+		response.message = 'An error occured: ' + err.message
+		res.status(500).json(err)
+	})
 })
 
 module.exports = {router}
