@@ -44,14 +44,6 @@ function getGameById (gameId) {
   })
 }
 
-getGameById(3).then((result) =>{
-  console.log("I got the game: ", result)
-}, (err) => {
-  console.log("Failure: " , err)
-}).catch((err) => {
-  console.log("Caught Failure: " , err)
-})
-
 module.exports = {
   getGamesByTeamName
 }
