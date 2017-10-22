@@ -3,7 +3,7 @@
 const express = require('express')
 // const _ = require('lodash')
 const router = express.Router()
-const db = require('../db/init')
+const teams = require('../db/init').teams
 const encrypt = require('../session/auth').encrypt
 
 // All paths in this file should start with this
@@ -26,7 +26,7 @@ router.get(path + '/', (req, res) => {
     users: []
   }
 
-  db.teams.getAllTeamNames().then((data) => {
+  teams.getAllTeamNames().then((data) => {
     response.success = true
     response.users = data
     res.status(200).json(response)
@@ -71,7 +71,7 @@ router.post(path + '/', (req, res) => {
     }
   }
   const passInfo = encrypt(body.password)
-  db.teams.createTeam(
+  teams.createTeam(
     body.username,
     body.email,
     passInfo.epass,
@@ -94,7 +94,37 @@ router.post(path + '/', (req, res) => {
 })
 
 router.get(path + '/:teamName', (req, res) => {
-  res.send('teamName is set to ' + req.params.teamName)
+  const response = {
+    success: false,
+    message: '',
+    user: null
+
+  }
+  // TODO check if user is authorized
+  teams.getTeamByName(req.params.teamName).then((data) => {
+    if (data.length === 0) {
+      response.success = false;
+      response.message = 'This team does not exist'
+      return res.status(404).json(response)
+    }
+    response.success = true
+    response.message = 'Success'
+    response.user = {
+      name: data[0].name,
+      contactEmail: data[0].contact_email,
+      isEligible: data[0].is_eligible
+    }
+
+    return res.status(200).json(response)
+  }, (err) => {
+    response.success = false
+    response.message = err.message
+    return res.status(500).json(response)
+  }).catch((err) => {
+    response.success = false
+    response.message = err.message
+    return res.status(500).json(response)
+  })
 })
 
 router.put(path + '/:teamName', (req, res) => {
