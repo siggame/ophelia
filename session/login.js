@@ -1,37 +1,42 @@
 'use strict'
 
-const sha256 = require('js-sha256')
-const knex = require('knex')({
-  client: 'pg',
-  connection: {
-    host: 'localhost',
-    port: '5432',
-    user: 'postgres',
-    password: 'siggame',
-    database: 'postgres'
-  }
-})
+const teams = require('../db/init').teams
+const compare = require('./auth').compare
 
-function login (name, pass) {
-  console.log('name', name)
+/**
+ * Uses a teamName and a password to check if a user is signed in
+ * @param teamName - String -  The name of the team who we are trying to log in
+ * @param password - String - The password of the team who is trying to log in
+ * @return {Promise}
+ *  resolve - (LoggedIn - Boolean, Role - String) - If success, passes role
+ *  reject - (err) - Rejects if there is an error
+ */
+function login (teamName, password) {
   return new Promise((resolve, reject) => {
-    // Check username and password
-    let query = knex('team').where({
-      name: name
-    }).select('password').then((res) => {
-      let correctPass = res[0].password
-      if (sha256(pass) === correctPass) {
-        // Password is correct
-        return resolve('Success!')
+    teams.getTeamByName(teamName).then((team) => {
+      if (typeof team === 'undefined') {
+        // If the team is undefined then there must not have been a match
+        return resolve(false, null)
       } else {
-        return reject('Incorrect Password')
+        const encryptedPassword = team.password
+        const salt = team.salt
+        const iterations = team.hash_iterations
+        const role = team.role
+        // Checking to see if given password matches the one in the db
+        if (compare(encryptedPassword, password, salt, iterations)) {
+          return resolve(true, role)
+        }
+        // If compare failed then they must have given the wrong password
+        return resolve(false, null)
       }
+    }, (err) => {
+      reject(err)
     }).catch((err) => {
-      return reject('Team not found')
+      reject(err)
     })
   })
 }
 
 module.exports = {
-  login: login
+  login
 }
