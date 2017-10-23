@@ -5,6 +5,7 @@ const express = require('express')
 const router = express.Router()
 const teams = require('../db/init').teams
 const encrypt = require('../session/auth').encrypt
+const login = require('../session/login').login
 
 // All paths in this file should start with this
 const path = '/users'
@@ -102,30 +103,33 @@ router.put(path + '/:teamName', (req, res) => {
     success: false,
     message: ''
   }
-  const userdata = req.body
+  const teamName = req.param.teamName
+  const body = req.body
   let data = {
     'contact_email': req.body['contactEmail'],
     'password': req.body['password']
   }
-  teams.getTeamByName(req.params.teamName).then((result)=>{
-    data['id'] = result[0].id
-    teams.editTeam(data).then((result) =>{
-      response.success = true
-      response.message = 'Edited user successfully'
-      res.status(200).json(response)
-    },(err) => {
-      response.message = err.message
-      res.status(400).json(response)
-    }).catch((err) => {
-      response.message = err.message
-      res.status(500).json(response)
-    })
-  },(err) => {
-    response.message = err.message
-    res.status(400).json(response)
-  }).catch((err) => {
-    response.message = err.message
-    res.status(500).json(response)
+  login(teamName, body.password).then((user) => {
+    if (user.success) {
+      const teamEditData = {}
+      if (body.hasOwnProperty('contactEmail')) {
+        teamEditData.contact_email = body.contactEmail
+      }
+      if (body.hasOwnProperty('password')) {
+        teamEditData.password = body.password
+      }
+      teams.editTeam(data).then((result) =>{
+        response.success = true
+        response.message = 'Edited user successfully'
+        res.status(200).json(response)
+      },(err) => {
+        response.message = err.message
+        res.status(400).json(response)
+      }).catch((err) => {
+        response.message = err.message
+        res.status(500).json(response)
+      })
+    }
   })
 })
 
