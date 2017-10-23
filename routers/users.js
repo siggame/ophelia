@@ -104,7 +104,7 @@ router.get(path + '/:teamName', (req, res) => {
   // TODO check if user is authorized
   teams.getTeamByName(req.params.teamName).then((data) => {
     if (data.length === 0) {
-      response.success = false;
+      response.success = false
       response.message = 'This team does not exist'
       return res.status(404).json(response)
     }
@@ -128,33 +128,63 @@ router.get(path + '/:teamName', (req, res) => {
   })
 })
 
+/**
+ * Edits a user
+ * Request body format
+ * {
+ *     oldPassword: String,
+ *     editData: {
+ *         email: String,
+ *         name: String,
+ *         password: String
+ *     }
+ * }
+ * Where each of the fields in editData is optional, but at least one must exist
+ */
 router.put(path + '/:teamName', (req, res) => {
   const response = {
     success: false,
     message: ''
   }
+  const editableFields = ['email', 'name', 'password']
   const teamName = req.param.teamName
   const body = req.body
-  let data = {
-    'contact_email': req.body['contactEmail'],
-    'password': req.body['password']
+  const requiredValues = ['oldPassword', 'editData']
+  for (const value of requiredValues) {
+    if (typeof body[value] === 'undefined') {
+      response.message = 'Required field ' + value + ' is missing or blank'
+      return res.status(400).json(response)
+    }
   }
-  login(teamName, body.password).then((user) => {
+  const oldPassword = body.oldPassword
+  const editData = body.editData
+  // Use the login function to check if they are signed in properly
+  login(teamName, oldPassword).then((user) => {
     if (user.success) {
       const teamEditData = {}
-      if (body.hasOwnProperty('contactEmail')) {
-        teamEditData.contact_email = body.contactEmail
+      // Iterate over each of the fields allowed to be edited
+      for (const field of editableFields) {
+        if (editData.hasOwnProperty(field)) {
+          if (field === 'password') {
+            // If the field is 'password' then we need to run encrypt
+            teamEditData[field] = encrypt(body.password)
+          } else {
+            teamEditData[field] = body[field]
+          }
+        }
       }
-      if (body.hasOwnProperty('password')) {
-        teamEditData.password = body.password
+      if (Object.keys(teamEditData).length === 0) {
+        // If the object has no keys then there were no valid keys given
+        response.message = 'Editable fields include only: ' + editableFields
+        return res.status(400).json(response)
       }
-      teams.editTeam(data).then((result) =>{
+      teams.editTeam(teamEditData).then((result) => {
         response.success = true
         response.message = 'Edited user successfully'
         res.status(200).json(response)
-      },(err) => {
+      }, (err) => {
         response.message = err.message
-        res.status(400).json(response)
+        res.status(500).json(response)
       }).catch((err) => {
         response.message = err.message
         res.status(500).json(response)

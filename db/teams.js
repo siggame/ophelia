@@ -60,7 +60,11 @@ function getTeamByName (teamName) {
  *    {
  *      name: String,
  *      email: String,
- *      password: String
+ *      password: {
+ *          epass: String,
+ *          salt: String,
+ *          iterations: Number
+ *      }
  *    }
  * @return {Promise} Resolves on success and rejects if invalid data is provided
  *  as well as when there are any errors
@@ -81,7 +85,10 @@ function editTeam (teamName, dataToUpdate) {
             teamData.contact_email = dataToUpdate[dataName]
             break
           case 'password':
-            teamData.password = dataToUpdate[dataName]
+            const passInfo = dataToUpdate[dataName]
+            teamData.password = passInfo.epass
+            teamData.salt = passInfo.salt
+            teamData.hash_iterations = passInfo.iterations
             break
           default:
             return reject(new Error('Can only edit name, email, and password'))
