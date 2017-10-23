@@ -146,7 +146,7 @@ export default class RegisterView extends Component {
             {confirmError}
             <input type='password' className='form-control' name='passwordConfirm' placeholder='Confirm Password' value={this.state.passwordConfirm} onChange={this.handleChange} />
           </div>
-          <button type='submit' onClick={this.handleSubmit} className='btn btn-default' disabled={this.state.formSubmitted && this.state.hasErrors ? 'disabled' : ''}>Submit</button>
+          <button type='submit' onClick={this.handleSubmit} className='btn btn-default'>Submit</button>
         </form>
       </div>
     )
