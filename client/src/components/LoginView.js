@@ -53,7 +53,7 @@ export default class LoginView extends React.Component {
     if (this.state.formSubmitted) {
       if (this.state.hasErrors) {
         formError = (
-          <span style={{ color: 'red', marginLeft: 10 }}>Incorrect username or password!</span>
+          <span style={{ color: 'red', marginLeft: 10 }}>Incorrect team name or password!</span>
         )
       } else {
         return (
@@ -66,19 +66,19 @@ export default class LoginView extends React.Component {
 
     return (
       <div>
-        <div className='col-md-3 col-md-offset-4'>
-          <h3>Sign In:</h3>
+        <div className='col-md-4 col-md-offset-4'>
+          <h3>Log In:</h3>
           <form>
             <div className='form-group'>
-              <label htmlFor='username'>Username</label>
+              <label htmlFor='username'>Team Name</label>
               {formError}
-              <input type='text' className='form-control' name='username' value={this.state.username} onChange={this.handleChange} />
+              <input type='text' className='form-control' name='username' placeholder='Team Name' value={this.state.username} onChange={this.handleChange} />
             </div>
             <div className='form-group'>
               <label htmlFor='password'>Password</label>
-              <input type='password' className='form-control' name='password' value={this.state.password} onChange={this.handleChange} />
+              <input type='password' className='form-control' name='password' placeholder='Password' value={this.state.password} onChange={this.handleChange} />
             </div>
-            <button type='submit' onClick={this.handleSubmit} className='btn btn-default'>Submit</button>
+            <button type='submit' onClick={this.handleSubmit} className='btn btn-default btn-block btn-lg' style={{marginTop: 32}}>Log In</button>
           </form>
         </div>
       </div>
