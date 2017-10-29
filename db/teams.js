@@ -73,6 +73,7 @@ function editTeam (teamData) {
  * @param salt string, salt used to Hash/Encrypt the password
  * @param hashIterations number, number used for PBKDF2 hashing
  * @param role string, role for the user, must be either 'user' or 'admin'
+ * @param name string, this is the contact_name of the new team
  * @param isEligible boolean, for whether team is eligible
  * @return {Promise} does not return anything on resolve
  */
