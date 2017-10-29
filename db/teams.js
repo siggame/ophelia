@@ -100,11 +100,11 @@ function createTeam (teamName, email, password, isEligible) {
 }
 
 module.exports = {
-  createTeam: createTeam,
-  getTeam: getTeam,
-  getTeamByName: getTeamByName,
-  editTeam: editTeam,
-  getSubmissionByTeamName: getSubmissionByTeamName,
-  getGame: getGame,
-  getAllTeamNames: getAllTeamNames,
+  createTeam,
+  getTeam,
+  getTeamByName,
+  editTeam,
+  getSubmissionByTeamName,
+  getGame,
+  getAllTeamNames,
 }
