@@ -1,6 +1,7 @@
 'use strict'
 
 const _ = require('lodash')
+require('dotenv').config()
 
 module.exports = {
   DB_HOST: _.defaultTo(process.env.DB_HOST, 'localhost'),
@@ -11,5 +12,6 @@ module.exports = {
   DB_NAME: _.defaultTo(process.env.DB_NAME, 'postgres'),
   HOST: _.defaultTo(process.env.HOST, 'localhost'),
   PORT: _.defaultTo(process.env.PORT, 3000),
-  PASSWORD_SECRET: _.defaultTo(process.env.PASSWORD_SECRET, 'secret')
+  PASSWORD_SECRET: _.defaultTo(process.env.PASSWORD_SECRET, 'secret'),
+  SENTRY_KEY: _.defaultTo(process.env.SENTRY_KEY, 'null')
 }
