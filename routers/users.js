@@ -146,7 +146,7 @@ router.put(path + '/:teamName', (req, res) => {
     message: ''
   }
   const editableFields = ['email', 'name', 'password']
-  const teamName = req.param.teamName
+  const teamName = req.params.teamName
   const body = req.body
   const requiredValues = ['oldPassword', 'editData']
   for (const value of requiredValues) {
