@@ -1,7 +1,6 @@
 'use strict'
 
 const express = require('express')
-// const _ = require('lodash')
 const router = express.Router()
 const teams = require('../db/init').teams
 const encrypt = require('../session/auth').encrypt
