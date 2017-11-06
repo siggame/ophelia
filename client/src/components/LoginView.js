@@ -43,8 +43,8 @@ export default class LoginView extends React.Component {
       this.setState({
         formSubmitted: true
       })
-      event.preventDefault()
     })
+    event.preventDefault()
   }
 
   render () {
