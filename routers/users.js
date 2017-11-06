@@ -1,9 +1,9 @@
 'use strict'
 
 const express = require('express')
-const _ = require('lodash')
 const router = express.Router()
 const teams = require('../db/init').teams
+const encrypt = require('../session/auth').encrypt
 
 // All paths in this file should start with this
 const path = '/users'
@@ -42,7 +42,8 @@ router.get(path + '/', (req, res) => {
  * {
 *     username: String,
 *     password: String,
-*     email: String
+*     email: String,
+*     name: String
 * }
  * Response body format:
  * {
@@ -59,20 +60,26 @@ router.post(path + '/', (req, res) => {
     success: false,
     message: ''
   }
-  const userData = req.body
+  const body = req.body
   // Checking for required values
-  if (!userData.username) {
-    response.message = 'Required field username is missing or blank'
-    res.status(400).json(response)
-  } else if (!userData.email) {
-    response.message = 'Required field email is missing or blank'
-    res.status(400).json(response)
-  } else if (!userData.password) {
-    response.message = 'Required field password is missing or blank'
-    res.status(400).json(response)
+  const requiredValues = ['username', 'email', 'password', 'name']
+  for (const value of requiredValues) {
+    if (typeof body[value] === 'undefined') {
+      response.message = 'Required field ' + value + ' is missing or blank'
+      return res.status(400).json(response)
+    }
   }
-  // TODO: encrypt passwords
-  teams.createTeam(userData.username, userData.email, userData.password, true).then(() => {
+  const passInfo = encrypt(body.password)
+  teams.createTeam(
+    body.username,
+    body.email,
+    passInfo.epass,
+    passInfo.salt,
+    passInfo.iterations,
+    'user',
+    body.name,
+    true
+  ).then(() => {
     response.success = true
     response.message = 'Created user successfully'
     res.status(201).json(response)
