@@ -16,7 +16,7 @@ router.get(path + '/', (req, res) => {
 		games: []
 	}
 	// if user is auth'ed:
-	db.games.getGamesByTeamName(teamName).then((result) => {
+	games.getGamesByTeamName(teamName).then((result) => {
 		response.success = true
 		response.message = 'Games successfully retrieved'
 		response.games = result
