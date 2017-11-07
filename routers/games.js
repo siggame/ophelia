@@ -2,7 +2,7 @@
 
 const express = require('express')
 const router = express.Router()
-const db = require('../db/init')
+const games = require('../db/init').games
 
 // All paths in this file should start with this
 const path = '/games'
@@ -32,7 +32,23 @@ router.get(path + '/', (req, res) => {
 })
 
 router.get(path + '/:gameID', (req, res) => {
-  res.send('gameID is set to ' + req.params.gameID)
+	// orginally here
+	// res.send('gameID is set to ' + req.params.gameID)
+	const gameId = req.params.gameID
+	const response = {
+		success: false,
+		message: '',
+		game: null
+	}
+	games.getGameById(gameId).then((result) => {
+		response.success = true
+		response.message = 'Game #' + gameId + ' successfully retrieved'
+		response.game = result
+		res.status(200).json(response)
+	}).catch((err) => {
+		response.message = 'An error occured: ' + err.message
+		res.status(500).json(response)
+	})
 })
 
 module.exports = {router}
