@@ -8,25 +8,22 @@ const db = require('../db/init')
 const path = '/games'
 
 router.get(path + '/', (req, res) => {
-	const teamName = 'fix me'
+	// TODO: Replace w/ auth'd user
+	const teamName = ''
 	const response = {
 		success: false,
 		message: '',
 		games: []
 	}
 	// if user is auth'ed:
-	db.teams.getGame(teamName).then((result) => {
-		// maybe check if res is empty
-	    response.success = true
-	    response.message = 'Games successfully retrieved'
-	    resposne.games = result
-	    res.status(200).json(response)
-	}, (err) => {
-		response.message = err.message
-		res.status(500).json(response)
+	db.games.getGamesByTeamName(teamName).then((result) => {
+		response.success = true
+		response.message = 'Games successfully retrieved'
+		response.games = result
+		return res.status(200).json(response)
 	}).catch((err) => {
-		response.message = 'An error occured: ' + err.message
-		res.status(500).json(err)
+		response.message = 'An error occurred: ' + err.message
+		return res.status(500).json(response)
 	})
 	// else
 	//	success = 401
