@@ -1,9 +1,9 @@
 'use strict'
 
 const express = require('express')
-const _ = require('lodash')
 const router = express.Router()
 const teams = require('../db/init').teams
+const encrypt = require('../session/auth').encrypt
 
 // All paths in this file should start with this
 const path = '/users'
@@ -29,8 +29,6 @@ router.get(path + '/', (req, res) => {
     response.success = true
     response.users = data
     res.status(200).json(response)
-  }, (err) => {
-    res.status(500).json(response)
   }).catch(() => {
     res.status(500).json(response)
   })
@@ -42,7 +40,8 @@ router.get(path + '/', (req, res) => {
  * {
 *     username: String,
 *     password: String,
-*     email: String
+*     email: String,
+*     name: String
 * }
  * Response body format:
  * {
@@ -59,29 +58,40 @@ router.post(path + '/', (req, res) => {
     success: false,
     message: ''
   }
-  const userData = req.body
+  const body = req.body
   // Checking for required values
-  if (!userData.username) {
-    response.message = 'Required field username is missing or blank'
-    res.status(400).json(response)
-  } else if (!userData.email) {
-    response.message = 'Required field email is missing or blank'
-    res.status(400).json(response)
-  } else if (!userData.password) {
-    response.message = 'Required field password is missing or blank'
-    res.status(400).json(response)
+  const requiredValues = ['username', 'email', 'password', 'name']
+  for (const value of requiredValues) {
+    if (typeof body[value] === 'undefined') {
+      response.message = 'Required field ' + value + ' is missing or blank'
+      return res.status(400).json(response)
+    }
   }
-  // TODO: encrypt passwords
-  teams.createTeam(userData.username, userData.email, userData.password, true).then(() => {
+  const passInfo = encrypt(body.password)
+  teams.createTeam(
+    body.username,
+    body.email,
+    passInfo.epass,
+    passInfo.salt,
+    passInfo.iterations,
+    'user',
+    body.name,
+    true
+  ).then(() => {
     response.success = true
     response.message = 'Created user successfully'
     res.status(201).json(response)
-  }, (err) => {
-    response.message = err.message
-    res.status(400).json(response)
+  }).catch((err) => {
+    if (err.message === teams.DUPLICATE_NAME_MESSAGE || err.message === teams.DUPLICATE_EMAIL_MESSAGE ||
+      err.message === teams.MISSING_FIELD_MESSAGE) {
+      response.message = err.message
+      return res.status(400).json(response)
+    }
+    // Throw any other errors, these are server related errors and are handled below
+    throw err
   }).catch((err) => {
     response.message = err.message
-    res.status(400).json(response)
+    res.status(500).json(response)
   })
 })
 
@@ -95,7 +105,7 @@ router.get(path + '/:teamName', (req, res) => {
   // TODO check if user is authorized
   teams.getTeamByName(req.params.teamName).then((data) => {
     if (data.length === 0) {
-      response.success = false;
+      response.success = false
       response.message = 'This team does not exist'
       return res.status(404).json(response)
     }

@@ -10,6 +10,8 @@ module.exports = {
   DB_CLIENT: _.defaultTo(process.env.DB_CLIENT, 'pg'),
   DB_NAME: _.defaultTo(process.env.DB_NAME, 'postgres'),
   HOST: _.defaultTo(process.env.HOST, 'localhost'),
-  PORT: _.defaultTo(process.env.PORT, 3000),
-  PASSWORD_SECRET: _.defaultTo(process.env.PASSWORD_SECRET, 'secret')
+  PORT: _.defaultTo(process.env.PORT, 3001),
+  PASSWORD_SECRET: _.defaultTo(process.env.PASSWORD_SECRET, 'secret'),
+  TOKEN_SECRET: _.defaultTo(process.env.TOKEN_SECRET, 'token_secret'),
+  TOKEN_EXPIRE_TIME: _.defaultTo(process.env.TOKEN_EXPIRE_TIME, '1d')
 }
