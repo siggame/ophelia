@@ -27,6 +27,24 @@ function getGamesByTeamName (teamName) {
   })
 }
 
+function getGameById (gameId) {
+  return new Promise((resolve, reject) => {
+    if (gameId === null || typeof gameId === 'undefined') {
+      return reject(new Error('gameId is null or undefined'))
+    }
+    knex
+    .select('status', 'win_reason', 'lose_reason', 'winner_id', 'log_url')
+    .from('games')
+    .where('id', '=', gameId)
+    .then((res) => {
+      return resolve(res) 
+    }).catch((err) => {
+      return reject(err)
+    })
+  })
+}
+
 module.exports = {
-  getGamesByTeamName
+  getGamesByTeamName,
+  getGameById
 }
