@@ -119,7 +119,7 @@ export default class RegisterView extends Component {
     // TODO: Make inputs and errors into components
     return (
       <div className='col-md-4 col-md-offset-4'>
-        <h3>Register:</h3>
+        <h3>Register</h3>
         <form>
           {formError}
           <div className='form-group'>

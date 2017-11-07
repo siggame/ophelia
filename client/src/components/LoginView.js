@@ -67,7 +67,7 @@ export default class LoginView extends React.Component {
     return (
       <div>
         <div className='col-md-4 col-md-offset-4'>
-          <h3>Log In:</h3>
+          <h3>Log In</h3>
           <form>
             <div className='form-group'>
               <label htmlFor='username'>Team Name</label>
