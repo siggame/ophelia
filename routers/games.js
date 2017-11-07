@@ -37,7 +37,7 @@ router.get(path + '/', (req, res) => {
 router.get(path + '/:gameID', (req, res) => {
 	// orginally here
 	// res.send('gameID is set to ' + req.params.gameID)
-	gameId = req.params.gameID
+	const gameId = req.params.gameID
 	const response = {
 		success: false,
 		message: '',
@@ -47,12 +47,10 @@ router.get(path + '/:gameID', (req, res) => {
 		response.success = true
 		response.message = 'Game #' + gameId + ' successfully retrieved'
 		response.game = result
-	}, (err) =>{
-		response.message = err.message
-		res.status(500).json(response)
+		res.status(200).json(response)
 	}).catch((err) => {
 		response.message = 'An error occured: ' + err.message
-		res.status(500).json(err)
+		res.status(500).json(response)
 	})
 })
 
