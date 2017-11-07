@@ -118,8 +118,8 @@ export default class RegisterView extends Component {
 
     // TODO: Make inputs and errors into components
     return (
-      <div className='container signup-box'>
-        <h1>{'Sign up for ' + this.props.competitionName + '!'}</h1>
+      <div className='col-md-4 col-md-offset-4'>
+        <h3>Register</h3>
         <form>
           {formError}
           <div className='form-group'>
@@ -146,7 +146,7 @@ export default class RegisterView extends Component {
             {confirmError}
             <input type='password' className='form-control' name='passwordConfirm' placeholder='Confirm Password' value={this.state.passwordConfirm} onChange={this.handleChange} />
           </div>
-          <button type='submit' onClick={this.handleSubmit} className='btn btn-default'>Submit</button>
+          <button type='submit' onClick={this.handleSubmit} className='btn btn-default btn-block btn-lg' style={{marginTop: 32}}>Register</button>
         </form>
       </div>
     )
