@@ -1,7 +1,25 @@
 import React from 'react'
+import Auth from '../modules/auth'
 
 export default class NavBar extends React.Component {
   render () {
+    let rightSection = (
+      <ul className='nav navbar-nav navbar-right'>
+        <li><a href='/register'>Register</a></li>
+        <li><a className='login-button' href='/login'>Log In</a></li>
+      </ul>
+    )
+
+    if (Auth.isUserAuthenticated()) {
+      // If the user is logged in, they should have different buttons over on the right side.
+      rightSection = (
+        <ul className='nav navbar-nav navbar-right'>
+          <li><a href='/logout'>Log Out</a></li>
+          <li><a className='login-button' href='/dashboard'>Dashboard</a></li>
+        </ul>
+      )
+    }
+
     return (
       <nav className='navbar navbar-default navbar-fixed-top'>
         <div className='container'>
@@ -18,10 +36,7 @@ export default class NavBar extends React.Component {
             <ul className='nav navbar-nav navbar-left'>
               <li><a href='/dashboard'>Dashboard</a></li>
             </ul>
-            <ul className='nav navbar-nav navbar-right'>
-              <li><a href='/logout'>Log Out</a></li>
-              <li><a className='login-button' href='/dashboard'>Dashboard</a></li>
-            </ul>
+            {rightSection}
           </div>
         </div>
       </nav>

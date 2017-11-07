@@ -3,7 +3,9 @@
 const PG_UNIQUE_ERROR = '23505' // unique_violation error in postgres
 const DB_TEAM_UNIQUE = 'teams_name_unique'
 const DB_EMAIL_UNIQUE = 'teams_contact_email_unique'
-
+const DUPLICATE_NAME_MESSAGE = 'Team name is already in use.'
+const DUPLICATE_EMAIL_MESSAGE = 'Team email is already in use.'
+const MISSING_FIELD_MESSAGE = 'All args. must be defined and not empty'
 const knex = require('./connect').knex
 
 function getTeam (teamId) {
@@ -144,18 +146,16 @@ function createTeam (
       role: role,
       contact_name: name,
       is_eligible: isEligible
-    }).then((insertId) => {
+    }).then(() => {
       return resolve()
-    }, (err) => {
+    }).catch((err) => {
       if (err.code === PG_UNIQUE_ERROR) {
         if (err.constraint === DB_TEAM_UNIQUE) {
-          return reject(new Error('Team name is already in use.'))
+          return reject(new Error(DUPLICATE_NAME_MESSAGE))
         } else if (err.constraint === DB_EMAIL_UNIQUE) {
-          return reject(new Error('Team email is already in use.'))
+          return reject(new Error(DUPLICATE_EMAIL_MESSAGE))
         }
       }
-      return reject(err)
-    }).catch((err) => {
       return reject(err)
     })
   })
@@ -166,5 +166,8 @@ module.exports = {
   getTeam,
   getTeamByName,
   editTeam,
-  getAllTeamNames
+  getAllTeamNames,
+  DUPLICATE_EMAIL_MESSAGE: DUPLICATE_EMAIL_MESSAGE,
+  DUPLICATE_NAME_MESSAGE: DUPLICATE_NAME_MESSAGE,
+  MISSING_FIELD_MESSAGE: MISSING_FIELD_MESSAGE
 }
