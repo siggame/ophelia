@@ -24,9 +24,10 @@ function login (name, pass) {
         // Password is correct
         return resolve('Success!')
       } else {
-        return reject('Incorrect Password')
+        return reject(new Error('Incorrect Password'))
       }
-    }).catch((err) => {
+    }).catch(() => {
+      // TODO: More robust error handling
       return reject('Team not found')
     })
   })

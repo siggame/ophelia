@@ -8,18 +8,16 @@
     It also needs to be included inside of app.js, next to the other 'app.use' statements.
  */
 
-const web = require('./web')
+const users = require('./users')
+const submissions = require('./submissions')
+const games = require('./games')
 const login = require('./login')
-const signup = require('./signup')
-const dashboard = require('./dashboard')
-const profile = require('./profile')
-const error = require('./error')
+const medium = require('./medium')
 
 module.exports = {
-  web,
+  games,
+  submissions,
+  users,
   login,
-  signup,
-  dashboard,
-  profile,
-  error
+  medium
 }
