@@ -7,17 +7,18 @@ import SubmissionInfo from './SubmissionInfo'
 export default class Dashboard extends React.Component {
   render () {
     return (
-      <div className='grid dashboard-container'>
-        <div className='games-grid'>
+      <div className='row'>
+        <div className='col-lg-6'>
           <Games />
         </div>
-        <div className='submission-grid'>
-          <SubmissionInfo />
+        <div className='col-lg-6' >
+          <div className='submission'>
+            <SubmissionInfo />
+          </div>
+          <div className='profile'>
+            <Profile />
+          </div>
         </div>
-        <div className='group-info-grid'>
-          <Profile />
-        </div>
-        <br />
       </div>
     )
   }
