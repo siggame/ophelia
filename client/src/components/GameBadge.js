@@ -35,7 +35,6 @@ export default class GameBadge extends Component {
 
               <div className="gamebadge-info right">
                 <a href={link}>
-<!--  <img src="../images/visit_link.png" alt="visit_link.png" height="85vh" width="85vw"/>  -->
                 <svg width="400" height="180">
                     <rect x="50" y="20" rx="20" ry="20" width="150" height="150"
                     style="fill:red;stroke:black;stroke-width:5;opacity:0.5" />
