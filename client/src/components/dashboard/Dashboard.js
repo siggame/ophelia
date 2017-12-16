@@ -1,17 +1,11 @@
 import React from 'react'
 
-import Profile from '../profile/profile'
-import Games from './games'
-import SubmissionInfo from './submission_info'
-
-import '../main.css'
+import Profile from '../profile/Profile'
+import Games from './Games'
+import SubmissionInfo from './SubmissionInfo'
 
 export default class Dashboard extends React.Component {
   render () {
-    const teamName = 'testTeam'
-    const primaryContactName = 'testName'
-    const primaryContactEmail = 'testEmail'
-
     return (
       <div className='grid dashboard-container'>
         <div className='games-grid'>
@@ -21,7 +15,7 @@ export default class Dashboard extends React.Component {
           <SubmissionInfo />
         </div>
         <div className='group-info-grid'>
-          <Profile teamName={teamName} primaryContactName={primaryContactName} primaryContactEmail={primaryContactEmail} />
+          <Profile />
         </div>
         <br />
       </div>

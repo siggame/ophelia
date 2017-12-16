@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import _ from 'lodash'
 import { Redirect } from 'react-router-dom'
 import { validateSignup } from '../modules/users'
-import '../containers/main.css'
 
 export default class RegisterView extends Component {
   constructor (props) {
