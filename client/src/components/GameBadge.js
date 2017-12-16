@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import '../containers/App.css'
 
 export default class GameBadge extends Component {
   constructor (props) {

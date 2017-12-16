@@ -1,0 +1,22 @@
+body {
+    padding-top: 10vh;
+    height: auto;
+}
+
+h1 {
+    padding-bottom: 4vh;
+}
+
+.login-button {
+    background-color: #3c763d;
+}
+
+/* Dashboard Styles */
+
+.submission {
+    height: 40vh;
+}
+
+.profile {
+    height: 40vh;
+}
