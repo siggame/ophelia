@@ -19,7 +19,7 @@ export default class GameBadge extends Component {
   }
 
   render () {
-    // TODO: Make this link a Global, hardcoded value.
+    // TODO: Make this link a Global, hard-coded value.
     const link = 'http://megaminerAI.com/' + this.props.gameID
     let bgColor = ''
     // The Background Color of the div should be different based on what the result of the game
@@ -38,7 +38,7 @@ export default class GameBadge extends Component {
     // This code looks really crazy, but it's rendering the purple play button on the right side of the badge.
     // SVGs are nice because the browser renders them and they don't get pixellated as you zoom in.
     const playButtonVector = (
-      <svg style={{ verticalAlign: 'middle' }} width='69' height='69' viewBox='0 0 69 69' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlnsXlink='http://www.w3.org/1999/xlink'>
+      <svg style={{ verticalAlign: 'middle' }} width='8vh' height='8vh' viewBox='0 0 69 69' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlnsXlink='http://www.w3.org/1999/xlink'>
         <g id='Canvas' transform='translate(-26 92)'>
           <g id='Group 2'>
             <g id='Viz Link Button'>
