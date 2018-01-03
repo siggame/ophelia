@@ -1,5 +1,14 @@
 import React, { Component } from 'react'
 
+/**
+ * GameBadge - used to display concise results of a game played in the Arena.
+ * 
+ * Props:
+ * opponentName - name of the opponent faced in the arena
+ * result - should either be 'Win' or 'Lose' 
+ * description - The reason for the win/loss
+ * gameId - Identifier used to link to the gamelog
+ */
 export default class GameBadge extends Component {
   constructor (props) {
     super(props)
@@ -20,7 +29,7 @@ export default class GameBadge extends Component {
 
   render () {
     // TODO: Make this link a Global, hard-coded value.
-    const link = 'http://megaminerAI.com/' + this.props.gameID
+    const link = 'http://megaminerai.com/' + this.props.gameId
     let bgColor = ''
     // The Background Color of the div should be different based on what the result of the game
     switch (this.props.result) {
@@ -42,7 +51,7 @@ export default class GameBadge extends Component {
         <g id='Canvas' transform='translate(-26 92)'>
           <g id='Group 2'>
             <g id='Viz Link Button'>
-              <use xlinkHref='#path0_fill' transform='translate(26 -92)' fill={this.state.buttonActive ? '#5D40A9' : '#9B51E0'} />
+              <use xlinkHref='#path0_fill' transform='translate(26 -92)' fill={this.state.buttonActive ? '#666666' : '#999999'} />
             </g>
             <g id='Group'>
               <g id='x33 56. Play'>
@@ -85,5 +94,5 @@ GameBadge.defaultProps = {
   opponentName: '',
   result: '',
   description: '',
-  gameID: ''
+  gameId: ''
 }
