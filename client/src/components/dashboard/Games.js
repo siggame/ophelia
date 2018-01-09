@@ -3,6 +3,20 @@ import GameBadge from '../../components/GameBadge'
 
 export default class Games extends React.Component {
   render () {
+    // Remove this once we have actual data coming in.
+    let debugData = [
+      { name: 'CompSigh', result: 'Win', desc: 'Opponent Failed to Compile', gameId: '21839712937' },
+      { name: 'CompSigh', result: 'Lose', desc: 'You stink, I guess', gameId: '21839712937' },
+      { name: 'CompSigh', result: 'Win', desc: 'Opponent Failed to Compile', gameId: '21839712937' },
+      { name: 'CompSigh', result: 'Win', desc: 'Won via coin flip', gameId: '21839712937' },
+      { name: 'CompSigh', result: 'Win', desc: 'Opponent Failed to Compile', gameId: '21839712937' },
+      { name: 'CompSigh', result: 'Lose', desc: 'All soliders defeated', gameId: '21839712937' },
+      { name: 'CompSigh', result: 'Win', desc: 'Opponent Failed to Compile', gameId: '21839712937' }
+    ]
+    let debugGamesList = debugData.map((data, index) => {
+      return <GameBadge opponentName={data.name} result={data.result} description={data.desc} gameId={data.gameId} key={index} />
+    })
+
     return (
       <div>
         <div className='row' style={{ marginLeft: 10 }} >
@@ -10,13 +24,7 @@ export default class Games extends React.Component {
           <div className='col-lg-6' >Result</div>
           <div className='col-lg-2' >Viz Link</div>
         </div>
-        <GameBadge opponentName={'The Voodles'} result={'Win'} description={'Opponent failed to compile'} gameID={'345765356'} />
-        <GameBadge opponentName={'The Doodles'} result={'Lose'} description={'Your AI got wrecked, sorry.'} gameID={'345765356'} />
-        <GameBadge opponentName={'The Noodles'} result={'Lose'} description={' Scofdasfdjsaklf dasjfkdjaslf adfsas fdasjfkdlas f;lads fdslkf dsal;jfkdas; fdslasot Scoot Scoot Scoot Scoot Scoot Scoot Scoot Scoot Scoot Scoot Scoot Scoot Scoot Scoot Scoot '} gameID={'345765356'} />
-        <GameBadge opponentName={'The Poodles'} result={'Lose'} description={'Your AI got wrecked, sorry.'} gameID={'345765356'} />
-        <GameBadge opponentName={'The ScDoodles'} result={'Win'} description={'The reason doesn\'t matter, you won!'} gameID={'345765356'} />
-        <GameBadge opponentName={'The McNoodles'} result={'Lose'} description={'Your AI got wrecked, sorry. Scoot Scoot Scoot Scoot Scoot Scoot Scoot Scoot Scoot Scoot Scoot Scoot'} gameID={'345765356'} />
-        <GameBadge opponentName={'The Scoodles'} result={'Lose'} description={'Your AI got wrecked, sorry.'} gameID={'345765356'} />
+        {debugGamesList}
       </div>
     )
   }
