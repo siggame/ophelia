@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 
 /**
  * GameBadge - used to display concise results of a game played in the Arena.
- * 
+ *
  * Props:
  * opponentName - name of the opponent faced in the arena
- * result - should either be 'Win' or 'Lose' 
+ * result - should either be 'Win' or 'Lose'
  * description - The reason for the win/loss
  * gameId - Identifier used to link to the gamelog
  */
