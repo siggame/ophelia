@@ -11,11 +11,13 @@
 const users = require('./users')
 const submissions = require('./submissions')
 const games = require('./games')
-const signIn = require('./signin')
+const login = require('./login')
+const medium = require('./medium')
 
 module.exports = {
   games,
   submissions,
   users,
-  signIn: signIn
+  login,
+  medium
 }

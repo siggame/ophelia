@@ -8,6 +8,7 @@ const bodyParser = require('body-parser')
 const session = require('express-session')
 const multer = require('multer')
 const upload = multer()
+require('dotenv').config()
 
 const routers = require('./routers/init')
 
@@ -34,7 +35,8 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use('/', routers.users.router)
 app.use('/', routers.submissions.router)
 app.use('/', routers.games.router)
-app.use('/', routers.signIn.router)
+app.use('/', routers.login.router)
+app.use('/', routers.medium.router)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
