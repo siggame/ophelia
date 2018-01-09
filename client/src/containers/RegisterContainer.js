@@ -1,8 +1,8 @@
 import React from 'react'
 import axios from 'axios'
-import SignupView from '../components/RegisterView'
+import Register from '../components/Register'
 
-export default class Register extends React.Component {
+export default class RegisterContainer extends React.Component {
   constructor (props) {
     super(props)
 
@@ -25,7 +25,7 @@ export default class Register extends React.Component {
   render () {
     return (
       <div>
-        <SignupView currentUsernames={this.state.currentUsernames} />
+        <Register currentUsernames={this.state.currentUsernames} />
       </div>
     )
   }

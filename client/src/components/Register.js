@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import _ from 'lodash'
 import { Redirect } from 'react-router-dom'
 import { validateSignup } from '../modules/users'
-import '../containers/main.css'
 
 export default class RegisterView extends Component {
   constructor (props) {
@@ -42,8 +41,7 @@ export default class RegisterView extends Component {
    */
   handleSubmit (event) {
     validateSignup(this.state.username, this.state.realName, this.state.email, this.state.password,
-                  this.state.passwordConfirm).then(
-      () => {
+      this.state.passwordConfirm).then(() => {
         this.setState({
           formSubmitted: true,
           hasErrors: false
@@ -54,7 +52,7 @@ export default class RegisterView extends Component {
           formErrors: err
         })
       }
-    )
+)
     // Prevents the default HTML behavior from happening, so we can control how the form is submitted.
     event.preventDefault()
   }

@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom'
 import { validateLogin } from '../modules/users'
 import Auth from '../modules/auth'
 
-export default class LoginView extends React.Component {
+export default class Login extends React.Component {
   constructor (props) {
     super(props)
 
