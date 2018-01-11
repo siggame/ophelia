@@ -37,7 +37,7 @@ function getGameById (gameId) {
     .from('games')
     .where('id', '=', gameId)
     .then((res) => {
-      return resolve(res) 
+      return resolve(res)
     }).catch((err) => {
       return reject(err)
     })
