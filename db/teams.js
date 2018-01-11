@@ -38,6 +38,9 @@ function getAllTeamNames () {
 
 function getTeamByName (teamName) {
   return new Promise((resolve, reject) => {
+    if (arguments.length !== getTeamByName.length) {
+      return reject(new Error('All arguments required'))
+    }
     knex('teams').where({
       name: teamName
     }).then((team) => {
@@ -72,8 +75,8 @@ function getTeamByName (teamName) {
 function editTeam (teamName, dataToUpdate) {
   const teamData = {}
   return new Promise((resolve, reject) => {
-    if (typeof dataToUpdate === 'undefined') {
-      return reject(new Error('No data to edit provided'))
+    if (arguments.length !== editTeam.length) {
+      return reject(new Error('All arguments required'))
     }
     for (const dataName in dataToUpdate) {
       if (dataToUpdate.hasOwnProperty(dataName)) {
