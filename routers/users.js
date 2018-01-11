@@ -145,9 +145,11 @@ router.put(path + '/:teamName', (req, res) => {
     success: false,
     message: ''
   }
+  // These are the fields that can be edited for a user.
   const editableFields = ['email', 'name', 'password']
   const teamName = req.params.teamName
   const body = req.body
+  // If these values aren't here then we can't move forward.
   const requiredValues = ['oldPassword', 'editData']
   for (const value of requiredValues) {
     if (typeof body[value] === 'undefined') {
@@ -166,9 +168,9 @@ router.put(path + '/:teamName', (req, res) => {
         if (editData.hasOwnProperty(field)) {
           if (field === 'password') {
             // If the field is 'password' then we need to run encrypt
-            teamEditData[field] = encrypt(body.password)
+            teamEditData[field] = encrypt(editData.password)
           } else {
-            teamEditData[field] = body[field]
+            teamEditData[field] = editData[field]
           }
         }
       }
@@ -177,7 +179,7 @@ router.put(path + '/:teamName', (req, res) => {
         response.message = 'Editable fields include only: ' + editableFields
         return res.status(400).json(response)
       }
-      teams.editTeam(teamEditData).then((result) => {
+      teams.editTeam(teamName, teamEditData).then((result) => {
         response.success = true
         response.message = 'Edited user successfully'
         res.status(200).json(response)
@@ -189,6 +191,12 @@ router.put(path + '/:teamName', (req, res) => {
         res.status(500).json(response)
       })
     }
+  }, (err) => {
+    console.log(err)
+    res.status(500).json(response)
+  }).catch((err) => {
+    console.log(err)
+    res.status(500).json(response)
   })
 })
 
