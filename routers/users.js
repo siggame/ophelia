@@ -161,21 +161,24 @@ router.put(path + '/:teamName', (req, res) => {
   const editData = body.editData
   // Use the login function to check if they are signed in properly
   login(teamName, oldPassword).then((user) => {
+    // user.success determines whether or not the user successfully logged in
     if (user.success) {
+      // This will hold all of the data to be edited
       const teamEditData = {}
       // Iterate over each of the fields allowed to be edited
       for (const field of editableFields) {
         if (editData.hasOwnProperty(field)) {
           if (field === 'password') {
-            // If the field is 'password' then we need to run encrypt
+            // If the field is 'password' then we need to run encrypt to
+            // get the proper information
             teamEditData[field] = encrypt(editData.password)
           } else {
             teamEditData[field] = editData[field]
           }
         }
       }
+      // If the object has no keys then there were no valid keys given
       if (Object.keys(teamEditData).length === 0) {
-        // If the object has no keys then there were no valid keys given
         response.message = 'Editable fields include only: ' + editableFields
         return res.status(400).json(response)
       }
@@ -190,6 +193,9 @@ router.put(path + '/:teamName', (req, res) => {
         response.message = err.message
         res.status(500).json(response)
       })
+    } else {
+      response.message = 'unauthorized'
+      return res.status(401).json(response)
     }
   }, (err) => {
     console.log(err)
