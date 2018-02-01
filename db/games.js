@@ -14,16 +14,44 @@ function getGamesByTeamName (teamName) {
     if (teamName === null || typeof teamName === 'undefined') {
       reject(new Error('TeamName is null or undefined'))
     }
-    knex('games')
+    const gameIDs = []
+    const gamesQuery = knex('games')
       .join('games_submissions', 'games_submissions.game_id', '=', 'games.id')
       .join('submissions', 'submissions.id', '=', 'games_submissions.submission_id').where('version', '=', knex('submissions').max('version'))
       .join('teams', 'teams.id', '=', 'submissions.team_id').where('teams.name', '=', teamName)
-      .select('games.status', 'games.win_reason', 'games.lose_reason', 'games.winner_id', 'games.log_url')
-      .then((res) => {
-        return resolve(res)
-      }).catch((err) => {
-        return reject(err)
+      .select('games.id', 'games.created_at')
+    // TODO Sort by timestamp
+    gamesQuery.then((rows) => {
+      // rows.sort(sortGames)
+      // This gets the IDs for each game that the user is in
+      rows.forEach((row) => { gameIDs.push(row.id) })
+      const submissions = knex('submissions')
+        .join('games_submissions', 'games_submissions.submission_id', '=', 'submissions.id').where('version', '=', knex('submissions').max('version'))
+        .join('games', 'games_submissions.game_id', '=', 'games.id').where('games.id', 'in', gameIDs)
+        .join('teams', 'teams.id', '=', 'submissions.team_id')
+        .select('submissions.team_id', 'teams.name', 'games.status', 'games.win_reason', 'games.lose_reason', 'games.winner_id', 'games.log_url')
+      submissions.then((subRows) => {
+        const games = []
+        for (const row of subRows) {
+          let game = row
+          if (row.name !== teamName) {
+            game.opponent = row.name
+            delete game.name
+            if (game.team_id === game.winner_id) {
+              game.winner = game.opponent
+            } else {
+              game.winner = teamName
+            }
+            delete game.winner_id
+            delete game.team_id
+            games.push(game)
+          }
+        }
+        return resolve(games)
       })
+    }).catch((err) => {
+      return reject(err)
+    })
   })
 }
 
@@ -42,6 +70,18 @@ function getGameById (gameId) {
       return reject(err)
     })
   })
+}
+
+function sortGames(gameA, gameB) {
+  const dateA = new Date(gameA.created_at)
+  const dateB = new Date(gameB.created_at)
+  if (dateA > dateB) {
+    return -1
+  }
+  if (dateA < dateB) {
+    return 1
+  }
+  return 0
 }
 
 module.exports = {
