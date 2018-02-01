@@ -1,7 +1,7 @@
 import React from 'react'
-import Auth from '../modules/auth'
+import { inject } from 'mobx-react'
 
-export default class NavBar extends React.Component {
+export default inject('authStore')(class NavBar extends React.Component {
   render () {
     let rightSection = (
       <ul className='nav navbar-nav navbar-right'>
@@ -10,7 +10,9 @@ export default class NavBar extends React.Component {
       </ul>
     )
 
-    if (Auth.isUserAuthenticated()) {
+    console.log('Auth Store', this.props.authStore)
+
+    if (this.props.authStore.username) {
       // If the user is logged in, they should have different buttons over on the right side.
       rightSection = (
         <ul className='nav navbar-nav navbar-right'>
@@ -42,4 +44,4 @@ export default class NavBar extends React.Component {
       </nav>
     )
   }
-}
+})

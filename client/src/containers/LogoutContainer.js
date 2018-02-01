@@ -1,10 +1,10 @@
+import { inject } from 'mobx-react'
 import React from 'react'
-import Auth from '../modules/auth'
 import { Redirect } from 'react-router-dom'
 
-export default class LogoutContainer extends React.Component {
+export default inject('authStore')(class LogoutContainer extends React.Component {
   componentDidMount () {
-    Auth.deauthenticateUser()
+    this.props.authStore.logUserOut()
   }
 
   render () {
@@ -12,4 +12,4 @@ export default class LogoutContainer extends React.Component {
       <Redirect to={'/'} />
     )
   }
-}
+})
