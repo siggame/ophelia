@@ -38,6 +38,7 @@ export default inject('authStore')(class Login extends React.Component {
         hasErrors: false
       })
     }).catch((err) => {
+      // TODO: Actual Logging
       console.log('error logging in: ', err)
       this.setState({
         formSubmitted: true
@@ -48,7 +49,6 @@ export default inject('authStore')(class Login extends React.Component {
   render () {
     let formError
 
-    console.log(this.state)
     if (this.state.formSubmitted) {
       if (this.state.hasErrors) {
         formError = (

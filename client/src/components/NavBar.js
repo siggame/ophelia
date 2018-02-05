@@ -10,8 +10,6 @@ export default inject('authStore')(class NavBar extends React.Component {
       </ul>
     )
 
-    console.log('Auth Store', this.props.authStore)
-
     if (this.props.authStore.username) {
       // If the user is logged in, they should have different buttons over on the right side.
       rightSection = (
