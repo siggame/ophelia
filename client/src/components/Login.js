@@ -1,9 +1,8 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
-import { validateLogin } from '../modules/users'
-import Auth from '../modules/auth'
+import { inject } from 'mobx-react'
 
-export default class Login extends React.Component {
+export default inject('authStore')(class Login extends React.Component {
   constructor (props) {
     super(props)
 
@@ -32,19 +31,19 @@ export default class Login extends React.Component {
   }
 
   handleSubmit (event) {
-    // TODO: add loading animation of some kind
-    validateLogin(this.state.username, this.state.password).then((result) => {
-      Auth.authenticateUser(result.data.token)
+    event.preventDefault()
+    this.props.authStore.logUserIn(this.state.username, this.state.password).then(() => {
       this.setState({
         formSubmitted: true,
         hasErrors: false
       })
-    }).catch(() => {
+    }).catch((err) => {
+      // TODO: Actual Logging
+      console.log('error logging in: ', err)
       this.setState({
         formSubmitted: true
       })
     })
-    event.preventDefault()
   }
 
   render () {
@@ -84,4 +83,4 @@ export default class Login extends React.Component {
       </div>
     )
   }
-}
+})
