@@ -4,6 +4,7 @@ const express = require('express')
 const router = express.Router()
 const jsonwebtoken = require('jsonwebtoken')
 const login = require('../session/login').login
+const sanitizer = require('../utils/sanitizer')
 
 const tokenSecret = require('../vars').TOKEN_SECRET
 const expired = require('../vars').TOKEN_EXPIRE_TIME
@@ -47,6 +48,14 @@ router.post(path + '/', (req, res) => {
   }
   const username = body.username
   const password = body.password
+  if (!sanitizer.isValidUsername(username)) {
+    response.message = 'Bad username'
+    return res.status(400).json(response)
+  }
+  if (!sanitizer.isValidPassword(password)) {
+    response.message = 'Bad password'
+    return res.status(400).json(response)
+  }
   login(username, password).then((result) => {
     console.log(result)
     if (result.success) {
