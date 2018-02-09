@@ -1,4 +1,4 @@
-import { extendObservable } from 'mobx'
+import { extendObservable, runInAction } from 'mobx'
 
 import requestLayer from '../modules/requestLayer'
 
@@ -14,14 +14,25 @@ export class GameStore {
   }
 
   loadGames () {
-    this.isLoading = true
-    requestLayer.fetchGames().then((data) => {
-      data.forEach((json) => {
-        this.updateGameFromServer(json)
+    runInAction(() => {
+      this.isLoading = true
+      requestLayer.fetchGames().then((data) => {
+        data.forEach((json) => {
+          this.updateGameFromServer(json)
+        })
+        this.isLoading = false
+        this.isStale = false
+        this.lastUpdated = new Date()
+      }).catch((err) => {
+        // TODO: Actual logging
+        console.log('Error loading games', err.message)
       })
-      this.isLoading = false
-      this.isStale = false
-      this.lastUpdated = new Date()
+    })
+  }
+
+  makeDataStale () {
+    runInAction(() => {
+      this.isStale = true
     })
   }
 
