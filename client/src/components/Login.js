@@ -1,16 +1,19 @@
-import React from 'react'
-import { Redirect } from 'react-router-dom'
 import { inject } from 'mobx-react'
+import React from 'react'
+import { Loader } from 'react-overlay-loader'
+import { Redirect } from 'react-router-dom'
 
+import 'react-overlay-loader/styles.css'
 export default inject('authStore')(class Login extends React.Component {
   constructor (props) {
     super(props)
 
     this.state = {
-      username: '',
-      password: '',
       formSubmitted: false,
-      hasErrors: true
+      hasErrors: true,
+      loading: false,
+      password: '',
+      username: ''
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -32,6 +35,7 @@ export default inject('authStore')(class Login extends React.Component {
 
   handleSubmit (event) {
     event.preventDefault()
+    this.setState({ loading: true })
     this.props.authStore.logUserIn(this.state.username, this.state.password).then(() => {
       this.setState({
         formSubmitted: true,
@@ -41,7 +45,8 @@ export default inject('authStore')(class Login extends React.Component {
       // TODO: Actual Logging
       console.log('error logging in: ', err)
       this.setState({
-        formSubmitted: true
+        formSubmitted: true,
+        loading: false
       })
     })
   }
@@ -80,6 +85,7 @@ export default inject('authStore')(class Login extends React.Component {
             <button type='submit' onClick={this.handleSubmit} className='btn btn-default btn-block btn-lg' style={{marginTop: 32}}>Log In</button>
           </form>
         </div>
+        <Loader loading={this.state.loading} fullPage />
       </div>
     )
   }
