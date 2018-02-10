@@ -12,7 +12,7 @@ const fileMimeTypeRegex = /((application\/(zip|octet-stream|zip-compressed|x-zip
 const path = '/submissions'
 
 router.get(path + '/', (req, res) => {
-  const user = 'bob'
+  const user = req.user.username
   const response = {
     success: false,
     message: '',

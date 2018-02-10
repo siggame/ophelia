@@ -58,9 +58,15 @@ router.post(path + '/', (req, res) => {
   }
   login(username, password).then((result) => {
     console.log(result)
-    if (result.success) {
+    if (result === false || result === null) {
+      // If result is false then they gave the wrong username or password
+      // If the result is null then they must not exist in the db
+      status = 401
+      response.success = false
+    } else {
       const token = jsonwebtoken.sign({
         username: username,
+        id: result.id,
         role: result.role
       }, tokenSecret, {
         expiresIn: expired
@@ -68,10 +74,6 @@ router.post(path + '/', (req, res) => {
       status = 200
       response.success = true
       response.token = token
-    } else {
-      // If success is false then they gave the wrong username or password
-      status = 401
-      response.success = false
     }
     return res.status(status).json(response)
   }, loginErrorHandler.bind(null, res))

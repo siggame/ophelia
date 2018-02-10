@@ -103,7 +103,6 @@ router.get(path + '/:teamName', (req, res) => {
     user: null
 
   }
-  // TODO check if user is authorized
   teams.getTeamByName(req.params.teamName).then((data) => {
     if (data.length === 0) {
       response.success = false
@@ -151,7 +150,12 @@ router.put(path + '/:teamName', (req, res) => {
   // These are the fields that can be edited for a user.
   const editableFields = ['email', 'name', 'password']
   const teamName = req.params.teamName
+  const jwtTeamName = req.user.username
   const body = req.body
+  if (teamName !== jwtTeamName) {
+    response.message = 'forbidden'
+    return res.status(403).json(response)
+  }
   // If these values aren't here then we can't move forward.
   const requiredValues = ['oldPassword', 'editData']
   for (const value of requiredValues) {
@@ -185,7 +189,7 @@ router.put(path + '/:teamName', (req, res) => {
         response.message = 'Editable fields include only: ' + editableFields
         return res.status(400).json(response)
       }
-      teams.editTeam(teamName, teamEditData).then((result) => {
+      teams.editTeam(teamName, teamEditData).then(() => {
         response.success = true
         response.message = 'Edited user successfully'
         res.status(200).json(response)
