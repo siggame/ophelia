@@ -40,6 +40,10 @@ router.get(path + '/:submissionID', (req, res) => {
     submission: null
   }
   submissions.getSubmissionByID(submissionID).then((submission) => {
+    if (typeof submission === 'undefined') {
+      response.message = 'No submission with that ID'
+      res.status(404).json(response)
+    }
     response.success = true
     response.submission = submission
     console.log(submission)
