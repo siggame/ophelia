@@ -87,10 +87,8 @@ function getGameById (gameId) {
 }
 
 function sortGames (gameA, gameB) {
-  console.log(gameA)
   const dateA = new Date(gameA.created_at)
   const dateB = new Date(gameB.created_at)
-  console.log(dateA, dateB)
   if (dateA > dateB) {
     return -1
   }
