@@ -28,16 +28,17 @@ export default class GameBadge extends Component {
   }
 
   render () {
-    // TODO: Make this link a Global, hard-coded value.
-    const link = 'http://megaminerai.com/' + this.props.gameId
     let bgColor = ''
     // The Background Color of the div should be different based on what the result of the game
     switch (this.props.result) {
-      case 'Win':
-        bgColor = '#bef5cb'
+      case 'Won':
+        bgColor = '#2ecc71'
         break
-      case 'Lose':
-        bgColor = '#fdaeb7'
+      case 'Lost':
+        bgColor = '#e74c3c'
+        break
+      case 'Queued':
+        bgColor = '#f1c40f'
         break
       default:
         bgColor = '#cccccc'
@@ -47,7 +48,7 @@ export default class GameBadge extends Component {
     // This code looks really crazy, but it's rendering the purple play button on the right side of the badge.
     // SVGs are nice because the browser renders them and they don't get pixellated as you zoom in.
     const playButtonVector = (
-      <svg style={{ verticalAlign: 'middle' }} width='8vh' height='8vh' viewBox='0 0 69 69' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlnsXlink='http://www.w3.org/1999/xlink'>
+      <svg style={{ verticalAlign: 'middle', width: '8vh', height: '8vh' }} viewBox='0 0 69 69' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlnsXlink='http://www.w3.org/1999/xlink'>
         <g id='Canvas' transform='translate(-26 92)'>
           <g id='Group 2'>
             <g id='Viz Link Button'>
@@ -74,14 +75,14 @@ export default class GameBadge extends Component {
     return (
       <div style={{ backgroundColor: bgColor, margin: 10, height: '10vh' }} className='row'>
         <div className='col-md-4' style={{ height: '100%' }}>
-          <div style={{ lineHeight: '10vh', fontSize: 26 }} >{this.props.opponentName}</div>
+          <div style={{ lineHeight: '10vh', fontSize: 26 }} >{this.props.opponent}</div>
         </div>
         <div className='col-md-6' style={{ height: '100%', overflow: 'hidden' }}>
-          <h3>{this.props.result}</h3>
+          <h3>{this.props.status}</h3>
           <p>{this.props.description}</p>
         </div>
         <div className='col-md-2' style={{ height: '100%', lineHeight: '10vh' }} >
-          <a href={link} onMouseEnter={this.toggleHover} onMouseLeave={this.toggleHover}>
+          <a href={this.props.logUrl} onMouseEnter={this.toggleHover} onMouseLeave={this.toggleHover}>
             {playButtonVector}
           </a>
         </div>
@@ -91,8 +92,9 @@ export default class GameBadge extends Component {
 }
 
 GameBadge.defaultProps = {
-  opponentName: '',
-  result: '',
+  opponent: '',
+  status: '',
   description: '',
-  gameId: ''
+  logUrl: '',
+  id: ''
 }

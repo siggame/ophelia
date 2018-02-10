@@ -9,7 +9,7 @@ const path = '/games'
 
 router.get(path + '/', (req, res) => {
   // TODO: Replace w/ auth'd user
-  const teamName = ''
+  const teamName = 'comp_sigh'
   const response = {
     success: false,
     message: '',
