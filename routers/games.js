@@ -8,8 +8,8 @@ const games = require('../db/init').games
 const path = '/games'
 
 router.get(path + '/', (req, res) => {
-  // TODO: Replace w/ auth'd user
-  const teamName = ''
+  // This is the signed in user, retrieved from the jwt
+  const teamName = req.user.username
   const response = {
     success: false,
     message: '',
