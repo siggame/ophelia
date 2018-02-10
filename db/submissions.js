@@ -8,7 +8,7 @@ const knex = require('./connect').knex
  * @param teamName name of the team from the 'teams' table
  * @return {Promise} resolves with a list of submissions under that team name
  */
-function getSubmissionByTeamName (teamName) {
+function getSubmissionsByTeamName (teamName) {
   return new Promise((resolve, reject) => {
     if (teamName === null || typeof teamName === 'undefined') {
       reject(new Error('TeamName is null or undefined'))
@@ -26,5 +26,5 @@ function getSubmissionByTeamName (teamName) {
 }
 
 module.exports = {
-  getSubmissionByTeamName
+  getSubmissionsByTeamName: getSubmissionsByTeamName
 }

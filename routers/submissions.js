@@ -14,7 +14,7 @@ router.get(path + '/', (req, res) => {
     message: '',
     submissions: null
   }
-  submissions.getSubmissionByTeamName(user).then((result) => {
+  submissions.getSubmissionsByTeamName(user).then((result) => {
     response.success = true
     response.message = 'Data successfully retrieved'
     response.submissions = result
