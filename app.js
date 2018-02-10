@@ -8,6 +8,7 @@ const bodyParser = require('body-parser')
 const session = require('express-session')
 const multer = require('multer')
 const upload = multer()
+const fileUpload = require('express-fileupload')
 require('dotenv').config()
 
 const routers = require('./routers/init')
@@ -30,6 +31,10 @@ app.use(session({
   saveUninitialized: 'true'
 }))
 app.use(express.static(path.join(__dirname, 'public')))
+// allows file uploads up to a max size of 512 KB
+app.use(fileUpload({
+  limits: { fileSize: 500 * 1024 }
+}))
 
 // Tell Express to use our routers we've made.
 app.use('/', routers.users.router)
