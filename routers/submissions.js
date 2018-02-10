@@ -33,7 +33,21 @@ router.post(path + '/', (req, res) => {
 })
 
 router.get(path + '/:submissionID', (req, res) => {
-  res.send('submissionID is set to ' + req.params.submissionID)
+  const submissionID = req.params.submissionID
+  const response = {
+    success: false,
+    message: '',
+    submission: null
+  }
+  submissions.getSubmissionByID(submissionID).then((submission) => {
+    response.success = true
+    response.submission = submission
+    console.log(submission)
+    return res.status(200).json(response)
+  }).catch((err) => {
+    response.message = 'An error occured: ' + err.message
+    res.status(500).json(err)
+  })
 })
 
 module.exports = {router}
