@@ -35,8 +35,9 @@ export class GameStore {
     this.isLoading = true
     // Actual HTTP request is abstracted to requestLayer object
     this.requestLayer.fetchGames().then(action("loadGames-callback", (data) => {
+      this.games = []
       data.forEach((json) => {
-        this.updateGameFromServer(json)
+        this.createGameFromServer(json)
       })
       this.isLoading = false
       this.isStale = false
@@ -62,31 +63,23 @@ export class GameStore {
    * @param {Object} json object containing the game information 
    * @memberof GameStore
    */
-  @action updateGameFromServer (json) {
-    let game = this.games.find(game => game.id === json.id)
-    if (!game) {
-      // If this is a new game from the server
-      let description
-      let status = json.status
-      if (status === 'finished') {
-        if (json.opponent === json.winner) {
-          // This means you lost
-          status = 'Lost'
-          description = json.lose_reason
-        } else {
-          status = 'Won'
-          description = json.win_reason
-        }
-      } else if (status === 'failed') {
-        // TODO: Handle failed building
+  @action createGameFromServer (json) {
+    let description
+    let status = json.status
+    if (status === 'finished') {
+      if (json.opponent === json.winner) {
+        // This means you lost
+        status = 'Lost'
+        description = json.lose_reason
+      } else {
+        status = 'Won'
+        description = json.win_reason
       }
-      game = new Game(json.id, json.opponent, status, description, json.log_url)
-      this.games.push(game)
-    } else {
-      // Game already exists on the client, update it.
-      game.updateFromJson(json)
+    } else if (status === 'failed') {
+      // TODO: Handle failed building
     }
-    // TODO: Handle deleted games (if needed)
+    let game = new Game(json.id, json.opponent, status, description, json.log_url)
+    this.games.push(game)
   }
 }
 
