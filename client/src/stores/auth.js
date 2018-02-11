@@ -1,10 +1,15 @@
-import { observable } from 'mobx'
 import axios from 'axios'
+import { extendObservable } from 'mobx'
 
 export default class AuthStore {
   constructor () {
-    this.token = ''
-    this.username = ''
+    extendObservable(this, {
+      token: '',
+      username: '',
+      get isUserLoggedIn () {
+        return !!(this.username && this.token)
+      }
+    })
   }
 
   logUserIn (username, password) {
