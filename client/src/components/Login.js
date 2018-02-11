@@ -4,7 +4,9 @@ import { Loader } from 'react-overlay-loader'
 import { Redirect } from 'react-router-dom'
 
 import 'react-overlay-loader/styles.css'
-export default inject('authStore')(class Login extends React.Component {
+
+@inject('authStore')
+export default class Login extends React.Component {
   constructor (props) {
     super(props)
 
@@ -89,4 +91,4 @@ export default inject('authStore')(class Login extends React.Component {
       </div>
     )
   }
-})
+}
