@@ -8,13 +8,13 @@ const submissions = require('../db/init').submissions
 const path = '/submissions'
 
 router.get(path + '/', (req, res) => {
-  const user = 'bob'
+  const user = req.user.username
   const response = {
     success: false,
     message: '',
     submissions: null
   }
-  submissions.getSubmissionByTeamName(user).then((result) => {
+  submissions.getSubmissionsByTeamName(user).then((result) => {
     response.success = true
     response.message = 'Data successfully retrieved'
     response.submissions = result
@@ -29,11 +29,29 @@ router.get(path + '/', (req, res) => {
 })
 
 router.post(path + '/', (req, res) => {
-
+  // const user = req.user.username
 })
 
 router.get(path + '/:submissionID', (req, res) => {
-  res.send('submissionID is set to ' + req.params.submissionID)
+  const submissionID = req.params.submissionID
+  const response = {
+    success: false,
+    message: '',
+    submission: null
+  }
+  submissions.getSubmissionByID(submissionID).then((submission) => {
+    if (typeof submission === 'undefined') {
+      response.message = 'No submission with that ID'
+      res.status(404).json(response)
+    }
+    response.success = true
+    response.submission = submission
+    console.log(submission)
+    return res.status(200).json(response)
+  }).catch((err) => {
+    response.message = 'An error occured: ' + err.message
+    res.status(500).json(err)
+  })
 })
 
 module.exports = {router}
