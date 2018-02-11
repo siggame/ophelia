@@ -1,24 +1,15 @@
-import { inject } from 'mobx-react'
+import { inject, observer } from 'mobx-react'
 import React from 'react'
 
 import GameBadge from '../../components/GameBadge'
 
-export default inject('gameStore')(class Games extends React.Component {
+@inject('gameStore')
+@observer
+export default class Games extends React.Component {
   render () {
     // Remove this once we have actual data coming in.
-    let debugData = [
-      { name: 'CompSigh', result: 'Win', desc: 'Opponent Failed to Compile', gameId: '21839712937' },
-      { name: 'CompSigh', result: 'Lose', desc: 'You stink, I guess', gameId: '21839712937' },
-      { name: 'CompSigh', result: 'Win', desc: 'Opponent Failed to Compile', gameId: '21839712937' },
-      { name: 'CompSigh', result: 'Win', desc: 'Won via coin flip', gameId: '21839712937' },
-      { name: 'CompSigh', result: 'Win', desc: 'Opponent Failed to Compile', gameId: '21839712937' },
-      { name: 'CompSigh', result: 'Lose', desc: 'All soliders defeated', gameId: '21839712937' },
-      { name: 'CompSigh', result: 'Win', desc: 'Opponent Failed to Compile', gameId: '21839712937' }
-    ]
-    console.log('Game Store Games', this.props.gameStore.games)
     let games = this.props.gameStore.games
     let gamesList = games.map((data) => {
-      console.log('Game data', data)
       return <GameBadge opponent={data.opponent} status={data.status} description={data.description} logUrl={data.logUrl} key={data.id} />
     })
 
@@ -34,4 +25,4 @@ export default inject('gameStore')(class Games extends React.Component {
       </div>
     )
   }
-})
+}

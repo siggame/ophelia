@@ -30,7 +30,7 @@ export default class GameBadge extends Component {
   render () {
     let bgColor = ''
     // The Background Color of the div should be different based on what the result of the game
-    switch (this.props.result) {
+    switch (this.props.status) {
       case 'Won':
         bgColor = '#2ecc71'
         break

@@ -3,10 +3,14 @@ import { extendObservable, observable } from 'mobx'
 import RequestLayer from '../modules/requestLayer'
 
 export class GameStore {
+  @observable games = []
+  @observable isLoading = true
+  @observable isStale = true
+  @observable lastUpdated = null
   constructor () {
     this.requestLayer = new RequestLayer()
 
-    this.games = observable([])
+    
     extendObservable(this, {
       isLoading: true,
       isStale: false,
@@ -21,7 +25,6 @@ export class GameStore {
 
   loadGames () {
     // runInAction(() => {
-    console.log('Loading games, func')
     this.isLoading = true
     this.requestLayer.fetchGames().then((data) => {
       data.forEach((json) => {
@@ -40,7 +43,6 @@ export class GameStore {
   makeDataStale () {
     // runInAction(() => {
     this.isStale = true
-    console.log('Data Store', this.games)
     // })
   }
 
@@ -58,7 +60,7 @@ export class GameStore {
           status = 'Lost'
           description = json.lose_reason
         } else {
-          status = 'Win'
+          status = 'Won'
           description = json.win_reason
         }
       } else if (status === 'failed') {
@@ -87,7 +89,21 @@ export class Game {
   }
 
   updateFromJson (json) {
-    this.status = json.status
-    this.description = json.description
+    let description
+    let status = json.status
+    if (status === 'finished') {
+      if (json.opponent === json.winner) {
+        // This means you lost
+        status = 'Lost'
+        description = json.lose_reason
+      } else {
+        status = 'Won'
+        description = json.win_reason
+      }
+    } else if (status === 'failed') {
+      // TODO: Handle failed building
+    }
+    this.status = status
+    this.description = description
   }
 }
