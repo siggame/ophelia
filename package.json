@@ -9,6 +9,7 @@
     "setup": "npm install && cd client && npm install && cd ../server && npm install && cd .."
   },
   "devDependencies": {
+    "nodemon": "^1.12.1",
     "concurrently": "^3.5.0",
     "eslint": "^4.7.1",
     "eslint-config-standard": "^10.2.1",
