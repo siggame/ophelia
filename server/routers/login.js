@@ -52,10 +52,10 @@ router.post(path + '/', (req, res) => {
     response.message = 'Bad username'
     return res.status(400).json(response)
   }
-  if (!sanitizer.isValidPassword(password)) {
-    response.message = 'Bad password'
-    return res.status(400).json(response)
-  }
+  //  if (!sanitizer.isValidPassword(password)) {
+  //   response.message = 'Bad password'
+  //    return res.status(400).json(response)
+  //  }
   login(username, password).then((result) => {
     console.log(result)
     if (result === false || result === null) {

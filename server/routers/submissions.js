@@ -4,9 +4,11 @@ const express = require('express')
 const router = express.Router()
 const submissions = require('../db/init').submissions
 const validator = require('validator')
+const arenaSubmissionEndpoint = require('../vars').ARENA_SUBMISSION_ENDPOINT
+const request = require('request')
 // Acceptable mimetypes: application/zip application/octet-stream application/zip-compressed
 // application/x-zip-compressed multipart/x-zip
-const fileMimeTypeRegex = /((application\/(zip|octet-stream|zip-compressed|x-zip-compressed))|multipart\/x-zip)/
+const fileMimeTypeRegex = /(application\/(zip|gzip))/
 
 // All paths in this file should start with this
 const path = '/submissions'
@@ -42,24 +44,39 @@ router.post(path + '/', (req, res) => {
   // Validate whether or not the file received is the proper type
   if (!req.files) {
     response.message = 'No file were uploaded'
-    return res.status(400).send(response)
-  } else if (req.files.file.truncated) {
+    return res.status(400).json(response)
+  }
+  response.filename = req.files.file.name
+  response.mimeType = req.files.file.mimetype
+  if (req.files.file.truncated) {
     // Check to make sure that the file size isn't too large
     response.message = 'File size is too large'
-    response.filename = req.files.file.name
-    response.mimeType = req.files.file.mimetype
-    return res.status(400).send(response)
+    return res.status(400).json(response)
   } else if (!validator.matches(req.files.file.mimetype, fileMimeTypeRegex)) {
     // Check if file is of acceptable mimetype
     response.message = 'Not an acceptable file type. Must be a compressed (zip, rar, 7z.. etc) file'
-    response.filename = req.files.file.name
-    response.mimeType = req.files.file.mimetype
-    return res.status(400).send(response)
+    return res.status(400).json(response)
   } else {
-    response.message = 'File upload accepted'
-    response.filename = req.files.file.name
-    response.mimeType = req.files.file.mimetype
-    return res.status(200).send(response)
+    // send file to arena submission end point here
+    const options = {
+      uri: arenaSubmissionEndpoint + '/' + req.user.username,
+      method: 'POST'
+    }
+    const arenaRequest = request(options, function (err, arenaRes, body) {
+      if (err) {
+        response.message = 'Error sending response to arena'
+        return res.status(500).json(response)
+      } else {
+        response.message = 'File successfully uploaded'
+        response.success = true
+        return res.status(200).json(response)
+      }
+    })
+    const form = arenaRequest.form()
+    form.append('file', req.files.file.data, {
+      filename: req.files.file.name,
+      contentType: req.files.file.mimetype
+    })
   }
 })
 
