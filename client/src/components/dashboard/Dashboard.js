@@ -1,7 +1,7 @@
 import React from 'react'
 
 import Profile from '../profile/Profile'
-import Games from './Games'
+import GamesContainer from '../../containers/GamesContainer'
 import SubmissionInfo from './SubmissionInfo'
 
 export default class Dashboard extends React.Component {
@@ -9,7 +9,7 @@ export default class Dashboard extends React.Component {
     return (
       <div className='row'>
         <div className='col-lg-6'>
-          <Games />
+          <GamesContainer />
         </div>
         <div className='col-lg-6' >
           <div className='submission'>
