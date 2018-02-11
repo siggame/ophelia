@@ -16,11 +16,10 @@ export default class Games extends React.Component {
 
     return (
       <div>
-        <div className='btn btn-default' onClick={this.props.gameStore.makeDataStale}>Refresh</div>
         <div className='row' style={{ marginLeft: 10 }} >
           <div className='col-lg-4' />
           <div className='col-lg-6' />
-          <div className='col-lg-2' ><ButtonRefresh /></div>
+          <div className='col-lg-2' ><ButtonRefresh buttonOnClick={this.props.gameStore.makeDataStale} /></div>
         </div>
         <div className='row' style={{ marginLeft: 10 }} >
           <div className='col-lg-4' >Opponent Name</div>
