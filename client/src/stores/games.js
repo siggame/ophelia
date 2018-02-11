@@ -1,4 +1,4 @@
-import { action, observable } from 'mobx'
+import { action, observable, reaction } from 'mobx'
 
 import RequestLayer from '../modules/requestLayer'
 
@@ -10,8 +10,8 @@ import RequestLayer from '../modules/requestLayer'
  */
 export class GameStore {
   @observable games = []
-  @observable isLoading = true
-  @observable isStale = true
+  @observable isLoading = false
+  @observable isStale = false
   @observable lastUpdated = null
 
   /**
@@ -22,8 +22,16 @@ export class GameStore {
     this.requestLayer = new RequestLayer()
     this.loadGames = this.loadGames.bind(this)
     this.makeDataStale = this.makeDataStale.bind(this)
-    // Load game data initially
-    this.loadGames()
+
+    // This function is a MobX fellow that watches for whenever the 'isStale' variable changes.
+    // Whenever it does, it goes ahead and sees if the data needs to be updated.
+    reaction(
+      () => this.isStale,
+      () => {
+      if (this.isStale) {
+        this.loadGames()
+      }
+    })
   }
 
   /**
@@ -55,6 +63,16 @@ export class GameStore {
    */
   @action makeDataStale () {
     this.isStale = true
+  }
+
+  /**
+   * Used to remove all games from the store. Mainly useful when a user logs out.
+   * 
+   * @memberof GameStore
+   */
+  @action resetGameData () {
+    this.games = []
+    this.lastUpdated = null
   }
 
   /**
@@ -95,11 +113,11 @@ export class Game {
 
   /**
    * Creates an instance of Game.
-   * @param {any} id ID, unique from the database
-   * @param {any} opponent Team name of opponent faced
-   * @param {any} status Either 'Won' or 'Lost' if game is finished, or 'Queued'/'Failed'
-   * @param {any} description Reason for winning/losing, or why it failed
-   * @param {any} logUrl URL to visualizer instance displaying log
+   * @param {int} id ID, unique from the database
+   * @param {string} opponent Team name of opponent faced
+   * @param {string} status Either 'Won' or 'Lost' if game is finished, or 'Queued'/'Failed'
+   * @param {string} description Reason for winning/losing, or why it failed
+   * @param {string} logUrl URL to visualizer instance displaying log
    * @memberof Game
    */
   constructor (id, opponent, status, description, logUrl) {
@@ -135,3 +153,5 @@ export class Game {
     this.description = description
   }
 }
+
+export default new GameStore()

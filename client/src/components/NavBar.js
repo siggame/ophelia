@@ -1,13 +1,14 @@
 import { inject } from 'mobx-react'
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 @inject('authStore')
 export default class NavBar extends React.Component {
   render () {
     let rightSection = (
       <ul className='nav navbar-nav navbar-right'>
-        <li><a href='/register'>Register</a></li>
-        <li><a className='login-button' href='/login'>Log In</a></li>
+        <li><Link to='/register'>Register</Link></li>
+        <li><Link className='login-button' to='/login'>Log In</Link></li>
       </ul>
     )
 
@@ -15,8 +16,8 @@ export default class NavBar extends React.Component {
       // If the user is logged in, they should have different buttons over on the right side.
       rightSection = (
         <ul className='nav navbar-nav navbar-right'>
-          <li><a href='/logout'>Log Out</a></li>
-          <li><a className='login-button' href='/dashboard'>Dashboard</a></li>
+          <li><Link to='/logout'>Log Out</Link></li>
+          <li><Link className='login-button' to='/dashboard'>Dashboard</Link></li>
         </ul>
       )
     }
@@ -31,11 +32,11 @@ export default class NavBar extends React.Component {
               <span className='icon-bar' />
               <span className='icon-bar' />
             </button>
-            <a className='navbar-brand' href='/'>MegaminerAI</a>
+            <Link className='navbar-brand' to='/'>MegaminerAI</Link>
           </div>
           <div id='navbar' className='collapse navbar-collapse'>
             <ul className='nav navbar-nav navbar-left'>
-              <li><a href='/dashboard'>Dashboard</a></li>
+              <li><Link to='/dashboard'>Dashboard</Link></li>
             </ul>
             {rightSection}
           </div>

@@ -8,11 +8,12 @@ import App from './App'
 import registerServiceWorker from './registerServiceWorker'
 import stores from './stores'
 
+
 ReactDOM.render(
-  <BrowserRouter>
-    <Provider {...stores}>
+  <Provider {...stores}>
+    <BrowserRouter>
       <App />
-    </Provider>
-  </BrowserRouter>,
+    </BrowserRouter>
+  </Provider>,
   document.getElementById('root'))
 registerServiceWorker()
