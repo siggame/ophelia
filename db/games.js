@@ -19,7 +19,6 @@ function getGamesByTeamName (teamName) {
       .join('games_submissions', 'games_submissions.game_id', '=', 'games.id')
       .join('submissions',
         'submissions.id', '=', 'games_submissions.submission_id')
-      .where('version', '=', knex('submissions').max('version'))
       .join('teams', 'teams.id', '=', 'submissions.team_id')
       .where('teams.name', '=', teamName)
       .select('games.id', 'games.created_at', 'games.updated_at')
@@ -29,13 +28,13 @@ function getGamesByTeamName (teamName) {
       const submissions = knex('submissions')
         .join('games_submissions',
           'games_submissions.submission_id', '=', 'submissions.id')
-        .where('version', '=', knex('submissions').max('version'))
         .join('games', 'games_submissions.game_id', '=', 'games.id')
         .where('games.id', 'in', gameIDs)
         .join('teams', 'teams.id', '=', 'submissions.team_id')
         .select('submissions.team_id',
           'games.id',
           'teams.name',
+          'submissions.version',
           'games.status',
           'games.win_reason',
           'games.lose_reason',
@@ -44,11 +43,14 @@ function getGamesByTeamName (teamName) {
           'games.created_at',
           'games.updated_at')
       submissions.then((subRows) => {
-        subRows.sort(sortGames)
         const games = []
         for (const row of subRows) {
           let game = row
           if (row.name !== teamName) {
+            // This finds the other row describing this game but with the
+            // team name of what we were given, so we have the correct version
+            let ver = subRows.find(o => o.name === teamName && o.id === row.id)
+            game.version = ver.version
             game.opponent = row.name
             delete game.name
             if (game.team_id === game.winner_id) {
@@ -61,6 +63,7 @@ function getGamesByTeamName (teamName) {
             games.push(game)
           }
         }
+        games.sort(sortGames)
         return resolve(games)
       })
     }).catch((err) => {
@@ -87,17 +90,27 @@ function getGameById (gameId) {
 }
 
 function sortGames (gameA, gameB) {
-  console.log(gameA)
+  const versionA = gameA.version
+  const versionB = gameB.version
   const dateA = new Date(gameA.created_at)
   const dateB = new Date(gameB.created_at)
-  console.log(dateA, dateB)
-  if (dateA > dateB) {
-    return -1
+  if (versionA === versionB) {
+    if (dateA > dateB) {
+      return -1
+    }
+    if (dateA < dateB) {
+      return 1
+    }
+    return 0
+  } else {
+    if (versionA > versionB) {
+      return -1
+    }
+    if (versionA < versionB) {
+      return 1
+    }
+    return 0
   }
-  if (dateA < dateB) {
-    return 1
-  }
-  return 0
 }
 
 module.exports = {
