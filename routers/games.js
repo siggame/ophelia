@@ -4,22 +4,39 @@ const express = require('express')
 const router = express.Router()
 const games = require('../db/init').games
 
+// How many games should be in each page
+const PAGE_SIZE = 100
+
 // All paths in this file should start with this
 const path = '/games'
 
 router.get(path + '/', (req, res) => {
   // TODO: Replace w/ auth'd user
-  const teamName = ''
+  const teamName = 'comp_sigh'
+  // The page that we want
+  const page = req.query.page
   const response = {
     success: false,
     message: '',
+    pages: 0,
     games: []
   }
+  if (typeof page === 'undefined' || page === null) {
+    response.message = 'No page number included (param name: page)'
+    return res.status(400).json(response)
+  }
+
   // if user is auth'ed:
-  games.getGamesByTeamName(teamName).then((result) => {
+  games.getGamesByTeamName(teamName).then((games) => {
+    const paginatedGames = createGroupedArray(games, PAGE_SIZE)
+    if (page > paginatedGames.length) {
+      response.message = 'Incorrect page number'
+      return res.status(400).json(response)
+    }
     response.success = true
     response.message = 'Games successfully retrieved'
-    response.games = result
+    response.pages = paginatedGames.length
+    response.games = paginatedGames[page - 1]
     return res.status(200).json(response)
   }).catch((err) => {
     response.message = 'An error occurred: ' + err.message
@@ -45,9 +62,17 @@ router.get(path + '/:gameID', (req, res) => {
     response.game = result
     res.status(200).json(response)
   }).catch((err) => {
-    response.message = 'An error occured: ' + err.message
+    response.message = 'An error occurred: ' + err.message
     res.status(500).json(response)
   })
 })
+
+function createGroupedArray (arr, chunkSize) {
+  const groups = []
+  for (let i = 0; i < arr.length; i += chunkSize) {
+    groups.push(arr.slice(i, i + chunkSize))
+  }
+  return groups
+}
 
 module.exports = {router}
