@@ -11,9 +11,8 @@ const PAGE_SIZE = 100
 const path = '/games'
 
 router.get(path + '/', (req, res) => {
-  // TODO: Replace w/ auth'd user
-  const teamName = 'comp_sigh'
-  // The page that we want
+  // This is the signed in user, retrieved from the jwt
+  const teamName = req.user.username
   const page = req.query.page
   const response = {
     success: false,

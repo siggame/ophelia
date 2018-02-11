@@ -8,7 +8,7 @@ const submissions = require('../db/init').submissions
 const path = '/submissions'
 
 router.get(path + '/', (req, res) => {
-  const user = 'bob'
+  const user = req.user.username
   const response = {
     success: false,
     message: '',
@@ -29,7 +29,7 @@ router.get(path + '/', (req, res) => {
 })
 
 router.post(path + '/', (req, res) => {
-
+  // const user = req.user.username
 })
 
 router.get(path + '/:submissionID', (req, res) => {
