@@ -12,7 +12,7 @@ export default class ButtonRefresh extends React.Component {
   render () {
     if (this.props.disabled) {
       return (
-        <button className='btn btn-success' disabled='disabled'>Refresh</button>
+        <button >{refreshimage}</button>
       )
     }
     return (
