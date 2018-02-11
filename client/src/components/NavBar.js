@@ -1,8 +1,8 @@
-import React from 'react'
-import { autorun } from 'mobx'
 import { inject } from 'mobx-react'
+import React from 'react'
 
-export default inject('authStore')(class NavBar extends React.Component {
+@inject('authStore')
+export default class NavBar extends React.Component {
   render () {
     let rightSection = (
       <ul className='nav navbar-nav navbar-right'>
@@ -43,4 +43,4 @@ export default inject('authStore')(class NavBar extends React.Component {
       </nav>
     )
   }
-})
+}
