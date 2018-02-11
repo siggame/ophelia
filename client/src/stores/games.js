@@ -1,55 +1,69 @@
-import { extendObservable, observable } from 'mobx'
+import { action, observable } from 'mobx'
 
 import RequestLayer from '../modules/requestLayer'
 
+/**
+ * MobX store for games played in the arena.
+ * 
+ * @export
+ * @class GameStore
+ */
 export class GameStore {
   @observable games = []
   @observable isLoading = true
   @observable isStale = true
   @observable lastUpdated = null
+
+  /**
+   * Creates an instance of GameStore.
+   * @memberof GameStore
+   */
   constructor () {
     this.requestLayer = new RequestLayer()
-
-    
-    extendObservable(this, {
-      isLoading: true,
-      isStale: false,
-      lastUpdated: null
-    })
-
     this.loadGames = this.loadGames.bind(this)
     this.makeDataStale = this.makeDataStale.bind(this)
-
+    // Load game data initially
     this.loadGames()
   }
 
-  loadGames () {
-    // runInAction(() => {
+  /**
+   * Grabs games from the server and throws them in the store
+   * 
+   * @memberof GameStore
+   */
+  @action loadGames () {
     this.isLoading = true
-    this.requestLayer.fetchGames().then((data) => {
+    // Actual HTTP request is abstracted to requestLayer object
+    this.requestLayer.fetchGames().then(action("loadGames-callback", (data) => {
       data.forEach((json) => {
         this.updateGameFromServer(json)
       })
       this.isLoading = false
       this.isStale = false
       this.lastUpdated = new Date()
-    }).catch((err) => {
+    })).catch((err) => {
       // TODO: Actual logging
       console.log('Error loading games', err.message)
     })
-    // })
   }
 
-  makeDataStale () {
-    // runInAction(() => {
+  /**
+   * Used to initiate a games load, via an autorun in stores/index.js
+   * 
+   * @memberof GameStore
+   */
+  @action makeDataStale () {
     this.isStale = true
-    // })
   }
 
-  updateGameFromServer (json) {
-    console.log('update this games', this.games)
+  /**
+   * Updates or creates a new game based on JSON data from the server
+   * 
+   * @param {Object} json object containing the game information 
+   * @memberof GameStore
+   */
+  @action updateGameFromServer (json) {
     let game = this.games.find(game => game.id === json.id)
-    console.log('game find results', game)
     if (!game) {
       // If this is a new game from the server
       let description
@@ -76,19 +90,40 @@ export class GameStore {
   }
 }
 
+/**
+ * Class for storing individual game objects
+ * 
+ * @export
+ * @class Game
+ */
 export class Game {
+  @observable status
+  @observable description
+
+  /**
+   * Creates an instance of Game.
+   * @param {any} id ID, unique from the database
+   * @param {any} opponent Team name of opponent faced
+   * @param {any} status Either 'Won' or 'Lost' if game is finished, or 'Queued'/'Failed'
+   * @param {any} description Reason for winning/losing, or why it failed
+   * @param {any} logUrl URL to visualizer instance displaying log
+   * @memberof Game
+   */
   constructor (id, opponent, status, description, logUrl) {
     this.id = id
     this.opponent = opponent
     this.logUrl = logUrl
-
-    extendObservable(this, {
-      status: status,
-      description: description
-    })
+    this.description = description
+    this.status = status
   }
 
-  updateFromJson (json) {
+  /**
+   * Updates game object based on new JSON data being passed to it.
+   * 
+   * @param {any} json JSON from the server containing new data
+   * @memberof Game
+   */
+  @action updateFromJson (json) {
     let description
     let status = json.status
     if (status === 'finished') {
