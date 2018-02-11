@@ -3,7 +3,6 @@ import Profile from '../profile/Profile'
 import Games from './Games'
 import SubmissionInfo from './SubmissionInfo'
 
-
 export default class Dashboard extends React.Component {
   render () {
     return (
