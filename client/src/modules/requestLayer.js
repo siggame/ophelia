@@ -13,6 +13,9 @@ export default class RequestLayer {
         // headers: {
         //   Authorization: `Bearer ${authStore.token}`
         // }
+        params: {
+          page: 1
+        }
       }).then((response) => {
         return resolve(response.data.games)
       }).catch((err) => {
