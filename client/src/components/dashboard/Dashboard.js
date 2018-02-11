@@ -1,5 +1,4 @@
 import React from 'react'
-
 import Profile from '../profile/Profile'
 import GamesContainer from '../../containers/GamesContainer'
 import SubmissionInfo from './SubmissionInfo'
