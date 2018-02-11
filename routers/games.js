@@ -29,7 +29,9 @@ router.get(path + '/', (req, res) => {
   // if user is auth'ed:
   games.getGamesByTeamName(teamName).then((games) => {
     const paginatedGames = createGroupedArray(games, PAGE_SIZE)
-    if (page > paginatedGames.length) {
+    if (paginatedGames.length === 0) {
+      return res.status(200).json(response)
+    } else if (page > paginatedGames.length) {
       response.message = 'Incorrect page number'
       return res.status(400).json(response)
     }
