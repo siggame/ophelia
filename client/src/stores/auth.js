@@ -1,6 +1,8 @@
 import axios from 'axios'
 import { action, computed, observable, reaction } from 'mobx'
 
+import gameStore from './games'
+
 export class AuthStore {
   @observable username = ''
   @observable token = window.localStorage.getItem('jwt')
@@ -52,6 +54,7 @@ export class AuthStore {
   @action logUserOut () {
     this.username = ''
     this.token = ''
+    gameStore.resetGameData()
   }
 }
 

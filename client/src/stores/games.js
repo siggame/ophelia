@@ -66,6 +66,16 @@ export class GameStore {
   }
 
   /**
+   * Used to remove all games from the store. Mainly useful when a user logs out.
+   * 
+   * @memberof GameStore
+   */
+  @action resetGameData () {
+    this.games = []
+    this.lastUpdated = null
+  }
+
+  /**
    * Updates or creates a new game based on JSON data from the server
    * 
    * @param {Object} json object containing the game information 
