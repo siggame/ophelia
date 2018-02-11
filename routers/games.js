@@ -22,6 +22,7 @@ router.get(path + '/', (req, res) => {
     games: []
   }
   if (typeof page === 'undefined' || page === null) {
+    // We need the page number in order to move on
     response.message = 'No page number included (param name: page)'
     return res.status(400).json(response)
   }
@@ -36,6 +37,7 @@ router.get(path + '/', (req, res) => {
     response.success = true
     response.message = 'Games successfully retrieved'
     response.pages = paginatedGames.length
+    // page - 1 because the array is indexed at 0
     response.games = paginatedGames[page - 1]
     return res.status(200).json(response)
   }).catch((err) => {
