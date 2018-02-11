@@ -1,5 +1,6 @@
 import React from 'react'
 import GameBadge from '../../components/GameBadge'
+import ButtonRefresh from '../ButtonRefresh'
 
 export default class Games extends React.Component {
   render () {
@@ -19,6 +20,11 @@ export default class Games extends React.Component {
 
     return (
       <div>
+        <div className='row' style={{ marginLeft: 10 }} >
+          <div className='col-lg-4' />
+          <div className='col-lg-6' />
+          <div className='col-lg-2' ><ButtonRefresh /></div>
+        </div>
         <div className='row' style={{ marginLeft: 10 }} >
           <div className='col-lg-4' >Opponent Name</div>
           <div className='col-lg-6' >Result</div>
