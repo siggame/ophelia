@@ -13,10 +13,7 @@ If you're on Windows, [Git Bash](https://git-scm.com/downloads) is reccomended a
 
 Once you've installed that and cloned the project files down, go ahead and run the following:
 ```
-$ npm install
-$ cd client/
-$ npm install
-$ cd ..
+$ npm run setup
 ```
 
 This will install all of the needed packages and put you back in the base directory of the repo. Once you're there, run the following to start the server in debug mode:
