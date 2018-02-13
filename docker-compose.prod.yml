@@ -1,7 +1,12 @@
 version: '2'
 services:
-  webserver:
-    build: .
-    image: siggame/ophelia
+  server:
+    build: ./server
     ports:
-      - '3000:3000'
+      - '3001:3001'
+  client:
+    build:
+      context: ./client
+      dockerfile: ./Dockerfile-prod
+    ports:
+      - '80:80'
