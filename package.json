@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node ./server/bin/www",
     "debug": "concurrently \"npm run server-debug\" \"cd client && npm start\"",
-    "server-debug": "node ./node_modules/nodemon/bin/nodemon.js -L",
+    "server-debug": "cd server && nodemon ./bin/www",
     "setup": "npm install && cd client && npm install && cd ../server && npm install && cd .."
   },
   "devDependencies": {
