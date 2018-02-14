@@ -1,21 +1,25 @@
 import React, { Component } from 'react'
 import _ from 'lodash'
+import { Loader } from 'react-overlay-loader'
 import { Redirect } from 'react-router-dom'
+
 import { validateSignup } from '../modules/users'
 
+import 'react-overlay-loader/styles.css'
 export default class RegisterView extends Component {
   constructor (props) {
     super(props)
 
     this.state = {
-      username: '',
       email: '',
-      realName: '',
-      password: '',
-      passwordConfirm: '',
+      formErrors: {},
       formSubmitted: false,
       hasErrors: true,
-      formErrors: {}
+      loading: false,
+      password: '',
+      passwordConfirm: '',
+      realName: '',
+      username: ''
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -40,6 +44,7 @@ export default class RegisterView extends Component {
    *  gives info back so we can redirect or display errors as needed
    */
   handleSubmit (event) {
+    this.setState({ loading: true })
     validateSignup(this.state.username, this.state.realName, this.state.email, this.state.password,
       this.state.passwordConfirm).then(() => {
         this.setState({
@@ -49,10 +54,10 @@ export default class RegisterView extends Component {
       }).catch((err) => {
         this.setState({
           formSubmitted: true,
-          formErrors: err
+          formErrors: err,
+          loading: false
         })
-      }
-)
+      })
     // Prevents the default HTML behavior from happening, so we can control how the form is submitted.
     event.preventDefault()
   }
@@ -146,6 +151,7 @@ export default class RegisterView extends Component {
           </div>
           <button type='submit' onClick={this.handleSubmit} className='btn btn-default btn-block btn-lg' style={{marginTop: 32}}>Register</button>
         </form>
+        <Loader loading={this.state.loading} fullPage />
       </div>
     )
   }
