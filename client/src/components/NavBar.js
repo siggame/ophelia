@@ -37,8 +37,8 @@ export default class NavBar extends React.Component {
           <div id='navbar' className='collapse navbar-collapse'>
             <ul className='nav navbar-nav navbar-left'>
               <li><Link to='/dashboard'>Dashboard</Link></li>
-              <li><Link to='/docs'>Documentation</Link></li>
-              <li><Link to='/github'>Github</Link></li>
+              <li><a href='http://docs.siggame.io'>Documentation</a></li>
+              <li><a href='http://github.com'>Github</a></li>
             </ul>
             {rightSection}
           </div>
