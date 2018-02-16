@@ -1,0 +1,27 @@
+server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+
+        server_name $NGINX_CLIENT_HOST;
+
+        location / {
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_pass http://localhost:3000;
+        }
+
+}
+
+server {
+        listen 80;
+        listen [::]:80;
+
+        server_name $NGINX_SERVER_HOST;
+
+        location / {
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_pass http://localhost:3001;
+        }
+
+}
