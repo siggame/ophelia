@@ -1,0 +1,26 @@
+# Environments & Editors
+.vscode/
+.idea/
+.vagrant/
+Vagrantfile
+
+# Don't include the git index
+.git/
+.gitignore
+.gitattributes
+
+# Docker
+server/Dockerfile
+Dockerfile.dev
+Dockerfile.prod
+.dockerignore
+
+# Logs
+*.logs
+
+# NodeJS & NPM
+node_modules/
+bower_components
+
+# Tempfiles
+*~

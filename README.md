@@ -6,33 +6,17 @@ This is the repository for SIG-Game's webserver application, the main entry poin
 for competitors of MegaMinerAI.
 
 ## Getting Started - Developers
-For development, the project uses Vagrant in order to support multiple development
-systems while still maintaining stability across them. Check out [this](http://siggame.io)
- post for more info on what Vagrant does.
- 
- First, make sure you have [Vagrant](https://www.vagrantup.com/downloads.html)
- and [VirtualBox](https://www.virtualbox.org/wiki/Downloads) installed.
- 
- Windows users, it is highly recommended that you use
- [Git Bash](https://git-scm.com/downloads) instead of Command Prompt.
- 
- After installing those programs, go into your project's directory and run the following:
-```
-vagrant up
-```
-This will set up a VM with everything you need to start development. Once it finishes,
-to access the box use:
 
-```
-vagrant ssh
-```
-Once you've SSH'd into the box, first change into the working directory:
-```
-cd /home/ubuntu/workspace
-```
-Note that you **should not edit these files on the VM.**
+To develop on the project, you'll need a newer version of [NodeJS](https://nodejs.org/en/) (LTS is preferred).
 
-After you're in the working directory, run the following to start the server in debug mode: 
+If you're on Windows, [Git Bash](https://git-scm.com/downloads) is reccomended as a replacement for Command Prompt.
+
+Once you've installed that and cloned the project files down, go ahead and run the following:
+```
+$ npm run setup
+```
+
+This will install all of the needed packages and put you back in the base directory of the repo. Once you're there, run the following to start the server in debug mode:
 ```
 npm run debug
 ``` 
