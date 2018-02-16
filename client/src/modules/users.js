@@ -53,7 +53,7 @@ export function validateSignup (username, name, email, password, confirmPassword
     if (errors) {
       return reject(errors)
     } else {
-      axios.post('/users/', {
+      axios.post(process.env.REACT_APP_API_URL + '/users/', {
         username: username,
         password: password,
         email: email,
@@ -83,7 +83,7 @@ export function validateSignup (username, name, email, password, confirmPassword
 
 export function validateLogin (username, password) {
   return new Promise((resolve, reject) => {
-    axios.post('/login', {
+    axios.post(process.env.REACT_APP_API_URL + '/login', {
       username: username,
       password: password
     }).then((data) => {

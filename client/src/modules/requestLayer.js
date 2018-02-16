@@ -9,7 +9,7 @@ export default class RequestLayer {
       if (!stores.authStore.isUserLoggedIn) {
         return reject(new Error('User must be logged in to fetch games'))
       }
-      axios.get('/games/', {
+      axios.get(process.env.REACT_APP_API_URL + '/games/', {
         headers: {
           Authorization: `Bearer ${stores.authStore.token}`
         },
