@@ -14,7 +14,7 @@ services:
     image: nginx
     volumes:
      - ./prod-setup/proxy_servers.template:/etc/nginx/conf.d/mysite.template
-     - ./prod-setup/letsencrypt:/etc/ssl:ro
+     - /etc/letsencrypt:/etc/ssl:ro
     ports:
      - "80:80"
      - "443:443"
