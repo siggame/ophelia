@@ -3,8 +3,7 @@
 const express = require('express')
 const router = express.Router()
 const jsonwebtoken = require('jsonwebtoken')
-const db = require('../db/init')
-const compare = require('../session/auth').compare
+const login = require('../session/login').login
 
 const tokenSecret = require('../vars').TOKEN_SECRET
 const expired = require('../vars').TOKEN_EXPIRE_TIME
@@ -48,40 +47,31 @@ router.post(path + '/', (req, res) => {
   }
   const username = body.username
   const password = body.password
-  db.teams.getTeamByName(username).then((team) => {
-    if (typeof team === 'undefined') {
-      // If the team is undefined then there must not have been a match
+  login(username, password).then((result) => {
+    console.log(result)
+    if (result === false || result === null) {
+      // If result is false then they gave the wrong username or password
+      // If the result is null then they must not exist in the db
       status = 401
-      response.message = ''
       response.success = false
     } else {
-      const encryptedPassword = team.password
-      const salt = team.salt
-      const iterations = team.hash_iterations
-      const role = team.role
-      // Checking to see if given password matches the one in the db
-      if (compare(encryptedPassword, password, salt, iterations)) {
-        const token = jsonwebtoken.sign({
-          username: username,
-          role: role
-        }, tokenSecret, {
-          expiresIn: expired
-        })
-        status = 200
-        response.success = true
-        response.token = token
-      } else {
-        // If compare failed then they must have given the wrong password
-        status = 401
-        response.success = false
-      }
+      const token = jsonwebtoken.sign({
+        username: username,
+        id: result.id,
+        role: result.role
+      }, tokenSecret, {
+        expiresIn: expired
+      })
+      status = 200
+      response.success = true
+      response.token = token
     }
     return res.status(status).json(response)
-  }, signInErrorHandler.bind(null, res))
-    .catch(signInErrorHandler.bind(null, res))
+  }, loginErrorHandler.bind(null, res))
+    .catch(loginErrorHandler.bind(null, res))
 })
 
-function signInErrorHandler (res, err) {
+function loginErrorHandler (res, err) {
   const status = 500
   let response = {
     success: null,

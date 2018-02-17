@@ -1,17 +1,21 @@
+import { inject } from 'mobx-react'
 import React from 'react'
+import { Loader } from 'react-overlay-loader'
 import { Redirect } from 'react-router-dom'
-import { validateLogin } from '../modules/users'
-import Auth from '../modules/auth'
 
+import 'react-overlay-loader/styles.css'
+
+@inject('authStore')
 export default class Login extends React.Component {
   constructor (props) {
     super(props)
 
     this.state = {
-      username: '',
-      password: '',
       formSubmitted: false,
-      hasErrors: true
+      hasErrors: true,
+      loading: false,
+      password: '',
+      username: ''
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -32,19 +36,21 @@ export default class Login extends React.Component {
   }
 
   handleSubmit (event) {
-    // TODO: add loading animation of some kind
-    validateLogin(this.state.username, this.state.password).then((result) => {
-      Auth.authenticateUser(result.data.token)
+    event.preventDefault()
+    this.setState({ loading: true })
+    this.props.authStore.logUserIn(this.state.username, this.state.password).then(() => {
       this.setState({
         formSubmitted: true,
         hasErrors: false
       })
-    }).catch(() => {
+    }).catch((err) => {
+      // TODO: Actual Logging
+      console.log('error logging in: ', err)
       this.setState({
-        formSubmitted: true
+        formSubmitted: true,
+        loading: false
       })
     })
-    event.preventDefault()
   }
 
   render () {
@@ -81,6 +87,7 @@ export default class Login extends React.Component {
             <button type='submit' onClick={this.handleSubmit} className='btn btn-default btn-block btn-lg' style={{marginTop: 32}}>Log In</button>
           </form>
         </div>
+        <Loader loading={this.state.loading} fullPage />
       </div>
     )
   }

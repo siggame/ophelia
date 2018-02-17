@@ -10,7 +10,7 @@ Vagrantfile
 .gitattributes
 
 # Docker
-Dockerfile
+server/Dockerfile
 Dockerfile.dev
 Dockerfile.prod
 .dockerignore

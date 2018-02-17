@@ -4,6 +4,7 @@ const express = require('express')
 const router = express.Router()
 const teams = require('../db/init').teams
 const encrypt = require('../session/auth').encrypt
+const login = require('../session/login').login
 
 // All paths in this file should start with this
 const path = '/users'
@@ -102,7 +103,6 @@ router.get(path + '/:teamName', (req, res) => {
     user: null
 
   }
-  // TODO check if user is authorized
   teams.getTeamByName(req.params.teamName).then((data) => {
     if (data.length === 0) {
       response.success = false
@@ -129,8 +129,88 @@ router.get(path + '/:teamName', (req, res) => {
   })
 })
 
+/**
+ * Edits a user
+ * Request body format
+ * {
+ *     oldPassword: String,
+ *     editData: {
+ *         email: String,
+ *         name: String,
+ *         password: String
+ *     }
+ * }
+ * Where each of the fields in editData is optional, but at least one must exist
+ */
 router.put(path + '/:teamName', (req, res) => {
-  res.send('teamName is set to ' + req.params.teamName)
+  const response = {
+    success: false,
+    message: ''
+  }
+  // These are the fields that can be edited for a user.
+  const editableFields = ['email', 'name', 'password']
+  const teamName = req.params.teamName
+  const jwtTeamName = req.user.username
+  const body = req.body
+  if (teamName !== jwtTeamName) {
+    response.message = 'forbidden'
+    return res.status(403).json(response)
+  }
+  // If these values aren't here then we can't move forward.
+  const requiredValues = ['oldPassword', 'editData']
+  for (const value of requiredValues) {
+    if (typeof body[value] === 'undefined') {
+      response.message = 'Required field ' + value + ' is missing or blank'
+      return res.status(400).json(response)
+    }
+  }
+  const oldPassword = body.oldPassword
+  const editData = body.editData
+  // Use the login function to check if they are signed in properly
+  login(teamName, oldPassword).then((user) => {
+    // user.success determines whether or not the user successfully logged in
+    if (user.success) {
+      // This will hold all of the data to be edited
+      const teamEditData = {}
+      // Iterate over each of the fields allowed to be edited
+      for (const field of editableFields) {
+        if (editData.hasOwnProperty(field)) {
+          if (field === 'password') {
+            // If the field is 'password' then we need to run encrypt to
+            // get the proper information
+            teamEditData[field] = encrypt(editData.password)
+          } else {
+            teamEditData[field] = editData[field]
+          }
+        }
+      }
+      // If the object has no keys then there were no valid keys given
+      if (Object.keys(teamEditData).length === 0) {
+        response.message = 'Editable fields include only: ' + editableFields
+        return res.status(400).json(response)
+      }
+      teams.editTeam(teamName, teamEditData).then(() => {
+        response.success = true
+        response.message = 'Edited user successfully'
+        res.status(200).json(response)
+      }, (err) => {
+        response.message = err.message
+        res.status(500).json(response)
+      }).catch((err) => {
+        response.message = err.message
+        res.status(500).json(response)
+      })
+    } else {
+      response.message = 'unauthorized'
+      return res.status(401).json(response)
+    }
+  }, (err) => {
+    console.log(err)
+    res.status(500).json(response)
+  }).catch((err) => {
+    console.log(err)
+    res.status(500).json(response)
+  })
 })
 
 module.exports = {router}
