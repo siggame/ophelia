@@ -64,7 +64,6 @@ router.post(path + '/', (req, res) => {
   // Checking for required values
   const requiredValues = ['username', 'email', 'password', 'name']
   for (const value of requiredValues) {
-    console.log("i have reached the page")
     if (typeof body[value] === 'undefined') {
       response.message = 'Required field ' + value + ' is missing or blank'
       return res.status(400).json(response)
@@ -78,13 +77,11 @@ router.post(path + '/', (req, res) => {
   // sanitizing the inputs 
 
   if (!sanitizer.isValidUsername(username)) {
-    console.log("i am validating username")
     response.message = 'Bad username'
     return res.status(400).json(response)
   }
   
   if (!sanitizer.isValidPassword(password)) {
-    console.log("i am validating password")
     response.message = 'Bad password'
     return res.status(400).json(response)
   }
