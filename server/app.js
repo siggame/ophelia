@@ -20,7 +20,7 @@ const app = express()
 
 // Enable CORS for the hostname that the client is hosted at
 app.use(cors({origin: hostname}))
-
+app.options(cors({origin: hostname}))
 // view engine setup
 app.set('components', path.join(__dirname, 'components'))
 
