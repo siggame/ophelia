@@ -1,5 +1,7 @@
-import AuthStore from './auth'
+import authStore from './auth'
+import gameStore from './games'
 
 export default {
-  authStore: new AuthStore()
+  authStore,
+  gameStore
 }

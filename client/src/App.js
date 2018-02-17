@@ -1,5 +1,6 @@
+import { observer } from 'mobx-react'
 import React from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Switch, withRouter } from 'react-router-dom'
 
 import NavBar from './components/NavBar'
 import LandingPageContainer from './containers/LandingPageContainer'
@@ -9,6 +10,8 @@ import RegisterContainer from './containers/RegisterContainer'
 import LoginContainer from './containers/LoginContainer'
 import LogoutContainer from './containers/LogoutContainer'
 
+@withRouter
+@observer
 export default class App extends React.Component {
   render () {
     return (
