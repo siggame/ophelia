@@ -5,6 +5,7 @@ const router = express.Router()
 const teams = require('../db/init').teams
 const encrypt = require('../session/auth').encrypt
 const login = require('../session/login').login
+const sanitizer = require('../utils/sanitizer')
 
 // All paths in this file should start with this
 const path = '/users'
@@ -63,20 +64,46 @@ router.post(path + '/', (req, res) => {
   // Checking for required values
   const requiredValues = ['username', 'email', 'password', 'name']
   for (const value of requiredValues) {
+    console.log("i have reached the page")
     if (typeof body[value] === 'undefined') {
       response.message = 'Required field ' + value + ' is missing or blank'
       return res.status(400).json(response)
     }
   }
+  const username = body.username
+  const password = body.password
+  const email = body.email
+  const name = body.name
+
+  // sanitizing the inputs 
+
+  if (!sanitizer.isValidUsername(username)) {
+    console.log("i am validating username")
+    response.message = 'Bad username'
+    return res.status(400).json(response)
+  }
+  
+  if (!sanitizer.isValidPassword(password)) {
+    console.log("i am validating password")
+    response.message = 'Bad password'
+    return res.status(400).json(response)
+  }
+  
+  if (!sanitizer.isValidEmail(email)) {
+    response.message = 'Bad Email'
+    return res.status(400).json(response)
+  }
+
+
   const passInfo = encrypt(body.password)
   teams.createTeam(
-    body.username,
-    body.email,
-    passInfo.epass,
+    username,
+    email,
+    password,
     passInfo.salt,
     passInfo.iterations,
     'user',
-    body.name,
+    name,
     true
   ).then(() => {
     response.success = true
@@ -166,6 +193,7 @@ router.put(path + '/:teamName', (req, res) => {
   }
   const oldPassword = body.oldPassword
   const editData = body.editData
+
   // Use the login function to check if they are signed in properly
   login(teamName, oldPassword).then((user) => {
     // user.success determines whether or not the user successfully logged in
