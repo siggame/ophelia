@@ -7,9 +7,24 @@ server {
         location / {
                 proxy_set_header Host $host;
                 proxy_set_header X-Real-IP $remote_addr;
-                proxy_pass http://localhost:3000;
+                return 301 https://$server_name$request_uri;
         }
 
+}
+
+server {
+        listen 443;
+        server_name $NGINX_CLIENT_HOST;
+
+        ssl on;
+        ssl_certificate /etc/ssl/live/$NGINX_CLIENT_HOST/cert.pem;
+        ssl_certificate_key /etc/ssl/live/$NGINX_CLIENT_HOST/privkey.pem;
+
+        location / {
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_pass http://localhost:3000;
+        }
 }
 
 server {
@@ -21,7 +36,22 @@ server {
         location / {
                 proxy_set_header Host $host;
                 proxy_set_header X-Real-IP $remote_addr;
-                proxy_pass http://localhost:3001;
+                return 301 https://$server_name$request_uri;
         }
 
+}
+
+server {
+        listen 443;
+        server_name $NGINX_SERVER_HOST;
+
+        ssl on;
+        ssl_certificate /etc/ssl/live/$NGINX_SERVER_HOST/cert.pem;
+        ssl_certificate_key /etc/ssl/live/$NGINX_SERVER_HOST/privkey.pem;
+
+        location / {
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_pass http://localhost:3001;
+        }
 }

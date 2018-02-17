@@ -14,8 +14,11 @@ services:
     image: nginx
     volumes:
      - ./prod-setup/proxy_servers.template:/etc/nginx/conf.d/mysite.template
+     - ./prod-setup/letsencrypt:/etc/ssl:ro
     ports:
      - "80:80"
+     - "443:443"
+    network_mode: "host"
     environment:
      - NGINX_CLIENT_HOST=chess.siggame.io
      - NGINX_SERVER_HOST=chess-server.siggame.io
