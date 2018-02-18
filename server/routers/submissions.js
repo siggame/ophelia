@@ -82,7 +82,7 @@ router.post(path + '/', (req, res) => {
       }
     })
     const form = arenaRequest.form()
-    form.append('file', fileData, {
+    form.append('submission', fileData, {
       filename: filename,
       contentType: mimeType
     })
