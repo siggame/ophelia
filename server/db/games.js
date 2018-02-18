@@ -18,6 +18,9 @@ function getGamesByTeamName (teamName, page, pageSize) {
     }
     const gameIDs = []
     const versions = []
+    // This is the offset for the query, it subtracts 1 from the page
+    // so that page 1 causes it to be 0, which will work like it isn't there
+    const offset = (page - 1) * pageSize
     /*
       Here we join all the tables together to get a list of ids from
       the games table that we will use in the next query.
@@ -36,7 +39,7 @@ function getGamesByTeamName (teamName, page, pageSize) {
       .select('games.id', 'games.created_at', 'games.updated_at',
         'submissions.version')
       .orderBy('games.created_at', 'desc')
-      .limit(pageSize).offset((page - 1) * pageSize)
+      .limit(pageSize).offset(offset)
     gamesQuery.then((rows) => {
       // This gets the IDs for each game that the user is in
       rows.forEach((row) => { gameIDs.push(row.id) })
