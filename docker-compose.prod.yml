@@ -18,7 +18,9 @@ services:
     ports:
      - "80:80"
      - "443:443"
-    network_mode: "host"
+    links:
+      - client
+      - server
     environment:
      - NGINX_CLIENT_HOST=chess.siggame.io
      - NGINX_SERVER_HOST=chess-server.siggame.io
