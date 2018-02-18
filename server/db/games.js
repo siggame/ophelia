@@ -119,27 +119,15 @@ function getGameById (gameId) {
 }
 
 function sortGames (gameA, gameB) {
-  const versionA = gameA.version
-  const versionB = gameB.version
   const dateA = new Date(gameA.created_at)
   const dateB = new Date(gameB.created_at)
-  if (versionA === versionB) {
-    if (dateA > dateB) {
-      return -1
-    }
-    if (dateA < dateB) {
-      return 1
-    }
-    return 0
-  } else {
-    if (versionA > versionB) {
-      return -1
-    }
-    if (versionA < versionB) {
-      return 1
-    }
-    return 0
+  if (dateA > dateB) {
+    return -1
   }
+  if (dateA < dateB) {
+    return 1
+  }
+  return 0
 }
 
 module.exports = {
