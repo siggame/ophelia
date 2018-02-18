@@ -51,19 +51,20 @@ router.get(path + '/', (req, res) => {
   // How many games should be in each page
   const pageSize = req.query.pageSize
 
-  games.getGamesByTeamName(teamName).then((games) => {
+  games.getGamesByTeamName(teamName, page, pageSize).then((games) => {
     const paginatedGames = createGroupedArray(games, pageSize)
     if (paginatedGames.length === 0) {
       return res.status(200).json(response)
     } else if (page > paginatedGames.length) {
-      response.message = 'Incorrect page number'
-      return res.status(400).json(response)
+      // response.message = 'Incorrect page number'
+      // return res.status(400).json(response)
     }
     response.success = true
     response.message = 'Games successfully retrieved'
     response.pages = paginatedGames.length
     // page - 1 because the array is indexed at 0
-    response.games = paginatedGames[page - 1]
+    // response.games = paginatedGames[page - 1]
+    response.games = games
     return res.status(200).json(response)
   }).catch((err) => {
     response.message = 'An error occurred: ' + err.message
