@@ -2,6 +2,7 @@ import axios from 'axios'
 import { action, computed, observable, reaction } from 'mobx'
 
 import gameStore from './games'
+import submissionStore from './submissions'
 
 export class AuthStore {
   @observable username = ''
@@ -55,6 +56,7 @@ export class AuthStore {
     this.username = ''
     this.token = ''
     gameStore.resetGameData()
+    submissionStore.resetSubmissionData()
   }
 }
 
