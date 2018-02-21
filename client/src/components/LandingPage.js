@@ -6,8 +6,8 @@ export default class LandingPage extends Component {
       <div>
         <div className='jumbotron'>
           <div className='container'>
-            <h1>MegaminerAI</h1>
-            <p>Some sample text to see how this looks.</p>
+            <h1>{process.env.REACT_APP_COMP_NAME}</h1>
+            <p>{process.env.REACT_APP_COMP_TAGLINE}</p>
           </div>
         </div>
         <div className='row' >

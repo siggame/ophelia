@@ -5,6 +5,7 @@ const router = express.Router()
 const teams = require('../db/init').teams
 const encrypt = require('../session/auth').encrypt
 const login = require('../session/login').login
+const sanitizer = require('../utils/sanitizer')
 
 // All paths in this file should start with this
 const path = '/users'
@@ -68,15 +69,33 @@ router.post(path + '/', (req, res) => {
       return res.status(400).json(response)
     }
   }
+  const username = body.username
+  const password = body.password
+  const email = body.email
+  const name = body.name
+
+  // sanitizing the inputs
+  if (!sanitizer.isValidUsername(username)) {
+    response.message = 'Bad username'
+    return res.status(400).json(response)
+  }
+  if (!sanitizer.isValidPassword(password)) {
+    response.message = 'Bad password'
+    return res.status(400).json(response)
+  }
+  if (!sanitizer.isValidEmail(email)) {
+    response.message = 'Bad Email'
+    return res.status(400).json(response)
+  }
   const passInfo = encrypt(body.password)
   teams.createTeam(
-    body.username,
-    body.email,
-    passInfo.epass,
+    username,
+    email,
+    password,
     passInfo.salt,
     passInfo.iterations,
     'user',
-    body.name,
+    name,
     true
   ).then(() => {
     response.success = true
@@ -166,6 +185,7 @@ router.put(path + '/:teamName', (req, res) => {
   }
   const oldPassword = body.oldPassword
   const editData = body.editData
+
   // Use the login function to check if they are signed in properly
   login(teamName, oldPassword).then((user) => {
     // user.success determines whether or not the user successfully logged in
@@ -175,12 +195,25 @@ router.put(path + '/:teamName', (req, res) => {
       // Iterate over each of the fields allowed to be edited
       for (const field of editableFields) {
         if (editData.hasOwnProperty(field)) {
-          if (field === 'password') {
-            // If the field is 'password' then we need to run encrypt to
-            // get the proper information
-            teamEditData[field] = encrypt(editData.password)
-          } else {
-            teamEditData[field] = editData[field]
+          switch (field) {
+            case 'password':
+              if (!sanitizer.isValidPassword(editableFields[field])) {
+                response.message = 'invalid password'
+                return res.status(400).json(response)
+              }
+              // If the field is 'password' then we need to run encrypt to
+              // get the proper information
+              teamEditData[field] = encrypt(editData.password)
+              break
+            case 'email':
+              if (!sanitizer.isValidEmail(editableFields[field])) {
+                response.message = 'invalid email'
+                return res.status(400).json(response)
+              }
+              teamEditData[field] = editableFields[field]
+              break
+            default:
+              teamEditData[field] = editableFields[field]
           }
         }
       }

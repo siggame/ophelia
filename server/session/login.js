@@ -31,7 +31,7 @@ function login (teamName, password) {
         // Checking to see if given password matches the one in the db
         if (compare(encryptedPassword, password, salt, iterations)) {
           const userInfo = {
-            id: team._id,
+            id: team.id,
             role: team.role
           }
           return resolve(userInfo)
