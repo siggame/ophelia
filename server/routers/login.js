@@ -80,8 +80,6 @@ router.post(path + '/', (req, res) => {
     .catch(loginErrorHandler.bind(null, res))
 })
 
-
-
 function loginErrorHandler (res, err) {
   const status = 500
   let response = {
