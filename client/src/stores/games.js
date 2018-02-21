@@ -99,7 +99,7 @@ export class GameStore {
     } else if (status === 'failed') {
       // TODO: Handle failed building
     }
-    let game = new Game(json.id, json.opponent, status, description, json.log_url)
+    let game = new Game(json.id, json.opponent, status, description, json.log_url, json.version, json.created_at, json.updated_at)
     this.games.push(game)
   }
 }
@@ -113,22 +113,29 @@ export class GameStore {
 export class Game {
   @observable status
   @observable description
+  @observable updatedAt
 
   /**
    * Creates an instance of Game.
-   * @param {int} id ID, unique from the database
+   * @param {Number} id ID, unique from the database
    * @param {string} opponent Team name of opponent faced
    * @param {string} status Either 'Won' or 'Lost' if game is finished, or 'Queued'/'Failed'
    * @param {string} description Reason for winning/losing, or why it failed
    * @param {string} logUrl URL to visualizer instance displaying log
+   * @param {Number} version The submission ID that the game was played with
+   * @param {Date} createdAt Date when the game was created in the DB
+   * @param {Date} updatedAt When the game was updated in the DB
    * @memberof Game
    */
-  constructor (id, opponent, status, description, logUrl) {
+  constructor (id, opponent, status, description, logUrl, version, createdAt, updatedAt) {
     this.id = id
     this.opponent = opponent
     this.logUrl = logUrl
     this.description = description
     this.status = status
+    this.version = version
+    this.createdAt = createdAt
+    this.updatedAt = updatedAt
   }
 
   /**
