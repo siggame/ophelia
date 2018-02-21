@@ -18,10 +18,12 @@ export default class UploadButton extends React.Component {
       'application/gzip',
       'application/x-tar'
     ]
-    if (acceptedFiletypes.includes(file.type)) {
-      this.props.submissionStore.uploadSubmission(file)
-    } else {
-      this.props.submissionStore.uploadError = 'Incorrect filetype - file must be .zip, .tar or .tar.gz.'
+    if (file) {
+      if (acceptedFiletypes.includes(file.type)) {
+        this.props.submissionStore.uploadSubmission(file)
+      } else {
+        this.props.submissionStore.uploadError = 'Incorrect filetype - file must be .zip, .tar or .tar.gz.'
+      }
     }
   }
 
