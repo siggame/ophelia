@@ -8,6 +8,7 @@ export class SubmissionStore {
   @observable isLoading = false
   @observable isStale = false
   @observable lastUpdated = null
+  @observable uploadError = ''
 
   constructor () {
     this.requestLayer = new RequestLayer()
@@ -39,6 +40,23 @@ export class SubmissionStore {
     })).catch((err) => {
       // TODO: Actual logging
       console.log('Error loading submissions', err.message)
+    })
+  }
+
+  @action uploadSubmission (file) {
+    return new Promise((resolve, reject) => {
+      this.uploadError = ''
+      this.isLoading = true
+      this.requestLayer.uploadSubmissions(file).then((response) => {
+        this.isLoading = false
+        this.makeDataStale()
+        return resolve()
+      }).catch((err) => {
+        this.isLoading = false
+        this.makeDataStale()
+        // Give a generic error message
+        this.uploadError = 'Uh oh! Something went wrong. Please wait a bit and try again. If the problem persists, contact the SIG-Game devs at siggame@mst.edu.'
+      })
     })
   }
 
