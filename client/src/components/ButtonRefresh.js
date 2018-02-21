@@ -3,7 +3,7 @@ import React from 'react'
 
 /**
  * Reusable Refresh button, supports custom functions via props
- * 
+ *
  * @export
  * @class ButtonRefresh
  * @extends {React.Component}

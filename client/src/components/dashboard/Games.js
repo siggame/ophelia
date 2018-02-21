@@ -8,7 +8,6 @@ import ButtonRefresh from '../ButtonRefresh'
 @observer
 export default class Games extends React.Component {
   render () {
-    // Remove this once we have actual data coming in.
     let games = this.props.gameStore.games
     let gamesList = games.map((data) => {
       return <GameBadge opponent={data.opponent} status={data.status} description={data.description} logUrl={data.logUrl} key={data.id} />
