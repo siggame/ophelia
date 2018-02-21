@@ -91,7 +91,7 @@ router.post(path + '/', (req, res) => {
   teams.createTeam(
     username,
     email,
-    password,
+    passInfo.epass,
     passInfo.salt,
     passInfo.iterations,
     'user',
