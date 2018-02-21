@@ -15,5 +15,5 @@ module.exports = {
   TOKEN_SECRET: _.defaultTo(process.env.TOKEN_SECRET, 'token_secret'),
   TOKEN_EXPIRE_TIME: _.defaultTo(process.env.TOKEN_EXPIRE_TIME, '1d'),
   MAX_FILE_SIZE: _.defaultTo(process.env.MAX_FILE_SIZE, '50000'),
-  ARENA_SUBMISSIONS_HOST: _.defaultTo(process.env.ARENA_SUBMISSIONS_HOST, 'asdf')
+  ARENA_SUBMISSIONS_HOST: _.defaultTo(process.env.ARENA_SUBMISSIONS_HOST, 'localhost')
 }
