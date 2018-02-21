@@ -47,17 +47,17 @@ export default class RegisterView extends Component {
     this.setState({ loading: true })
     validateSignup(this.state.username, this.state.realName, this.state.email, this.state.password,
       this.state.passwordConfirm).then(() => {
-        this.setState({
-          formSubmitted: true,
-          hasErrors: false
-        })
-      }).catch((err) => {
-        this.setState({
-          formSubmitted: true,
-          formErrors: err,
-          loading: false
-        })
+      this.setState({
+        formSubmitted: true,
+        hasErrors: false
       })
+    }).catch((err) => {
+      this.setState({
+        formSubmitted: true,
+        formErrors: err,
+        loading: false
+      })
+    })
     // Prevents the default HTML behavior from happening, so we can control how the form is submitted.
     event.preventDefault()
   }
