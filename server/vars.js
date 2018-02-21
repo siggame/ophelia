@@ -17,5 +17,5 @@ module.exports = {
   MAX_FILE_SIZE: _.defaultTo(process.env.MAX_FILE_SIZE, '50000'),
   ARENA_HOST: _.defaultTo(process.env.ARENA_HOST, 'localhost'),
   SUBMISSIONS_ENDPOINT: _.defaultTo(process.env.SUBMISSIONS_ENDPOINT, '/tmp'),
-  GAMES_LOG_ENDPOINT: _.defaultTo(process.env.GAMES_LOG_ENDPOINT, '/tmp')
+  LOG_ENDPOINT: _.defaultTo(process.env.LOG_ENDPOINT, '/tmp')
 }
