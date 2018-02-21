@@ -15,7 +15,8 @@ function getSubmissionsByTeamName (teamName) {
     }
     knex('submissions')
       .join('teams', 'teams.id', '=', 'submissions.team_id')
-      .select('version', 'status', 'submission_url', 'log_url', 'image_name')
+      .select('version', 'status', 'submission_url', 'log_url', 'image_name',
+        'submissions.created_at', 'submissions.updated_at')
       .where('teams.name', '=', teamName)
       .then((submissions) => {
         submissions.sort(sortSubmissions)

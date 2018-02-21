@@ -8,9 +8,10 @@ const bodyParser = require('body-parser')
 const jwt = require('express-jwt')
 const multer = require('multer')
 const upload = multer()
+const fileUpload = require('express-fileupload')
 const cors = require('cors')
 require('dotenv').config()
-
+const maxFileSize = require('./vars').MAX_FILE_SIZE
 const jwtSecret = require('./vars').TOKEN_SECRET
 const hostname = require('./vars').HOST
 
@@ -31,6 +32,10 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
+// allows file uploads up to a max size of 512 KB
+app.use(fileUpload({
+  limits: { fileSize: maxFileSize }
+}))
 
 // Add JSON Web Token functionality
 const jwtConfig = {
