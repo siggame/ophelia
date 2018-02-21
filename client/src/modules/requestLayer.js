@@ -3,7 +3,7 @@ import axios from 'axios'
 import stores from '../stores'
 
 export default class RequestLayer {
-  fetchGames () {
+  fetchGames (pageNum, pageSize) {
     return new Promise((resolve, reject) => {
       // Check first to make sure the user is logged in
       if (!stores.authStore.isUserLoggedIn) {
@@ -14,10 +14,15 @@ export default class RequestLayer {
           Authorization: `Bearer ${stores.authStore.token}`
         },
         params: {
-          page: 1
+          page: pageNum,
+          pageSize: pageSize
         }
       }).then((response) => {
-        return resolve(response.data.games)
+        // This query also gives us the number of pages, so we need to grab both.
+        return resolve({
+          games: response.data.games,
+          numPages: response.data.pages
+        })
       }).catch((err) => {
         return reject(err)
       })

@@ -10,6 +10,8 @@ import RequestLayer from '../modules/requestLayer'
  */
 export class GameStore {
   @observable games = []
+  @observable numPages = 5
+  @observable pageSize = 10
   @observable isLoading = false
   @observable isStale = false
   @observable lastUpdated = null
@@ -39,12 +41,13 @@ export class GameStore {
    * 
    * @memberof GameStore
    */
-  @action loadGames () {
+  @action loadGames (pageNum=1) {
     this.isLoading = true
     // Actual HTTP request is abstracted to requestLayer object
-    this.requestLayer.fetchGames().then(action("loadGames-callback", (data) => {
+    this.requestLayer.fetchGames(pageNum, this.pageSize).then(action("loadGames-callback", (data) => {
       this.games = []
-      data.forEach((json) => {
+      this.numPages = data.numPages
+      data.games.forEach((json) => {
         this.createGameFromServer(json)
       })
       this.isLoading = false
