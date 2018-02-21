@@ -1,7 +1,8 @@
 'use strict'
 
 const knex = require('./connect').knex
-
+const host = require('../vars').HOST
+const logEndpoint = require('../vars').GAMES_LOG_ENDPOINT
 /**
  * Queries for all relevant games for a specified team name. Only retrieves
  * games for the highest submission version
@@ -89,6 +90,8 @@ function getGamesByTeamName (teamName, page, pageSize) {
           } else {
             game.winner = teamName
           }
+          // We need to modify the game URL to point to the arena
+          game.log_url = host + logEndpoint + '/' + game.log_url
           delete game.winner_id
           delete game.team_id
           games.push(game)
