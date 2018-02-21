@@ -55,8 +55,8 @@ export default class RequestLayer {
           headers: {
             Authorization: `Bearer ${stores.authStore.token}`,
             'Content-Type': 'multipart/form-data'
-        }
-      }).then((result) => {
+          }
+        }).then((result) => {
         console.log('Got a result, neat')
         return resolve(result)
       }).catch((err) => {
