@@ -74,24 +74,19 @@ router.post(path + '/', (req, res) => {
   const email = body.email
   const name = body.name
 
-  // sanitizing the inputs 
-
+  // sanitizing the inputs
   if (!sanitizer.isValidUsername(username)) {
     response.message = 'Bad username'
     return res.status(400).json(response)
   }
-  
   if (!sanitizer.isValidPassword(password)) {
     response.message = 'Bad password'
     return res.status(400).json(response)
   }
-  
   if (!sanitizer.isValidEmail(email)) {
     response.message = 'Bad Email'
     return res.status(400).json(response)
   }
-
-
   const passInfo = encrypt(body.password)
   teams.createTeam(
     username,
@@ -200,12 +195,25 @@ router.put(path + '/:teamName', (req, res) => {
       // Iterate over each of the fields allowed to be edited
       for (const field of editableFields) {
         if (editData.hasOwnProperty(field)) {
-          if (field === 'password') {
-            // If the field is 'password' then we need to run encrypt to
-            // get the proper information
-            teamEditData[field] = encrypt(editData.password)
-          } else {
-            teamEditData[field] = editData[field]
+          switch (field) {
+            case 'password':
+              if (!sanitizer.isValidPassword(editableFields[field])) {
+                response.message = 'invalid password'
+                return res.status(400).json(response)
+              }
+              // If the field is 'password' then we need to run encrypt to
+              // get the proper information
+              teamEditData[field] = encrypt(editData.password)
+              break
+            case 'email':
+              if (!sanitizer.isValidEmail(editableFields[field])) {
+                response.message = 'invalid email'
+                return res.status(400).json(response)
+              }
+              teamEditData[field] = editableFields[field]
+              break
+            default:
+              teamEditData[field] = editableFields[field]
           }
         }
       }
