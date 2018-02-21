@@ -75,7 +75,6 @@ function getGamesByTeamName (teamName, page, pageSize) {
         .where('teams.name', '!=', teamName)
 
       submissions.then((subRows) => {
-        console.log(subRows)
         const games = []
         for (const row of subRows) {
           let game = row
