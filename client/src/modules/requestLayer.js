@@ -9,7 +9,7 @@ export default class RequestLayer {
       if (!stores.authStore.isUserLoggedIn) {
         return reject(new Error('User must be logged in to fetch games'))
       }
-      axios.get('/games/', {
+      axios.get(process.env.REACT_APP_API_URL + '/games/', {
         headers: {
           Authorization: `Bearer ${stores.authStore.token}`
         },
@@ -35,7 +35,7 @@ export default class RequestLayer {
       if (!stores.authStore.isUserLoggedIn) {
         return reject(new Error('User must be logged in to fetch submissions'))
       }
-      axios.get('/submissions/', {
+      axios.get(process.env.REACT_APP_API_URL + '/submissions/', {
         headers: {
           Authorization: `Bearer ${stores.authStore.token}`
         }
@@ -54,7 +54,7 @@ export default class RequestLayer {
       }
       let formData = new FormData()
       formData.append('file', file)
-      axios.post('/submissions/',
+      axios.post(process.env.REACT_APP_API_URL + '/submissions/',
         formData,
         {
           headers: {
@@ -62,10 +62,8 @@ export default class RequestLayer {
             'Content-Type': 'multipart/form-data'
           }
         }).then((result) => {
-        console.log('Got a result, neat')
         return resolve(result)
       }).catch((err) => {
-        // TODO: Log this happening (means Arena failed us basically)
         return reject(err)
       })
     })
