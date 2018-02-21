@@ -7,10 +7,21 @@ import ButtonRefresh from '../ButtonRefresh'
 export class GamesList extends React.Component {
   render() {
     let games = this.props.games
-    let gamesList = games.map((data) => {
-      return <GameBadge opponent={data.opponent} status={data.status} description={data.description}
-                        logUrl={data.logUrl} key={data.id}/>
-    })
+    let gamesList
+    if (games) {
+      if (games.length === 0) {
+        gamesList = (
+          <div className='text-center' style={{ paddingTop: '5vh' }} >
+            No games have been played yet. Upload some code for games to run!
+          </div>
+        )
+      } else {
+        gamesList = games.map((data) => {
+          return <GameBadge {...data} key={data.id} />
+        })
+      }
+    }
+    
 
     return (
       <div>
@@ -55,37 +66,46 @@ export default class Games extends React.Component {
   }
 
   render () {
+    let paginateSection
+    if (this.props.gameStore.games.length > 0) {
+      paginateSection = (
+        <div>
+          <div className='col-xs-2' />
+          <div className='games-paginate text-center col-xs-8'>
+            <ReactPaginate
+              containerClassName='pagination text-center'
+              subContainerClassName='pagination pages'
+              activeClassName='active'
+              breakClassName='break'
+              breakLabel={<a>...</a>}
+              previousLabel='<<'
+              nextLabel='>>'
+              pageCount={this.props.gameStore.numPages}
+              pageRangeDisplayed={2}
+              marginPagesDisplayed={1}
+              forcePage={this.state.currentPage-1}
+              onPageChange={this.handlePageClick}
+            />
+          </div>
+          <div className='col-xs-2' />
+        </div>
+      )
+    }
     return (
       <div>
-        <div className='row' style={{ marginLeft: 10, display: 'flex' }} >
-          <div className='col-lg-4'><h2>Games</h2></div>
-          <div className='col-lg-6' />
-          <div className='col-lg-2' style={{ marginTop: '5vh'}}><ButtonRefresh buttonOnClick={this.handleRefresh} /></div>
+        <div className='row' style={{ margin: '0 10px 0 10px', display: 'flex' }} >
+          <div className='col-xs-4'><h2>Games</h2></div>
+          <div className='col-xs-6' />
+          <div className='col-xs-2' style={{ padding: '3vh 0 4px 0'}}><ButtonRefresh buttonOnClick={this.handleRefresh} /></div>
         </div>
-        <div className='row' style={{ marginLeft: 10 }} >
-          <div className='col-lg-4' >Opponent Name</div>
-          <div className='col-lg-6' >Result</div>
-          <div className='col-lg-2' >Viz Link</div>
+        <div className='row' style={{ margin: '0 10px 0 10px' }}>
+          <div className='col-xs-3 text-center' >Opponent Name</div>
+          <div className='col-xs-5 text-center' >Result</div>
+          <div className='col-xs-2 text-center' >Version</div>
+          <div className='col-xs-2 text-center' >Viz Link</div>
         </div>
         <GamesList games={this.props.gameStore.games}/>
-        <div className='col-md-2' />
-        <div className='games-paginate text-center col-md-8'>
-          <ReactPaginate
-            containerClassName='pagination text-center'
-            subContainerClassName='pagination pages'
-            activeClassName='active'
-            breakClassName='break'
-            breakLabel={<a>...</a>}
-            previousLabel='<<'
-            nextLabel='>>'
-            pageCount={this.props.gameStore.numPages}
-            pageRangeDisplayed={2}
-            marginPagesDisplayed={1}
-            forcePage={this.state.currentPage-1}
-            onPageChange={this.handlePageClick}
-          />
-        </div>
-        <div className='col-md-2' />
+        {paginateSection}   
       </div>
     )
   }
