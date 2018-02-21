@@ -4,8 +4,6 @@ import ReactPaginate from 'react-paginate';
 import GameBadge from '../../components/GameBadge'
 import ButtonRefresh from '../ButtonRefresh'
 
-@inject('gameStore')
-@observer
 export class GamesList extends React.Component {
   render() {
     let games = this.props.games
@@ -22,84 +20,72 @@ export class GamesList extends React.Component {
   }
 }
 
+@inject('gameStore')
+@observer
 export default class Games extends React.Component {
   constructor (props) {
     super(props)
 
     // TODO: Make maxPerPage a prop
     this.state = {
-      beginning: 0,
-      endingPosition: 10
+      currentPage: 1
     }
+    this.handlePageClick = this.handlePageClick.bind(this)
+    this.handleRefresh = this.handleRefresh.bind(this)
   }
   //Need to slice up the array to display certain amount per page
   //I'm not really too sure on the proper way to call and modify parameters inside of a function
-  handlePageClick (games) {
-    let oldEnding = this.state.endingPosition
-    let oldBeginning = this.state.beginning
-    let gamesDisplay = games.slice(this.state.endingPosition, this.state.beginning+this.state.endingPosition);
+  handlePageClick (data) {
+    // So this library we're using (React Paginate) thinks an awesome idea to 0-index page numbers.
+    // In order to combat that, we have to add one, and type out this comment so someone doesn't get confused.
+    let newPage = data.selected + 1
+    // Grab our games for the next page
     this.setState({
-      beginning: oldEnding,
-      endingPosition: oldEnding+oldBeginning
+      currentPage: newPage
     })
-    return gamesDisplay
+    this.props.gameStore.loadGames(newPage)
+  }
+
+  handleRefresh () {
+    // Since refreshing always sends the page back to 1, need to handle that here.
+    this.setState({
+      currentPage: 1
+    })
+    this.props.gameStore.makeDataStale()
   }
 
   render () {
-    let games = [
-      {opponent: 'CompSigh', status: 'Win', description: 'Opponent Failed to Compile', id: '21839712930'},
-      {opponent: 'CompSigh', status: 'Lose', description: 'You stink, I guess', id: '21839712931'},
-      {opponent: 'CompSigh', status: 'Win', description: 'Opponent Failed to Compile', id: '21839712932'},
-      {opponent: 'CompSigh', status: 'Win', description: 'Won via coin flip', id: '21839712933'},
-      {opponent: 'CompSigh', status: 'Win', description: 'Opponent Failed to Compile', id: '21839712934'},
-      {opponent: 'CompSigh', status: 'Lose', description: 'You stink, I guess', id: '21839712935'},
-      {opponent: 'CompSigh', status: 'Win', description: 'Opponent Failed to Compile', id: '21839712936'},
-      {opponent: 'CompSigh', status: 'Win', description: 'Won via coin flip', id: '21839712937'},
-      {opponent: 'CompSigh', status: 'Win', description: 'Opponent Failed to Compile', id: '21839712938'},
-      {opponent: 'CompSigh', status: 'Lose', description: 'You stink, I guess', id: '21839712939'},
-      {opponent: 'CompSigh', status: 'Win', description: 'Opponent Failed to Compile', id: '21839712940'},
-      {opponent: 'CompSigh', status: 'Win', description: 'Won via coin flip', id: '21839712941'},
-      {opponent: 'CompSigh', status: 'Win', description: 'Opponent Failed to Compile', id: '21839712942'},
-      {opponent: 'CompSigh', status: 'Lose', description: 'You stink, I guess', id: '21839712943'},
-      {opponent: 'CompSigh', status: 'Win', description: 'Opponent Failed to Compile', id: '21839712944'},
-      {opponent: 'CompSigh', status: 'Win', description: 'Won via coin flip', id: '21839712945'},
-      {opponent: 'CompSigh', status: 'Win', description: 'Opponent Failed to Compile', id: '21839712946'},
-      {opponent: 'CompSigh', status: 'Lose', description: 'You stink, I guess', id: '21839712947'},
-      {opponent: 'CompSigh', status: 'Win', description: 'Opponent Failed to Compile', id: '21839712948'},
-      {opponent: 'CompSigh', status: 'Win', description: 'Won via coin flip', id: '21839712949'}
-    ]
-    //Maximum number of items being displayed each time
-    let maxperpage=10;
-    //Calculate how many pages are needed
-    let numPages = Math.ceil(games.length/maxperpage);
-    //Setting the ending point to get ready for array slice
-    let endingpos = maxperpage;
-    //Setting the beginning of the array slice
-    let begining = 0;
-    //Not really sure on how to get the function called in order to correctly slice an array
-    let gamesDisplay = null;
-    //handlePageClick is what is called when the "next" button is clicked not sure what happens on previous (haven't tested)
-    gamesDisplay = this.handlePageClick(games)
-    console.log("Games Display: ", gamesDisplay)
-    // Remove this once we have actual data coming in.
-  //  let games = this.props.gameStore.games
     return (
       <div>
-        <div className='row' style={{ marginLeft: 10 }} >
-          <div className='col-lg-4' />
+        <div className='row' style={{ marginLeft: 10, display: 'flex' }} >
+          <div className='col-lg-4'><h2>Games</h2></div>
           <div className='col-lg-6' />
+          <div className='col-lg-2' style={{ marginTop: '5vh'}}><ButtonRefresh buttonOnClick={this.handleRefresh} /></div>
         </div>
         <div className='row' style={{ marginLeft: 10 }} >
           <div className='col-lg-4' >Opponent Name</div>
           <div className='col-lg-6' >Result</div>
           <div className='col-lg-2' >Viz Link</div>
         </div>
-        <GamesList games={games}/>
-        <ReactPaginate
-          pageCount={numPages}
-          pageRangeDisplayed={5}
-          marginPagesDisplayed={5}
-        />
+        <GamesList games={this.props.gameStore.games}/>
+        <div className='col-md-2' />
+        <div className='games-paginate text-center col-md-8'>
+          <ReactPaginate
+            containerClassName='pagination text-center'
+            subContainerClassName='pagination pages'
+            activeClassName='active'
+            breakClassName='break'
+            breakLabel={<a>...</a>}
+            previousLabel='<<'
+            nextLabel='>>'
+            pageCount={this.props.gameStore.numPages}
+            pageRangeDisplayed={2}
+            marginPagesDisplayed={1}
+            forcePage={this.state.currentPage-1}
+            onPageChange={this.handlePageClick}
+          />
+        </div>
+        <div className='col-md-2' />
       </div>
     )
   }
