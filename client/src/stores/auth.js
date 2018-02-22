@@ -88,7 +88,7 @@ export class AuthStore {
    */
   isTokenExpired (exp) {
     if (!exp) {
-      return false
+      return true
     }
     return new Date().getTime() / 1000 > exp
   }
