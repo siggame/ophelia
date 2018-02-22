@@ -4,7 +4,7 @@ import RequestLayer from '../modules/requestLayer'
 
 /**
  * MobX store for games played in the arena.
- * 
+ *
  * @export
  * @class GameStore
  */
@@ -38,7 +38,7 @@ export class GameStore {
 
   /**
    * Grabs games from the server and throws them in the store
-   * 
+   *
    * @memberof GameStore
    */
   @action loadGames (pageNum=1) {
@@ -81,7 +81,7 @@ export class GameStore {
   /**
    * Updates or creates a new game based on JSON data from the server
    * 
-   * @param {Object} json object containing the game information 
+   * @param {Object} json object containing the game information
    * @memberof GameStore
    */
   @action createGameFromServer (json) {
@@ -99,7 +99,7 @@ export class GameStore {
     } else if (status === 'failed') {
       // TODO: Handle failed building
     }
-    let game = new Game(json.id, json.opponent, status, description, json.log_url, json.version, json.created_at, json.updated_at)
+    let game = new Game(json.id, json.opponent, status, description, json.log_url, json.client_log_url, json.version, json.created_at, json.updated_at)
     this.games.push(game)
   }
 }
@@ -122,15 +122,17 @@ export class Game {
    * @param {string} status Either 'Won' or 'Lost' if game is finished, or 'Queued'/'Failed'
    * @param {string} description Reason for winning/losing, or why it failed
    * @param {string} logUrl URL to visualizer instance displaying log
+   * @param {string} clientLogUrl URL to retrieve output from client
    * @param {Number} version The submission ID that the game was played with
    * @param {Date} createdAt Date when the game was created in the DB
    * @param {Date} updatedAt When the game was updated in the DB
    * @memberof Game
    */
-  constructor (id, opponent, status, description, logUrl, version, createdAt, updatedAt) {
+  constructor (id, opponent, status, description, logUrl, clientLogUrl, version, createdAt, updatedAt) {
     this.id = id
     this.opponent = opponent
     this.logUrl = logUrl
+    this.clientLogUrl = clientLogUrl
     this.description = description
     this.status = status
     this.version = version
