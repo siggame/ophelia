@@ -43,7 +43,7 @@ function getSubmissionByID (submissionID) {
     query.then((submission) => {
       // This will let us contact the correct endpoint to actually retrieve
       // the log url from the arena
-      submission[0].log_url = host + logEndpoint + '/' + submission[0].log_url
+      submission[0].log_url = host + logEndpoint + submission[0].log_url
       return resolve(submission[0])
     }).catch((err) => {
       return reject(err)
