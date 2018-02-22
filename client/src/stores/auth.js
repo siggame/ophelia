@@ -1,45 +1,38 @@
 import axios from 'axios'
-import { action, computed, observable, reaction, toJS, autorun, extendObservable } from 'mobx'
+import { action, computed, observable, reaction } from 'mobx'
 import jwtDecode from 'jwt-decode'
 
 import gameStore from './games'
 import submissionStore from './submissions'
 
-/**
- * @description If the value of any observables change, save the new values in localStorage. Does not save on initial load
- * @param {any} store Any instance of a store
- * @param {function} save Function that will save store values in localStorage
- */
-function autoSave (store, save) {
-  let firstRun = true;
-  autorun(() => {
-    // This code will run every time any observable property
-    // on the store is updated.
-    const json = JSON.stringify(toJS(store));
-    if (!firstRun) {
-      save(json);
-    }
-    firstRun = false;
-  })
-}
-
 export class AuthStore {
-  @observable username = ''
-  @observable token = ''
+  @observable token = localStorage.getItem('jwt')
 
   constructor () {
-    // Removes the auth JSON value in localStorage if the user is no longer logged in
+    // Updates or removes our JSON Web Token in the localStorage of the browser.1
     reaction(
-      () => this.isUserLoggedIn,
-      isUserLoggedIn => {
-        if (!isUserLoggedIn) {
-          localStorage.removeItem('auth')
+      () => this.token,
+      token => {
+        if (token) {
+          localStorage.setItem('jwt', token)
+        } else {
+          localStorage.removeItem('jwt')
         }
       }
     )
+  }
 
-    this.loadUser();
-    autoSave(this, this.save)
+  /**
+   * @description Get username from user's jwt token
+   * @return {string | null} username if jwt token is valid. Otherwise, null
+   */
+  @computed get username () {
+    try {
+      const { username } = jwtDecode(this.token)
+      return username
+    } catch (err) {
+      return null
+    }
   }
 
   /**
@@ -48,9 +41,9 @@ export class AuthStore {
    */
   @computed get isUserLoggedIn () {
     try {
-      const { exp, username } = jwtDecode(this.token)
+      const { exp } = jwtDecode(this.token)
 
-      if (this.isTokenExpired(exp) || this.username !== username) {
+      if (this.isTokenExpired(exp)) {
         return false
       }
     } catch (err) {
@@ -64,10 +57,6 @@ export class AuthStore {
     this.token = token
   }
 
-  @action setUsername (username) {
-    this.username = username
-  }
-
   @action logUserIn (username, password) {
     return new Promise(action('login-callback', (resolve, reject) => {
       axios.post('/login',
@@ -77,7 +66,6 @@ export class AuthStore {
         }
       ).then((response) => {
         this.setToken(response.data.token)
-        this.username = username
         return resolve()
       }).catch((err) => {
         // TODO: Error handling
@@ -88,7 +76,6 @@ export class AuthStore {
   }
 
   @action logUserOut () {
-    this.username = ''
     this.token = ''
     gameStore.resetGameData()
     submissionStore.resetSubmissionData()
@@ -104,24 +91,6 @@ export class AuthStore {
       return false
     }
     return new Date().getTime() / 1000 > exp
-  }
-
-  /**
-   * @description Get and update values of the auth store in localStorage
-  */
-  loadUser () {
-    const auth = localStorage.getItem('auth');
-    if (auth) {
-      extendObservable(this, JSON.parse(auth));
-    }
-  }
-
-  /**
-   * @description Save the JSON value of the store in localStorage
-   * @param {string} json stringified JSON object of the store
-   */
-  save = (json) => {
-    localStorage.setItem('auth', json)
   }
 }
 
