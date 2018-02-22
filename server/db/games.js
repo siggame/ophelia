@@ -65,12 +65,13 @@ function getGamesByTeamName (teamName, page, pageSize) {
         .join('teams', 'teams.id', '=', 'submissions.team_id')
         .select('submissions.team_id',
           'games.id',
-          'teams.name',
+          'teams.name as opponent',
           'games.status',
           'games.win_reason',
           'games.lose_reason',
           'games.winner_id',
           'games.log_url',
+          'games_submissions.output_url as client_log_url',
           'games.created_at',
           'games.updated_at')
         .where('teams.name', '!=', teamName)
@@ -83,7 +84,6 @@ function getGamesByTeamName (teamName, page, pageSize) {
           // By using the array we made earlier to store them together
           let ver = versions.find(o => o.gameID === row.id)
           game.version = ver.version
-          game.opponent = row.name
           delete game.name
           if (game.team_id === game.winner_id) {
             game.winner = game.opponent
