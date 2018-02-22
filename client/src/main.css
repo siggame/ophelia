@@ -11,6 +11,17 @@ h1 {
     background-color: #3c763d;
 }
 
+.jumbotron {
+    height: 50vh;
+background: linear-gradient(white, #999999, #666666, #333333)
+}
+
+/* General Purpose Styles */
+
+.bolded {
+	font-weight: bold;
+}
+
 /* Dashboard Styles */
 
 .submission {
@@ -19,4 +30,10 @@ h1 {
 
 .profile {
     height: 40vh;
+}
+
+.submission-banner {
+	font-size: 20px;
+	background-color: #999999;
+	margin-top: -45px;
 }

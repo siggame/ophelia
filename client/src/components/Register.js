@@ -47,17 +47,17 @@ export default class RegisterView extends Component {
     this.setState({ loading: true })
     validateSignup(this.state.username, this.state.realName, this.state.email, this.state.password,
       this.state.passwordConfirm).then(() => {
-        this.setState({
-          formSubmitted: true,
-          hasErrors: false
-        })
-      }).catch((err) => {
-        this.setState({
-          formSubmitted: true,
-          formErrors: err,
-          loading: false
-        })
+      this.setState({
+        formSubmitted: true,
+        hasErrors: false
       })
+    }).catch((err) => {
+      this.setState({
+        formSubmitted: true,
+        formErrors: err,
+        loading: false
+      })
+    })
     // Prevents the default HTML behavior from happening, so we can control how the form is submitted.
     event.preventDefault()
   }
@@ -141,6 +141,14 @@ export default class RegisterView extends Component {
           </div>
           <div className='form-group'>
             <label htmlFor='password'>Password</label>
+            <div>
+              Must be at least 6 characters and contain:
+              <ul>
+                <li>an uppercase letter</li>
+                <li>a lowercase letter</li>
+                <li>a number</li>
+              </ul>
+            </div>
             {passwordError}
             <input type='password' className='form-control' name='password' placeholder='Password' value={this.state.password} onChange={this.handleChange} />
           </div>

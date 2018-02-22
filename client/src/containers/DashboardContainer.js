@@ -4,12 +4,17 @@ import { Redirect } from 'react-router-dom'
 
 import Dashboard from '../components/dashboard/Dashboard'
 
-@inject('authStore', 'gameStore')
+@inject('authStore', 'gameStore', 'submissionStore')
 @observer
 export default class DashboardContainer extends React.Component {
   componentWillMount () {
-    if (!this.props.gameStore.lastUpdated && this.props.authStore.isUserLoggedIn) {
-      this.props.gameStore.makeDataStale()
+    if(this.props.authStore.isUserLoggedIn) {
+      if (!this.props.gameStore.lastUpdated) {
+        this.props.gameStore.makeDataStale()
+      }
+      if (!this.props.submissionStore.lastUpdated) {
+        this.props.submissionStore.makeDataStale()
+      }
     }
   }
 

@@ -13,7 +13,7 @@ export default class RegisterContainer extends React.Component {
   }
 
   componentDidMount () {
-    axios.get('/users/').then((response) => {
+    axios.get(process.env.REACT_APP_API_URL + '/users/').then((response) => {
       this.setState({
         currentUsernames: response.data.users
       })

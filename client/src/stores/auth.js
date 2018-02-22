@@ -2,6 +2,7 @@ import axios from 'axios'
 import { action, computed, observable, reaction } from 'mobx'
 
 import gameStore from './games'
+import submissionStore from './submissions'
 
 export class AuthStore {
   @observable username = ''
@@ -34,7 +35,8 @@ export class AuthStore {
   }
 
   @action logUserIn (username, password) {
-    return new Promise(action('login-callback', (resolve, reject) => {      axios.post('/login',
+    return new Promise(action('login-callback', (resolve, reject) => {
+      axios.post(process.env.REACT_APP_API_URL + '/login',
         {
           username: username,
           password: password
@@ -55,6 +57,7 @@ export class AuthStore {
     this.username = ''
     this.token = ''
     gameStore.resetGameData()
+    submissionStore.resetSubmissionData()
   }
 }
 
