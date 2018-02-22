@@ -16,6 +16,9 @@ server {
         listen 443;
         server_name $NGINX_CLIENT_HOST;
 
+        client_max_body_size 150M;
+        client_body_timeout 120s;
+
         ssl on;
         ssl_certificate /etc/ssl/live/$NGINX_CLIENT_HOST/cert.pem;
         ssl_certificate_key /etc/ssl/live/$NGINX_CLIENT_HOST/privkey.pem;
