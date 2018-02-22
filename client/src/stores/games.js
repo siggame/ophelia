@@ -30,10 +30,10 @@ export class GameStore {
     reaction(
       () => this.isStale,
       () => {
-      if (this.isStale) {
-        this.loadGames()
-      }
-    })
+        if (this.isStale) {
+          this.loadGames()
+        }
+      })
   }
 
   /**
@@ -41,10 +41,10 @@ export class GameStore {
    *
    * @memberof GameStore
    */
-  @action loadGames (pageNum=1) {
+  @action loadGames (pageNum = 1) {
     this.isLoading = true
     // Actual HTTP request is abstracted to requestLayer object
-    this.requestLayer.fetchGames(pageNum, this.pageSize).then(action("loadGames-callback", (data) => {
+    this.requestLayer.fetchGames(pageNum, this.pageSize).then(action('loadGames-callback', (data) => {
       this.games = []
       this.numPages = data.numPages
       data.games.forEach((json) => {
@@ -61,7 +61,7 @@ export class GameStore {
 
   /**
    * Used to initiate a games load, via an autorun in stores/index.js
-   * 
+   *
    * @memberof GameStore
    */
   @action makeDataStale () {
@@ -70,7 +70,7 @@ export class GameStore {
 
   /**
    * Used to remove all games from the store. Mainly useful when a user logs out.
-   * 
+   *
    * @memberof GameStore
    */
   @action resetGameData () {
@@ -80,7 +80,7 @@ export class GameStore {
 
   /**
    * Updates or creates a new game based on JSON data from the server
-   * 
+   *
    * @param {Object} json object containing the game information
    * @memberof GameStore
    */
@@ -106,7 +106,7 @@ export class GameStore {
 
 /**
  * Class for storing individual game objects
- * 
+ *
  * @export
  * @class Game
  */
@@ -142,7 +142,7 @@ export class Game {
 
   /**
    * Updates game object based on new JSON data being passed to it.
-   * 
+   *
    * @param {any} json JSON from the server containing new data
    * @memberof Game
    */
