@@ -8,15 +8,12 @@ export default class Dashboard extends React.Component {
     return (
       <div>
         <div className='row'>
-          <div className='col-lg-6'>
+          <div className='col-md-6'>
             <GamesContainer />
           </div>
-          <div className='col-lg-6' >
+          <div className='col-md-6' >
             <div className='submission'>
               <SubmissionContainer />
-            </div>
-            <div className='profile'>
-              <Profile />
             </div>
           </div>
         </div>
