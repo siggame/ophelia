@@ -103,6 +103,26 @@ function getGamesByTeamName (teamName, page, pageSize) {
   })
 }
 
+function countGamesByTeamName (teamName) {
+  return new Promise((resolve, reject) => {
+    if (teamName === null || typeof teamName === 'undefined') {
+      reject(new Error('TeamName is null or undefined'))
+    }
+    const query = knex('games')
+      .join('games_submissions', 'games_submissions.game_id', '=', 'games.id')
+      .join('submissions',
+        'submissions.id', '=', 'games_submissions.submission_id')
+      .join('teams', 'teams.id', '=', 'submissions.team_id')
+      .where('teams.name', '=', teamName)
+      .count('games.id')
+    query.then((count) => {
+      resolve(parseInt(count[0].count))
+    }).catch((err) => {
+      reject(err)
+    })
+  })
+}
+
 function getGameById (gameId) {
   return new Promise((resolve, reject) => {
     if (gameId === null || typeof gameId === 'undefined') {
@@ -134,5 +154,6 @@ function sortGames (gameA, gameB) {
 
 module.exports = {
   getGamesByTeamName,
-  getGameById
+  getGameById,
+  countGamesByTeamName
 }
