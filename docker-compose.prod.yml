@@ -32,9 +32,10 @@ services:
     environment:
      - NGINX_CLIENT_HOST=chess.siggame.io
      - NGINX_SERVER_HOST=chess-server.siggame.io
+     - NGINX_ARENA_HOST=10.128.0.4
     command: >
         /bin/bash -c "envsubst
-        '$$NGINX_CLIENT_HOST $$NGINX_SERVER_HOST'
+        '$$NGINX_CLIENT_HOST $$NGINX_SERVER_HOST $$NGINX_ARENA_HOST'
         < /etc/nginx/conf.d/mysite.template >
         /etc/nginx/conf.d/default.conf
         && nginx -g 'daemon off;'"
