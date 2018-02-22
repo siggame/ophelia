@@ -58,7 +58,8 @@ export class SubmissionStore {
         this.isLoading = false
         this.makeDataStale()
         // Give a generic error message
-        switch (err.response.status) {
+        let responseStatus = err.response.status
+        switch (responseStatus) {
           case 413:
             this.uploadError = 'The file you uploaded was too large. The maximum file size is 150MB.'
             break
