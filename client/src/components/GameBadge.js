@@ -84,12 +84,15 @@ export default class GameBadge extends Component {
         <div className='col-xs-3 text-center' style={{ height: '100%' }}>
           <div style={{ lineHeight: '10vh', fontSize: 26 }} >{this.props.opponent}</div>
         </div>
-        <div className='col-xs-6 text-center' style={{ height: '100%', overflow: 'hidden' }}>
+        <div className='col-xs-5 text-center' style={{ height: '100%', overflow: 'hidden' }}>
           <div style={{ paddingTop: '2vh' }}><span style={{ fontSize: 20 }}>{this.props.status}</span> <span style={{ fontStyle: 'italic' }}>{'(' + updatedTime + ')'}</span></div>
           <div style={{ padding: '1vh 0 1vh 0', fontSize: 13 }}>{this.props.description}</div>
         </div>
         <div className='col-xs-1 text-center' style={{ height: '100%', overflow: 'hidden' }}>
           <div style={{ lineHeight: '10vh', fontSize: 26 }}>{this.props.version}</div>
+        </div>
+        <div className='col-xs-1 text-center' style={{ height: '100%', lineHeight: '10vh' }}>
+          <a href={this.props.clientLogUrl} download>Log</a>
         </div>
         <div className='col-xs-2 text-center' style={{ height: '100%', lineHeight: '10vh' }} >
           <a href={visUrl} onMouseEnter={this.toggleHover} onMouseLeave={this.toggleHover} target='_blank'>

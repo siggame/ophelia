@@ -101,7 +101,8 @@ export default class Games extends React.Component {
         <div className='row' style={{ margin: '0 10px 0 10px' }}>
           <div className='col-xs-3 text-center' >Opponent Name</div>
           <div className='col-xs-5 text-center' >Result</div>
-          <div className='col-xs-2 text-center' >Version</div>
+          <div className='col-xs-1 text-center' >Version</div>
+          <div className='col-xs-1 text-center' >Client</div>
           <div className='col-xs-2 text-center' >Viz Link</div>
         </div>
         <GamesList games={this.props.gameStore.games}/>
