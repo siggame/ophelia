@@ -22,7 +22,7 @@ function getSubmissionsByTeamName (teamName) {
       .where('teams.name', '=', teamName)
       .then((submissions) => {
         for (const submission of submissions) {
-          submission.log_url = host + logEndpoint + '/' + submission.log_url
+          submission.log_url = host + logEndpoint + submission.log_url
         }
         submissions.sort(sortSubmissions)
         return resolve(submissions)
