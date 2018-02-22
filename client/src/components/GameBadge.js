@@ -77,6 +77,8 @@ export default class GameBadge extends Component {
       </svg>
     )
 
+    let visUrl = 'http://vis.siggame.io?log=' + this.props.logUrl
+
     return (
       <div style={{ backgroundColor: bgColor, margin: 10, height: '10vh' }} className='row'>
         <div className='col-xs-3 text-center' style={{ height: '100%' }}>
@@ -90,7 +92,7 @@ export default class GameBadge extends Component {
           <div style={{ lineHeight: '10vh', fontSize: 26 }}>{this.props.version}</div>
         </div>
         <div className='col-xs-2 text-center' style={{ height: '100%', lineHeight: '10vh' }} >
-          <a href={this.props.logUrl} onMouseEnter={this.toggleHover} onMouseLeave={this.toggleHover}>
+          <a href={visUrl} onMouseEnter={this.toggleHover} onMouseLeave={this.toggleHover} target='_blank'>
             {playButtonVector}
           </a>
         </div>
