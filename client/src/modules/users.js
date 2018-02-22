@@ -32,6 +32,10 @@ export function validateSignup (username, name, email, password, confirmPassword
       },
       password: {
         presence: true,
+        format: {
+          pattern: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9!@#$%^&*]*$/,
+          message: 'is invalid'
+        },
         length: {
           minimum: 6,
           message: 'must be at least 6 characters'

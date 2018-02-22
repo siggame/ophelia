@@ -40,7 +40,7 @@ export default class SubmissionInfo extends React.Component {
 
     return (
       <div>
-        <h1>Latest Submission:</h1>
+        <h2>Latest Submission:</h2>
         <div style={{ marginLeft: 10 }} >
           {uploadError}
           <p>
