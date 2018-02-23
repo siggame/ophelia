@@ -55,7 +55,7 @@ export default class EditProfile extends React.Component {
           </div>
           <div className="col-md-8">
             <form onSubmit={handleSubmit}>
-              <div className={`form-group ${touched.username && errors.username && 'has-error'}`}>
+              <div className={`form-group${touched.username && errors.username ? ' has-error' : ''}`}>
                 <label htmlFor="username">Username</label>
                 <input type="text" className="form-control" name="username" placeholder="Username" autoComplete="off" value={values.username} onChange={handleChange} onBlur={handleBlur} />
                 {formattedErrors.username}
@@ -64,17 +64,17 @@ export default class EditProfile extends React.Component {
                 <label htmlFor="teamName">Team Name</label>
                 <input type="text" className="form-control" name="teamName" placeholder="Team Name" autoComplete="off" value={values.teamName} onChange={handleChange} onBlur={handleBlur} />
               </div>
-              <div className={`form-group ${touched.email && errors.email && 'has-error'}`}>
+              <div className={`form-group${touched.email && errors.email ? ' has-error' : ''}`}>
                 <label htmlFor="email">Primary Contact Email</label>
                 <input type="text" className="form-control" name="email" placeholder="Primary Contact Email" autoComplete="off" value={values.email} onChange={handleChange} onBlur={handleBlur} />
                 {formattedErrors.email}
               </div>
-              <div className={`form-group ${touched.name && errors.name && 'has-error'}`}>
+              <div className={`form-group${touched.name && errors.name ? ' has-error' : ''}`}>
                 <label htmlFor="name">Primary Contact Name</label>
                 <input type="text" className="form-control" name="name" placeholder="Primary Contact Name" autoComplete="off" value={values.name} onChange={handleChange} onBlur={handleBlur} />
                 {formattedErrors.name}
               </div>
-              <div className={`form-group ${touched.bio && errors.bio && 'has-error'}`}>
+              <div className={`form-group${touched.bio && errors.bio ? ' has-error' : ''}`}>
                 <label htmlFor="bio">{`Bio (${values.bio.length}/${MAX_BIO_LENGTH})`}</label>
                 <textarea
                   className="form-control"
