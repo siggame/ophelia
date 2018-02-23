@@ -21,6 +21,10 @@ export default class SubmissionBanner extends React.Component {
           <span className='bolded'>Status:</span> <span style={statusStyle} ><StatusBadge status={this.props.status} badgeStyle='status-fill' /></span>
         </span>
         <span className='col-md-2'>
+        <div className="form-group">
+          <label>Comment:</label>
+          <textarea className="form-control" rows="5" id="comment" />
+        </div>
           <UploadButton />
         </span>
       </nav>
