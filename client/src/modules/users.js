@@ -1,7 +1,7 @@
 import axios from 'axios'
 import validate from 'validate.js'
 
-export function validateSignup(username, name, email, password, confirmPassword) {
+export function validateSignup (username, name, email, password, confirmPassword) {
   return new Promise((resolve, reject) => {
     let formData = {
       username: username,
@@ -88,7 +88,7 @@ export function validateSignup(username, name, email, password, confirmPassword)
   })
 }
 
-export function validateLogin(username, password) {
+export function validateLogin (username, password) {
   return new Promise((resolve, reject) => {
     axios
       .post(process.env.REACT_APP_API_URL + '/login', {
@@ -104,7 +104,7 @@ export function validateLogin(username, password) {
   })
 }
 
-export function validateProfileUpdate(values) {
+export function validateProfileUpdate (values) {
   const constraints = {
     username: {
       presence: true,

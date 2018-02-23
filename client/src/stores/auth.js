@@ -6,7 +6,7 @@ import gameStore from './games'
 import submissionStore from './submissions'
 
 export class AuthStore {
-  @observable token = localStorage.getItem('jwt')
+  @observable token = window.localStorage.getItem('jwt')
 
   constructor () {
     // Updates or removes our JSON Web Token in the localStorage of the browser.1
@@ -14,9 +14,9 @@ export class AuthStore {
       () => this.token,
       token => {
         if (token) {
-          localStorage.setItem('jwt', token)
+          window.localStorage.setItem('jwt', token)
         } else {
-          localStorage.removeItem('jwt')
+          window.localStorage.removeItem('jwt')
         }
       }
     )
@@ -30,6 +30,19 @@ export class AuthStore {
     try {
       const { username } = jwtDecode(this.token)
       return username
+    } catch (err) {
+      return null
+    }
+  }
+
+  /**
+   * @description Get username from user's jwt token
+   * @return {number | null} id if jwt token is valid. Otherwise, null
+   */
+  @computed get userId () {
+    try {
+      const { id } = jwtDecode(this.token)
+      return id
     } catch (err) {
       return null
     }

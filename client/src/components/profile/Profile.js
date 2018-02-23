@@ -25,7 +25,7 @@ const Profile = ({ username, teamName, bio, imageUrl }) => (
         </dl>
         <dl className='dl-horizontal'>
           <dt>Bio</dt>
-          <dd style={{overflowY: 'auto', maxHeight: 200, width: 'auto' }}>{bio}</dd>
+          <dd style={{ overflowY: 'auto', maxHeight: 200, width: 'auto' }}>{bio}</dd>
         </dl>
       </div>
     </div>

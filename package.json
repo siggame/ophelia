@@ -22,9 +22,13 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-react": "^7.3.0",
     "eslint-plugin-standard": "^3.0.1",
-    "nodemon": "^1.12.1"
+    "nodemon": "^1.12.1",
+    "standard": "^11.0.0"
   },
   "dependencies": {
     "react-paginate": "^5.1.0"
+  },
+  "standard": {
+    "parser": "babel-eslint"
   }
 }

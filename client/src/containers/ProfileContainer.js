@@ -1,13 +1,25 @@
 import React from 'react'
-import EditProfile from '../components/profile/EditProfile'
+import { inject } from 'mobx-react'
 
+import EditProfile from '../components/profile/EditProfile'
+import Profile from '../components/profile/Profile'
+
+@inject('authStore')
 export default class ProfileContainer extends React.Component {
-  render() {
+  isLoggedInUsersProfile = userId => {
+    return userId === this.props.authStore.userId
+  }
+
+  render () {
     const bio =
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum elementum elit ac vestibulum sodales. Mauris tempor consectetur mi nec tempor. Etiam fermentum maximus lacus, quis interdum ligula lacinia ac. Maecenas sagittis metus quis sem feugiat ultricies. Praesent imperdiet tincidunt metus at mollis. Ut sit amet libero id urna accumsan varius at aliquet nulla. Fusce tortor orci, rhoncus interdum velit eget, pellentesque ullamcorper diam. Pellentesque sed vestibulum mauris. Suspendisse neque odio, rhoncus eget tempor eget, tempus quis nisl. Donec hendrerit, lorem non lacinia ultrices, erat odio rhoncus tortor, eu posuere dolor metus sed eros. Pellentesque eget nisi posuere dolor luctus vestibulum. Duis aliquam convallis est nec interdum. Sed nibh mi, tempor ut nunc id, luctus tincidunt ex. Vestibulum nec velit hendrerit nulla mollis laoreet et sit amet tellus. Nunc non fringilla mi. Duis arcu mi, congue pharetra lorem eu, pulvinar ultrices sapien.'
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum elementum elit ac vestibulum sodales. Mauris tempor consectetur mi nec tempor. Etiam fermentum maximus lacus, quis interdum ligula lacinia ac. Maecenas sagittis metus quis sem feugiat ultricies.'
     return (
-      <div className="container">
-        <EditProfile username={'username'} teamName={'dummyTeamName'} bio={bio} email={'me@me.com'} name={'dummy name'} imageUrl={''} />
+      <div className='container'>
+        {this.isLoggedInUsersProfile(parseInt(this.props.match.params.userId, 10)) ? (
+          <EditProfile username={'username'} teamName={'dummyTeamName'} bio={bio} email={'me@me.com'} name={'dummy name'} imageUrl={''} />
+        ) : (
+          <Profile username={'other user'} teamName={'other team'} bio={bio} imageUrl={''} />
+        )}
       </div>
     )
   }
