@@ -59,7 +59,7 @@ export class AuthStore {
 
   @action logUserIn (username, password) {
     return new Promise(action('login-callback', (resolve, reject) => {
-      axios.post('/login',
+      axios.post(process.env.REACT_APP_API_URL + '/login',
         {
           username: username,
           password: password

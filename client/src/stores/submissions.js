@@ -40,6 +40,9 @@ export class SubmissionStore {
     })).catch((err) => {
       // TODO: Actual logging
       console.log('Error loading submissions', err.message)
+      this.isLoading = false
+      this.isStale = false
+      this.lastUpdated = new Date()
     })
   }
 
@@ -55,7 +58,19 @@ export class SubmissionStore {
         this.isLoading = false
         this.makeDataStale()
         // Give a generic error message
-        this.uploadError = 'Uh oh! Something went wrong. Please wait a bit and try again. If the problem persists, contact the SIG-Game devs at siggame@mst.edu.'
+        let responseStatus = err.response.status
+        switch (responseStatus) {
+          case 413:
+            this.uploadError = 'The file you uploaded was too large. The maximum file size is 150MB.'
+            break
+          case 415:
+            this.uploadError = 'Incorrect filetype - file must be .zip, .tar or .tar.gz.'
+            break
+          default:
+            this.uploadError = 'Uh oh! Something went wrong. Please wait a bit and try again. If the problem persists, contact the SIG-Game devs at siggame@mst.edu.'    
+            break
+        }
+        
       })
     })
   }

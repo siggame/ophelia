@@ -1,7 +1,8 @@
 'use strict'
 
 const knex = require('./connect').knex
-
+const host = require('../vars').HOST
+const logEndpoint = require('../vars').LOG_ENDPOINT
 /**
  * Queries for all relevant games for a specified team name. Only retrieves
  * games for the highest submission version
@@ -89,6 +90,9 @@ function getGamesByTeamName (teamName, page, pageSize) {
           } else {
             game.winner = teamName
           }
+          // This will let us contact the correct endpoint to actually retrieve
+          // the log url from the arena
+          game.log_url = host + logEndpoint + game.log_url
           delete game.winner_id
           delete game.team_id
           games.push(game)
@@ -99,6 +103,26 @@ function getGamesByTeamName (teamName, page, pageSize) {
       })
     }).catch((err) => {
       return reject(err)
+    })
+  })
+}
+
+function countGamesByTeamName (teamName) {
+  return new Promise((resolve, reject) => {
+    if (teamName === null || typeof teamName === 'undefined') {
+      reject(new Error('TeamName is null or undefined'))
+    }
+    const query = knex('games')
+      .join('games_submissions', 'games_submissions.game_id', '=', 'games.id')
+      .join('submissions',
+        'submissions.id', '=', 'games_submissions.submission_id')
+      .join('teams', 'teams.id', '=', 'submissions.team_id')
+      .where('teams.name', '=', teamName)
+      .count('games.id')
+    query.then((count) => {
+      resolve(parseInt(count[0].count))
+    }).catch((err) => {
+      reject(err)
     })
   })
 }
@@ -134,5 +158,6 @@ function sortGames (gameA, gameB) {
 
 module.exports = {
   getGamesByTeamName,
-  getGameById
+  getGameById,
+  countGamesByTeamName
 }
