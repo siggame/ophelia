@@ -1,3 +1,4 @@
+import { distanceInWords } from 'date-fns'
 import React, { Component } from 'react'
 
 /**
@@ -45,6 +46,10 @@ export default class GameBadge extends Component {
         break
     }
 
+    // Display human readable time
+    let updatedDate = new Date(this.props.updatedAt)
+    let updatedTime = distanceInWords(new Date(), updatedDate, { addSuffix: true })
+
     // This code looks really crazy, but it's rendering the purple play button on the right side of the badge.
     // SVGs are nice because the browser renders them and they don't get pixellated as you zoom in.
     const playButtonVector = (
@@ -72,17 +77,22 @@ export default class GameBadge extends Component {
       </svg>
     )
 
+    let visUrl = 'http://vis.siggame.io?log=' + this.props.logUrl
+
     return (
       <div style={{ backgroundColor: bgColor, margin: 10, height: '10vh' }} className='row'>
-        <div className='col-md-4' style={{ height: '100%' }}>
+        <div className='col-xs-3 text-center' style={{ height: '100%' }}>
           <div style={{ lineHeight: '10vh', fontSize: 26 }} >{this.props.opponent}</div>
         </div>
-        <div className='col-md-6' style={{ height: '100%', overflow: 'hidden' }}>
-          <h3>{this.props.status}</h3>
-          <p>{this.props.description}</p>
+        <div className='col-xs-6 text-center' style={{ height: '100%', overflow: 'hidden' }}>
+          <div style={{ paddingTop: '2vh' }}><span style={{ fontSize: 20 }}>{this.props.status}</span> <span style={{ fontStyle: 'italic' }}>{'(' + updatedTime + ')'}</span></div>
+          <div style={{ padding: '1vh 0 1vh 0', fontSize: 13 }}>{this.props.description}</div>
         </div>
-        <div className='col-md-2' style={{ height: '100%', lineHeight: '10vh' }} >
-          <a href={this.props.logUrl} onMouseEnter={this.toggleHover} onMouseLeave={this.toggleHover}>
+        <div className='col-xs-1 text-center' style={{ height: '100%', overflow: 'hidden' }}>
+          <div style={{ lineHeight: '10vh', fontSize: 26 }}>{this.props.version}</div>
+        </div>
+        <div className='col-xs-2 text-center' style={{ height: '100%', lineHeight: '10vh' }} >
+          <a href={visUrl} onMouseEnter={this.toggleHover} onMouseLeave={this.toggleHover} target='_blank'>
             {playButtonVector}
           </a>
         </div>
@@ -96,5 +106,8 @@ GameBadge.defaultProps = {
   status: '',
   description: '',
   logUrl: '',
-  id: ''
+  id: '',
+  version: '',
+  createdAt: '',
+  updatedAt: ''
 }

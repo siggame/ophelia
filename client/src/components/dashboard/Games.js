@@ -21,8 +21,7 @@ export class GamesList extends React.Component {
         })
       }
     }
-
-
+    
 
     return (
       <div>

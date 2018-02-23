@@ -2,7 +2,7 @@
 
 const express = require('express')
 const router = express.Router()
-const games = require('../db/init').games
+const dbGames = require('../db/init').games
 
 // All paths in this file should start with this
 const path = '/games'
@@ -51,7 +51,7 @@ router.get(path + '/', (req, res) => {
   // How many games should be in each page
   const pageSize = req.query.pageSize
 
-  games.getGamesByTeamName(teamName, page, pageSize).then((games) => {
+  dbGames.getGamesByTeamName(teamName, page, pageSize).then((games) => {
     const paginatedGames = createGroupedArray(games, pageSize)
     if (paginatedGames.length === 0) {
       return res.status(200).json(response)
@@ -59,13 +59,18 @@ router.get(path + '/', (req, res) => {
       // response.message = 'Incorrect page number'
       // return res.status(400).json(response)
     }
-    response.success = true
-    response.message = 'Games successfully retrieved'
-    response.pages = paginatedGames.length
-    // page - 1 because the array is indexed at 0
-    // response.games = paginatedGames[page - 1]
-    response.games = games
-    return res.status(200).json(response)
+    dbGames.countGamesByTeamName(teamName).then((count) => {
+      response.success = true
+      response.message = 'Games successfully retrieved'
+      response.pages = Math.ceil(count / pageSize)
+      // page - 1 because the array is indexed at 0
+      // response.games = paginatedGames[page - 1]
+      response.games = games
+      return res.status(200).json(response)
+    }).catch((err) => {
+      response.message = 'An error occurred: ' + err.message
+      return res.status(500).json(response)
+    })
   }).catch((err) => {
     response.message = 'An error occurred: ' + err.message
     return res.status(500).json(response)
@@ -84,7 +89,7 @@ router.get(path + '/:gameID', (req, res) => {
     message: '',
     game: null
   }
-  games.getGameById(gameId).then((result) => {
+  dbGames.getGameById(gameId).then((result) => {
     response.success = true
     response.message = 'Game #' + gameId + ' successfully retrieved'
     response.game = result

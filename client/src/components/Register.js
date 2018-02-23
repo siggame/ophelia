@@ -141,6 +141,14 @@ export default class RegisterView extends Component {
           </div>
           <div className='form-group'>
             <label htmlFor='password'>Password</label>
+            <div>
+              Must be at least 6 characters and contain:
+              <ul>
+                <li>an uppercase letter</li>
+                <li>a lowercase letter</li>
+                <li>a number</li>
+              </ul>
+            </div>
             {passwordError}
             <input type='password' className='form-control' name='password' placeholder='Password' value={this.state.password} onChange={this.handleChange} />
           </div>
