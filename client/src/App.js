@@ -13,23 +13,24 @@ import LogoutContainer from './containers/LogoutContainer'
 @withRouter
 @observer
 export default class App extends React.Component {
-  render () {
+  render() {
     return (
       <div>
         <NavBar />
         <main>
           <Switch>
-            <Route exact path='/' component={LandingPageContainer} />
-            <Route exact path='/dashboard' component={DashboardContainer} />
-            <Route path='/profile/:teamId' component={ProfileContainer} />
-            <Route exact path='/register' component={RegisterContainer} />
-            <Route exact path='/login' component={LoginContainer} />
-            <Route exact path='/logout' component={LogoutContainer} />
+            <Route exact path="/" component={LandingPageContainer} />
+            <Route exact path="/dashboard" component={DashboardContainer} />
+            {/* <Route path='/profile/:teamId' component={ProfileContainer} /> */}
+            <Route path="/profile" component={ProfileContainer} />
+            <Route exact path="/register" component={RegisterContainer} />
+            <Route exact path="/login" component={LoginContainer} />
+            <Route exact path="/logout" component={LogoutContainer} />
           </Switch>
         </main>
 
-        <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js' />
-        <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' integrity='sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa' crossOrigin='anonymous' />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js" />
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossOrigin="anonymous" />
       </div>
     )
   }

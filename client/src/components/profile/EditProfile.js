@@ -1,43 +1,41 @@
 import React from 'react'
-import { withFormik } from 'formik'
+import { withFormik, Formik } from 'formik'
 import PropTypes from 'prop-types'
 import { Loader } from 'react-overlay-loader'
+import each from 'lodash/each'
+
+import { validateProfileUpdate } from '../../modules/users'
 
 const MAX_BIO_LENGTH = 512
 
 @withFormik({
-  // Transform outer props into form values
-  mapPropsToValues: ({ username, teamName, bio, primaryContactEmail, primaryContactName }) => ({
+  mapPropsToValues: ({ username, teamName, bio, email, name }) => ({
     username,
-    teamName,
-    bio,
-    primaryContactEmail,
-    primaryContactName
+    teamName: teamName || `${username} is currently a F/A`,
+    bio: bio || '',
+    email,
+    name
   }),
-  // Add a custom validation function (this can be async too!)
-  // TODO: Add function in users modules to add validation
-  validate: (values, props) => {
-    const errors = {}
-    console.log('formik validate')
-    return errors
-  },
-  // Submission handler
-  handleSubmit: (
-    values,
-    {
-      props,
-      setSubmitting,
-      setErrors
-      /* setValues, setStatus, and other goodies */
-    }
-  ) => {
-    console.log('formik submit')
+  validate: (values, props) => validateProfileUpdate(values),
+  handleSubmit: (values, { props, setSubmitting, setErrors }) => {
+    // TODO: Update via an API call
+    console.log('formik submit', values)
     setSubmitting(false)
   }
 })
 export default class EditProfile extends React.Component {
   render() {
-    const { values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, imageUrl } = this.props
+    const { values, touched, errors = {}, handleChange, handleBlur, handleSubmit, isSubmitting, imageUrl } = this.props
+    const formattedErrors = {}
+
+    // TODO: Move this into its own file
+    each(errors, (values, key) => {
+      formattedErrors[key] = values.map((value, i) => (
+        <span key={i} className="help-block">
+          {touched[key] && errors[key] && value}
+        </span>
+      ))
+    })
 
     return (
       <div className="container">
@@ -57,34 +55,26 @@ export default class EditProfile extends React.Component {
           </div>
           <div className="col-md-8">
             <form onSubmit={handleSubmit}>
-              <div className={`form-group ${errors.username && 'has-error'}`}>
+              <div className={`form-group ${touched.username && errors.username && 'has-error'}`}>
                 <label htmlFor="username">Username</label>
-                <input type="text" className="form-control" name="username" placeholder="Username" autoComplete="off" value={values.username} onChange={handleChange} />
-                {errors.username && <span className="help-block">{errors.username}</span>}
+                <input type="text" className="form-control" name="username" placeholder="Username" autoComplete="off" value={values.username} onChange={handleChange} onBlur={handleBlur} />
+                {formattedErrors.username}
               </div>
               <div className="form-group">
                 <label htmlFor="teamName">Team Name</label>
-                <input type="text" className="form-control" name="teamName" placeholder="Team Name" autoComplete="off" value={values.teamName} onChange={handleChange} />
+                <input type="text" className="form-control" name="teamName" placeholder="Team Name" autoComplete="off" value={values.teamName} onChange={handleChange} onBlur={handleBlur} />
               </div>
-              <div className={`form-group ${errors.primaryContactEmail && 'has-error'}`}>
-                <label htmlFor="primaryContactEmail">Primary Contact Email</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="primaryContactEmail"
-                  placeholder="Primary Contact Email"
-                  autoComplete="off"
-                  value={values.primaryContactEmail}
-                  onChange={handleChange}
-                />
-                {errors.primaryContactEmail && <span className="help-block">{errors.primaryContactEmail}</span>}
+              <div className={`form-group ${touched.email && errors.email && 'has-error'}`}>
+                <label htmlFor="email">Primary Contact Email</label>
+                <input type="text" className="form-control" name="email" placeholder="Primary Contact Email" autoComplete="off" value={values.email} onChange={handleChange} onBlur={handleBlur} />
+                {formattedErrors.email}
               </div>
-              <div className={`form-group ${errors.primaryContactName && 'has-error'}`}>
-                <label htmlFor="primaryContactName">Primary Contact Name</label>
-                <input type="text" className="form-control" name="primaryContactName" placeholder="Primary Contact Name" autoComplete="off" value={values.primaryContactName} onChange={handleChange} />
-                {errors.primaryContactName && <span className="help-block">{errors.primaryContactName}</span>}
+              <div className={`form-group ${touched.name && errors.name && 'has-error'}`}>
+                <label htmlFor="name">Primary Contact Name</label>
+                <input type="text" className="form-control" name="name" placeholder="Primary Contact Name" autoComplete="off" value={values.name} onChange={handleChange} onBlur={handleBlur} />
+                {formattedErrors.name}
               </div>
-              <div className="form-group">
+              <div className={`form-group ${touched.bio && errors.bio && 'has-error'}`}>
                 <label htmlFor="bio">{`Bio (${values.bio.length}/${MAX_BIO_LENGTH})`}</label>
                 <textarea
                   className="form-control"
@@ -94,7 +84,9 @@ export default class EditProfile extends React.Component {
                   maxLength={MAX_BIO_LENGTH}
                   value={values.bio}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                 />
+                {formattedErrors.bio}
               </div>
               <div className="form-group">
                 <button type="submit" className="btn btn-default btn-block btn-lg" disabled={isSubmitting}>
@@ -107,4 +99,23 @@ export default class EditProfile extends React.Component {
       </div>
     )
   }
+}
+
+Formik.propTypes = {
+  username: PropTypes.string.isRequired,
+  teamName: PropTypes.string,
+  bio: PropTypes.string,
+  email: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired
+}
+
+EditProfile.propTypes = {
+  values: PropTypes.object,
+  touched: PropTypes.object,
+  errors: PropTypes.object,
+  handleChange: PropTypes.func,
+  handleBlur: PropTypes.func,
+  handleSubmit: PropTypes.func,
+  isSubmitting: PropTypes.func,
+  imageUrl: PropTypes.string
 }
