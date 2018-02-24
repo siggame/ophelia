@@ -5,16 +5,23 @@ import { Loader } from 'react-overlay-loader'
 import each from 'lodash/each'
 
 import { validateProfileUpdate } from '../../modules/users'
+import UploadImage from './UploadImage'
 
 const MAX_BIO_LENGTH = 512
 
+/**
+ * Note:
+ * Formik doesn't do anything with the image. Only using Formik has a convenient way to
+ * update the image source attribute for the profile image.
+*/
 @withFormik({
-  mapPropsToValues: ({ username, teamName, bio, email, name }) => ({
+  mapPropsToValues: ({ username, teamName, bio, email, name, image }) => ({
     username,
     teamName: teamName || `${username} is currently a F/A`,
     bio: bio || '',
     email,
-    name
+    name,
+    image
   }),
   validate: (values, props) => validateProfileUpdate(values),
   handleSubmit: (values, { props, setSubmitting, setErrors }) => {
@@ -25,7 +32,7 @@ const MAX_BIO_LENGTH = 512
 })
 export default class EditProfile extends React.Component {
   render () {
-    const { values, touched, errors = {}, handleChange, handleBlur, handleSubmit, isSubmitting, imageUrl } = this.props
+    const { values, touched, errors = {}, handleChange, handleBlur, handleSubmit, isSubmitting, setFieldValue } = this.props
     const formattedErrors = {}
 
     // TODO: Move this into its own file
@@ -50,8 +57,9 @@ export default class EditProfile extends React.Component {
         <div className='row'>
           <div className='col-md-4'>
             <div className='thumbnail'>
-              <img src={imageUrl} alt='...' />
+              <img src={values.image} alt='...' />
             </div>
+            <UploadImage onChange={setFieldValue} name='image' />
           </div>
           <div className='col-md-8'>
             <form onSubmit={handleSubmit}>
