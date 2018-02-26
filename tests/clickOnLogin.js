@@ -14,7 +14,7 @@ module.exports = {
       .pause(3000)
       .setValue('input[name=username]', 'username')
       .setValue('input[name=password]', 'password')
-      .click('input[type=submit]')
+      .click('button[type=submit]')
       .pause(3000)
       .assert.containsText('h2', 'Latest Submission')
       .end()
