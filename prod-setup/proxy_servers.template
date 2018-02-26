@@ -59,6 +59,10 @@ server {
         ssl_certificate /etc/ssl/live/$NGINX_SERVER_HOST/cert.pem;
         ssl_certificate_key /etc/ssl/live/$NGINX_SERVER_HOST/privkey.pem;
 
+        location ^~ /storage/ {
+                    proxy_pass http://$NGINX_ARENA_HOST/storage/;
+                }
+
         location / {
                 proxy_set_header Host $host;
                 proxy_set_header X-Real-IP $remote_addr;
