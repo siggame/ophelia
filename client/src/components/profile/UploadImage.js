@@ -4,7 +4,7 @@ import { UploadField } from '@navjobs/upload'
 
 // TODO: Upload image to API
 export default class UploadImage extends React.Component {
-  handleFileChange = image => {
+  handleFileChange = ([image]) => {
     const reader = new FileReader()
     reader.onloadend = () => {
       this.props.onChange(this.props.name, reader.result)
@@ -18,7 +18,7 @@ export default class UploadImage extends React.Component {
   render () {
     return (
       <UploadField
-        onFiles={files => this.handleFileChange(files[0])}
+        onFiles={this.handleFileChange}
         uploadProps={{
           accept: '.png,.jpg,.gif'
         }}

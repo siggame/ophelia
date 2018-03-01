@@ -122,7 +122,9 @@ export function validateProfileUpdate (values) {
       presence: false
     },
     name: {
-      presence: true
+      presence: {
+        allowEmpty: false
+      }
     },
     email: {
       presence: true,

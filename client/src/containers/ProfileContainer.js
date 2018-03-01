@@ -16,9 +16,9 @@ export default class ProfileContainer extends React.Component {
     return (
       <div className='container'>
         {this.isLoggedInUsersProfile(parseInt(this.props.match.params.userId, 10)) ? (
-          <EditProfile username={'username'} teamName={'dummyTeamName'} bio={bio} email={'me@me.com'} name={'dummy name'} imageUrl={''} />
+          <EditProfile username={'username'} bio={bio} email={'me@me.com'} name={'dummy name'} imageUrl={''} />
         ) : (
-          <Profile username={'other user'} teamName={'other team'} bio={bio} imageUrl={''} />
+          <Profile username={'other user'} bio={bio} imageUrl={''} />
         )}
       </div>
     )
