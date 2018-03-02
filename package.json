@@ -8,7 +8,7 @@
     "debug": "concurrently \"npm run server-debug\" \"cd client && npm start\"",
     "server-debug": "cd server && nodemon ./bin/www",
     "setup": "npm install && cd client && npm install && cd ../server && npm install && cd ..",
-    "testing": "npm install nightwatch && npm install selenium-standalone && ./node_modules/.bin/selenium-standalone install"
+    "testing": "npm install nightwatch --save-dev && npm install selenium-standalone --save-dev && ./node_modules/.bin/selenium-standalone install"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",
@@ -24,11 +24,11 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-react": "^7.3.0",
     "eslint-plugin-standard": "^3.0.1",
-    "nodemon": "^1.12.1"
+    "nightwatch": "^0.9.19",
+    "nodemon": "^1.12.1",
+    "selenium-standalone": "^6.12.0"
   },
   "dependencies": {
-    "nightwatch": "^0.9.19",
-    "react-paginate": "^5.1.0",
-    "selenium-standalone": "^6.12.0"
+    "react-paginate": "^5.1.0"
   }
 }
