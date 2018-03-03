@@ -9,14 +9,19 @@ const jwt = require('express-jwt')
 const multer = require('multer')
 const upload = multer()
 const fileUpload = require('express-fileupload')
+const cors = require('cors')
 require('dotenv').config()
 const maxFileSize = require('./vars').MAX_FILE_SIZE
 const jwtSecret = require('./vars').TOKEN_SECRET
+const hostname = require('./vars').HOST
 
 const routers = require('./routers/init')
 
 const app = express()
 
+// Enable CORS for the hostname that the client is hosted at
+app.use(cors({origin: hostname}))
+app.options(cors({origin: hostname}))
 // view engine setup
 app.set('components', path.join(__dirname, 'components'))
 

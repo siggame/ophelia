@@ -27,7 +27,7 @@ export default class SubmissionInfo extends React.Component {
             <div className='col-xs-10'>
               <h2>Latest Submission</h2>
             </div>
-            <div className='col-xs-2' style={{ padding: '3vh 0 4px 0'}}>
+            <div className='col-xs-2' style={{padding: '3vh 0 4px 0'}}>
               <ButtonRefresh buttonOnClick={this.props.submissionStore.makeDataStale} />
             </div>
           </div>
@@ -50,10 +50,10 @@ export default class SubmissionInfo extends React.Component {
       <div>
         <div className='row'>
           <div className='col-xs-10'>
-           <h2>Latest Submission</h2>
+            <h2>Latest Submission</h2>
           </div>
-          <div className='col-xs-2' style={{ padding: '3vh 0 4px 0'}}>
-          <ButtonRefresh buttonOnClick={this.props.submissionStore.makeDataStale} />
+          <div className='col-xs-2' style={{padding: '3vh 0 4px 0'}}>
+            <ButtonRefresh buttonOnClick={this.props.submissionStore.makeDataStale} />
           </div>
         </div>
         
@@ -63,7 +63,7 @@ export default class SubmissionInfo extends React.Component {
             <span>Uploaded:</span> ({uploadedTime})  {uploadedDate.toDateString() + ' ' +  uploadedDate.toLocaleTimeString('en-US') }
           </div>
           <div className='row'>
-            <div className='col-md-4'><a href={latestSubmission.logUrl} style={{ fontWeight: 'bold' }}>Build Log</a></div>
+            <div className='col-md-4'><a href={latestSubmission.logUrl} style={{ fontWeight: 'bold' }} download>Build Log</a></div>
             <div className='col-md-4'><span style={{ fontWeight: 'bold' }}>Version:</span> {latestSubmission.version}</div>
           </div>
           <p>
