@@ -136,6 +136,11 @@ export function validateProfileUpdate (values) {
         maximum: 512,
         message: 'must be less than 512 characters'
       }
+    },
+    password: {
+      presence: {
+        allowEmpty: false
+      }
     }
   }
 

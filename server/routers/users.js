@@ -178,7 +178,7 @@ router.put(path + '/:teamName', (req, res) => {
   // If these values aren't here then we can't move forward.
   const requiredValues = ['oldPassword', 'editData']
   for (const value of requiredValues) {
-    if (typeof body[value] === 'undefined') {
+    if (typeof body[value] === 'undefined' || (typeof body[value] === 'string' && body[value] === '')) {
       response.message = 'Required field ' + value + ' is missing or blank'
       return res.status(400).json(response)
     }
@@ -188,16 +188,16 @@ router.put(path + '/:teamName', (req, res) => {
 
   // Use the login function to check if they are signed in properly
   login(teamName, oldPassword).then((user) => {
-    // user.success determines whether or not the user successfully logged in
-    if (user.success) {
+    // user determines whether or not the user successfully logged in
+    if (user) {
       // This will hold all of the data to be edited
       const teamEditData = {}
       // Iterate over each of the fields allowed to be edited
       for (const field of editableFields) {
-        if (editData.hasOwnProperty(field)) {
+        if (editData.hasOwnProperty(field) && editData[field] !== '') {
           switch (field) {
             case 'password':
-              if (!sanitizer.isValidPassword(editableFields[field])) {
+              if (!sanitizer.isValidPassword(editData[field])) {
                 response.message = 'invalid password'
                 return res.status(400).json(response)
               }
@@ -206,14 +206,14 @@ router.put(path + '/:teamName', (req, res) => {
               teamEditData[field] = encrypt(editData.password)
               break
             case 'email':
-              if (!sanitizer.isValidEmail(editableFields[field])) {
+              if (!sanitizer.isValidEmail(editData[field])) {
                 response.message = 'invalid email'
                 return res.status(400).json(response)
               }
-              teamEditData[field] = editableFields[field]
+              teamEditData[field] = editData[field]
               break
             default:
-              teamEditData[field] = editableFields[field]
+              teamEditData[field] = editData[field]
           }
         }
       }
