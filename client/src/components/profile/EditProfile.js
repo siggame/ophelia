@@ -5,11 +5,32 @@ import { Loader } from 'react-overlay-loader'
 import each from 'lodash/each'
 import axios from 'axios'
 import { inject, observer } from 'mobx-react'
+import Yup from 'yup'
 
-import { validateProfileUpdate } from '../../modules/users'
 import UploadImage from './UploadImage'
 
 const MAX_BIO_LENGTH = 512
+
+/**
+ * Check if two Yup fields match because Yup doesn't support this natively support this nicely
+ * @param {*} ref Reference to the field that is being compared
+ * @param {string} msg Custom error message to display
+ */
+function equalTo (ref, msg) {
+  return this.test({
+    name: 'equalTo',
+    exclusive: false,
+    message: msg || `${ref.path} must be the same as ${ref}`,
+    params: {
+      reference: ref.path
+    },
+    test: function (value) {
+      return value === this.resolve(ref)
+    }
+  })
+}
+
+Yup.addMethod(Yup.string, 'equalTo', equalTo)
 
 /*
  * Note:
@@ -49,24 +70,24 @@ export default class EditProfile extends React.Component {
           newPassword: '',
           confirmPassword: ''
         }}
-        validate={values => {
-          const errors = validateProfileUpdate(values) || {}
-          const { newPassword, confirmPassword } = values
-          const passwordPattern = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9!@#$%^&*]*$/
-
-          if (newPassword && newPassword !== '') {
-            if (newPassword.length < 6) {
-              errors.newPassword = ['Password must be at least 6 characters']
-            } else if (!passwordPattern.test(newPassword)) {
-              errors.newPassword = ['Password is invalid']
-            }
-            if (confirmPassword !== newPassword) {
-              errors.confirmPassword = ['Passwords do not match']
-            }
-          }
-
-          return errors
-        }}
+        validationSchema={Yup.object().shape({
+          name: Yup.string().required('Required'),
+          email: Yup.string().email('Invalid email').required('Required'),
+          username: Yup.string().required('Required'),
+          bio: Yup.string().trim(),
+          password: Yup.string().required('Required'),
+          // New password is only validated when the user inputs something. If it's blank, assume the user doesn't want to change their password which is okay.
+          newPassword: Yup.string().notRequired().min(6, 'Password must be at least 6 characters').matches(
+            /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9!@#$%^&*]*$/,
+            'Invalid password'
+          ),
+          // Confirm password only validated if there is something in newPassword
+          confirmPassword: Yup.string().when('newPassword', (newPassword, schema) => (
+            newPassword && newPassword
+              ? schema.equalTo(Yup.ref('newPassword'), 'Passwords do not match').required('Required')
+              : schema.notRequired()
+          ))
+        })}
         onSubmit={async (values, { setSubmitting, setErrors, resetForm }) => {
           try {
             await axios.put(`${process.env.REACT_APP_API_URL}/users/${teamName}/`, {
@@ -89,16 +110,12 @@ export default class EditProfile extends React.Component {
           setSubmitting(false)
         }}
       >
-        {({ values, touched, errors = {}, handleChange, handleBlur, handleSubmit, isSubmitting, setFieldValue }) => {
+        {({ values, touched, errors, handleChange, handleBlur, handleSubmit, isSubmitting, setFieldValue }) => {
           const formattedErrors = {}
 
           // TODO: Move this into its own file
-          each(errors, (values, key) => {
-            formattedErrors[key] = values.map((value, i) => (
-              <span key={`error-${key}-${i}`} className='help-block'>
-                {touched[key] && errors[key] && value}
-              </span>
-            ))
+          each(errors, (value, key) => {
+            formattedErrors[key] = <span className='help-block'>{touched[key] && errors[key] && value}</span>
           })
 
           return (
