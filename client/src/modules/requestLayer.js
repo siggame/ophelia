@@ -2,6 +2,20 @@ import axios from 'axios'
 
 import stores from '../stores'
 
+axios.interceptors.response.use(
+  response => {
+    console.log(response)
+    return response
+  },
+  error => {
+    // TODO: Add all error logging logic here
+    if (error.status === 401) {
+      stores.authStore.logUserOut()
+    }
+    return Promise.reject(error)
+  }
+)
+
 export default class RequestLayer {
   fetchGames (pageNum, pageSize) {
     return new Promise((resolve, reject) => {
