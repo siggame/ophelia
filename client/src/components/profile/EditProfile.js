@@ -12,7 +12,7 @@ import UploadImage from './UploadImage'
 const MAX_BIO_LENGTH = 512
 
 /**
- * Check if two Yup fields match because Yup doesn't support this natively support this nicely
+ * Check if two Yup fields match (Yup doesn't currently have a native way to do this nicely)
  * @param {*} ref Reference to the field that is being compared
  * @param {string} msg Custom error message to display
  */
