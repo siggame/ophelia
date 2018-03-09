@@ -1,16 +1,15 @@
 import axios from 'axios'
 
 import stores from '../stores'
+import { history } from '../index'
 
 axios.interceptors.response.use(
-  response => {
-    console.log(response)
-    return response
-  },
+  response => response,
   error => {
     // TODO: Add all error logging logic here
-    if (error.status === 401) {
+    if (error.response.status === 401) {
       stores.authStore.logUserOut()
+      history.push('/login')
     }
     return Promise.reject(error)
   }
