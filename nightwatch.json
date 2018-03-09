@@ -8,11 +8,11 @@
 
   "selenium" : {
     "start_process" : false,
-    "server_path" : "./node_modules/selenium-standalone/.selenium/selenium-server/3.7.1-server.jar",
+    "server_path" : "",
     "port" : 4444,
     "cli_args" : {
-      "webdriver.chrome.driver" : "./node-modules/.selenium/chromedriver/2.33-x64-chromedriver",
-      "webdriver.gecko.driver" : "./node-modules/.selenium/geckodriver/0.19.1-x64-geckodriver"
+      "webdriver.chrome.driver" : "",
+      "webdriver.gecko.driver" : ""
     }
   },
 
@@ -27,8 +27,8 @@
         "path" : ""
       },
       "desiredCapabilities": {
-        "browserName": "firefox",
-        "marionette": false
+        "browserName": "chrome",
+        "marionette": true
       },
       "integration" : {
         "launch_url" : "http://localhost:3000",
