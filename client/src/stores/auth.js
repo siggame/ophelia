@@ -1,12 +1,12 @@
 import axios from 'axios'
 import { action, computed, observable, reaction } from 'mobx'
+import jwtDecode from 'jwt-decode'
 
 import gameStore from './games'
 import submissionStore from './submissions'
 
 export class AuthStore {
-  @observable username = ''
-  @observable token = window.localStorage.getItem('jwt')
+  @observable token = localStorage.getItem('jwt')
 
   constructor () {
     // Updates or removes our JSON Web Token in the localStorage of the browser.1
@@ -14,24 +14,47 @@ export class AuthStore {
       () => this.token,
       token => {
         if (token) {
-          window.localStorage.setItem('jwt', token)
+          localStorage.setItem('jwt', token)
         } else {
-          window.localStorage.removeItem('jwt')
+          localStorage.removeItem('jwt')
         }
       }
     )
   }
 
+  /**
+   * @description Get username from user's jwt token
+   * @return {string | null} username if jwt token is valid. Otherwise, null
+   */
+  @computed get username () {
+    try {
+      const { username } = jwtDecode(this.token)
+      return username
+    } catch (err) {
+      return null
+    }
+  }
+
+  /**
+   * @description Decode token and validate user's authentication
+   * @return {boolean} True if user has a valid token. Otherwise, false
+   */
   @computed get isUserLoggedIn () {
-    return !!(this.token)
+    try {
+      const { exp } = jwtDecode(this.token)
+
+      if (this.isTokenExpired(exp)) {
+        return false
+      }
+    } catch (err) {
+      return false
+    }
+
+    return true
   }
 
-  @action setToken(token) {
+  @action setToken (token) {
     this.token = token
-  }
-
-  @action setUsername(username) {
-    this.username = username
   }
 
   @action logUserIn (username, password) {
@@ -43,7 +66,6 @@ export class AuthStore {
         }
       ).then((response) => {
         this.setToken(response.data.token)
-        this.username = username
         return resolve()
       }).catch((err) => {
         // TODO: Error handling
@@ -54,10 +76,21 @@ export class AuthStore {
   }
 
   @action logUserOut () {
-    this.username = ''
     this.token = ''
     gameStore.resetGameData()
     submissionStore.resetSubmissionData()
+  }
+
+  /**
+   * @description Check whether or not the token is expired
+   * @param {number} exp Value in UTC seconds when token expires
+   * @return {boolean} Whether or not the token has expired compared to the current time
+   */
+  isTokenExpired (exp) {
+    if (!exp) {
+      return true
+    }
+    return new Date().getTime() / 1000 > exp
   }
 }
 

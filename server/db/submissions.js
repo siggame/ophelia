@@ -1,7 +1,7 @@
 'use strict'
 
 const knex = require('./connect').knex
-const host = require('../vars').HOST
+const host = require('../vars').SERVER_HOST
 const logEndpoint = require('../vars').LOG_ENDPOINT
 
 /**
@@ -22,7 +22,7 @@ function getSubmissionsByTeamName (teamName) {
       .where('teams.name', '=', teamName)
       .then((submissions) => {
         for (const submission of submissions) {
-          submission.log_url = host + logEndpoint + '/' + submission.log_url
+          submission.log_url = host + logEndpoint + submission.log_url
         }
         submissions.sort(sortSubmissions)
         return resolve(submissions)

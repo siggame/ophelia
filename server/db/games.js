@@ -1,7 +1,7 @@
 'use strict'
 
 const knex = require('./connect').knex
-const host = require('../vars').HOST
+const host = require('../vars').SERVER_HOST
 const logEndpoint = require('../vars').LOG_ENDPOINT
 /**
  * Queries for all relevant games for a specified team name. Only retrieves
