@@ -8,7 +8,9 @@
     "debug": "concurrently \"npm run server-debug\" \"cd client && npm start\"",
     "server-debug": "cd server && nodemon ./bin/www",
     "setup": "npm install && cd client && npm install && cd ../server && npm install && cd ..",
-    "testing": "npm install nightwatch --save-dev && npm install selenium-standalone --save-dev && ./node_modules/.bin/selenium-standalone install"
+    "nightwatch_install": "npm install nightwatch --save-dev && npm install selenium-standalone --save-dev && ./node_modules/.bin/selenium-standalone install",
+    "nightwatch": "./node_modules/.bin/nightwatch",
+    "selenium": "./node_modules/.bin/selenium-standalone start"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",
