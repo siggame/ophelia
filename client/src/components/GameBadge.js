@@ -36,7 +36,7 @@ export default class GameBadge extends Component {
         bgColor = '#2ecc71'
         break
       case 'Lost':
-        bgColor = '#e74c3c'
+        bgColor = 'rgb(251, 128, 116)'
         break
       case 'Queued':
         bgColor = '#f1c40f'
@@ -57,7 +57,7 @@ export default class GameBadge extends Component {
         <g id='Canvas' transform='translate(-26 92)'>
           <g id='Group 2'>
             <g id='Viz Link Button'>
-              <use xlinkHref='#path0_fill' transform='translate(26 -92)' fill={this.state.buttonActive ? '#666666' : '#999999'} />
+              <use xlinkHref='#path0_fill' transform='translate(26 -92)' id ='playButton' fill='#666666' />
             </g>
             <g id='Group'>
               <g id='x33 56. Play'>
@@ -103,7 +103,7 @@ export default class GameBadge extends Component {
           </a>
         </div>
         <div className='col-xs-2 text-center' style={{ height: '100%', lineHeight: '10vh' }} >
-          <a href={visUrl} onMouseEnter={this.toggleHover} onMouseLeave={this.toggleHover} target='_blank'>
+          <a href={visUrl} target='_blank'>
             {playButtonVector}
           </a>
         </div>
