@@ -14,7 +14,6 @@ module.exports = {
       .pause(3000)
       .setValue('input[name=username]', 'username')
       .setValue('input[name=password]', 'password')
-      .expect.element('#lst-ib').to.be.visible
       .click('button[type=submit]')
       .end()
   }
