@@ -8,6 +8,8 @@ const sanitizer = require('../utils/sanitizer')
 
 const tokenSecret = require('../vars').TOKEN_SECRET
 const expired = require('../vars').TOKEN_EXPIRE_TIME
+const Raven = require('../utils/ravenconfig')
+
 
 // All paths in this file should start with this
 const path = '/login'
@@ -42,6 +44,7 @@ router.post(path + '/', (req, res) => {
   const requiredValues = ['username', 'password']
   for (const value of requiredValues) {
     if (typeof body[value] === 'undefined') {
+      // Raven.captureException("The error i want to record", { req: req })
       response.message = 'Required field ' + value + ' is missing or blank'
       return res.status(400).json(response)
     }
@@ -49,6 +52,7 @@ router.post(path + '/', (req, res) => {
   const username = body.username
   const password = body.password
   if (!sanitizer.isValidUsername(username)) {
+    // raven.captureException("incorrect login password")
     response.message = 'Bad username'
     return res.status(400).json(response)
   }

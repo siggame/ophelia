@@ -8,7 +8,6 @@ const bodyParser = require('body-parser')
 const jwt = require('express-jwt')
 const multer = require('multer')
 const upload = multer()
-require('./ravenconfig')
 const fileUpload = require('express-fileupload')
 require('dotenv').config()
 const maxFileSize = require('./vars').MAX_FILE_SIZE
