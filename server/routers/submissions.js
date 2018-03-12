@@ -9,7 +9,7 @@ const submissionsEndpoint = require('../vars').SUBMISSIONS_ENDPOINT
 const request = require('request')
 // Acceptable mimetypes: application/zip application/octet-stream application/zip-compressed
 // application/x-zip-compressed multipart/x-zip
-const fileMimeTypeRegex = /(application\/(zip|gzip))/
+const fileMimeTypeRegex = /(application\/(x-)?(zip|gzip))/
 
 // All paths in this file should start with this
 const path = '/submissions'
