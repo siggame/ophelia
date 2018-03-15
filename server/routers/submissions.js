@@ -97,11 +97,13 @@ router.post(path + '/', (req, res) => {
     }
     const arenaRequest = request(options, function (err, arenaRes) {
       if (err) {
-        response.message = 'Error sending response to arena'
-        return res.status(500).json(response)
-      } else if (arenaRes.statusCode >= 400) {
-        response.message = 'Error sending response to arena'
-        return res.status(500).json(response)
+        if (arenaRes.statusCode >= 500) {
+          response.message = 'Error sending response to arena'
+          return res.status(500).json(response)
+        } else {
+          response.message = 'Error sending response to arena'
+          return res.status(500).json(response)
+        }
       } else {
         response.message = 'File successfully uploaded'
         response.success = true
