@@ -53,7 +53,7 @@ export default class GameBadge extends Component {
     // This code looks really crazy, but it's rendering the purple play button on the right side of the badge.
     // SVGs are nice because the browser renders them and they don't get pixellated as you zoom in.
     const playButtonVector = (
-      <svg style={{ verticalAlign: 'middle', width: '8vh', height: '8vh' }} viewBox='0 0 69 69' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlnsXlink='http://www.w3.org/1999/xlink'>
+      <svg style={{verticalAlign: 'middle', width: '60px', height: '60px', margin: '5px' }} viewBox='0 0 69 69' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlnsXlink='http://www.w3.org/1999/xlink'>
         <g id='Canvas' transform='translate(-26 92)'>
           <g id='Group 2'>
             <g id='Viz Link Button'>
@@ -78,7 +78,7 @@ export default class GameBadge extends Component {
     )
 
     const logButtonVector = (
-      <svg style = {{verticalAlign: 'middle', width: '21', height: '21'}} version='1.1' viewBox="0 0 36 36" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+      <svg style = {{verticalAlign: 'middle', width: 21, height: 26, margin: 22}} version='1.1' viewBox="0 0 36 36" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                 <path id="logButton" fill="#111" d="M34,11.12V6.58a4.5,4.5,0,0,0-4.5-4.5h-16A4.5,4.5,0,0,0,9,6.58v23a2.5,2.5,0,1,1-5,0V26H7.19V24H2v5.5A4.5,4.5,0,0,0,6.5,34H25.58a4.5,4.5,0,0,0,4.5-4.5V13.13h-2V29.54a2.5,2.5,0,0,1-2.5,2.5H10.24a4.47,4.47,0,0,0,.76-2.5v-23a2.5,2.5,0,0,1,5,0v4.54Zm-4.5-7A2.5,2.5,0,0,1,32,6.58V9.12H18V6.58a4.48,4.48,0,0,0-.76-2.5Z" className="clr-i-outline clr-i-outline-path-1"></path>
                 <rect x="0" y="0" width="36" height="36" fillOpacity="0"/>
             </svg>
@@ -86,7 +86,7 @@ export default class GameBadge extends Component {
     let visUrl = 'http://vis.siggame.io?log=' + this.props.logUrl
 
     return (
-      <div style={{ backgroundColor: bgColor, margin: 10, height: '10vh' }} className='row'>
+      <div style={{ backgroundColor: bgColor, margin: 10, height: '70px'/*height: '10vh'*/ }} className='row'>
         <div className='col-xs-3 text-center' style={{ height: '100%' }}>
           <div style={{ lineHeight: '10vh', fontSize: 26 }} >{this.props.opponent}</div>
         </div>
@@ -97,12 +97,12 @@ export default class GameBadge extends Component {
         <div className='col-xs-1 text-center' style={{ height: '100%', overflow: 'hidden' }}>
           <div style={{ lineHeight: '10vh', fontSize: 26 }}>{this.props.version}</div>
         </div>
-        <div className='col-xs-1 text-center' style={{ height: '100%', lineHeight: '10vh' }}>
+        <div className='col-xs-1 text-center' style={{ height: '100%', lineHeight: '100%' }}>
           <a href={this.props.clientLogUrl} download>
             {logButtonVector}
           </a>
         </div>
-        <div className='col-xs-2 text-center' style={{ height: '100%', lineHeight: '10vh' }} >
+        <div className='col-xs-2 text-center' style={{ height: '100%', lineHeight: '100%' }} >
           <a href={visUrl} target='_blank'>
             {playButtonVector}
           </a>
