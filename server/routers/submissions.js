@@ -4,8 +4,9 @@ const express = require('express')
 const router = express.Router()
 const submissions = require('../db/init').submissions
 const validator = require('validator')
-const arenaSubmissionHost = require('../vars').ARENA_HOST
+const arenaHost = require('../vars').ARENA_HOST
 const submissionsEndpoint = require('../vars').SUBMISSIONS_ENDPOINT
+const acceptedLanguages = require('../vars').LANGUAGES
 const request = require('request')
 // Acceptable mimetypes: application/zip application/octet-stream application/zip-compressed
 // application/x-zip-compressed multipart/x-zip
@@ -57,6 +58,14 @@ router.post(path + '/', (req, res) => {
     success: false,
     message: ''
   }
+  const lang = req.params.lang
+  if (typeof lang === 'undefined' || lang === null) {
+    response.message = 'missing url parameter \'lang\''
+    return res.status(400).json(response)
+  } else if (acceptedLanguages.indexOf(lang) === -1) {
+    response.message = 'unsupported \'lang\' slug'
+    return res.status(400).json(response)
+  }
   // Make sure there is a file uploaded
   if (!req.files) {
     response.message = 'No file were uploaded'
@@ -83,7 +92,7 @@ router.post(path + '/', (req, res) => {
   } else {
     // send file to arena submission end point here
     const options = {
-      url: arenaSubmissionHost + submissionsEndpoint + '/' + userID,
+      url: arenaHost + submissionsEndpoint + '/' + lang + '/' + userID,
       method: 'POST'
     }
     const arenaRequest = request(options, function (err, arenaRes) {
