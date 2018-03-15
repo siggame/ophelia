@@ -35,6 +35,23 @@ router.get(path + '/', (req, res) => {
   })
 })
 
+/**
+ * Creates a submission
+ * takes in a submission and 'proxies' it to the arena
+ * Request body format:
+ *    multipart form
+ * Request parameters:
+ *    lang: the language of the code being uploaded
+ * Response body format:
+ * {
+*     success: Boolean, - true if success, false otherwise
+*     message: String - error message/success message
+* }
+ * Response codes:
+ * 201 - Successfully created
+ * 400 - User error
+ * 500 - Something went wrong
+ */
 router.post(path + '/', (req, res) => {
   const response = {
     success: false,
