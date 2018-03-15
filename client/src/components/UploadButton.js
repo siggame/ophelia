@@ -16,7 +16,8 @@ export default class UploadButton extends React.Component {
     const acceptedFiletypes = [
       'application/zip',
       'application/gzip',
-      'application/x-tar'
+      'application/x-tar',
+      'application/x-zip-compressed'
     ]
     if (file) {
       if (acceptedFiletypes.includes(file.type)) {
