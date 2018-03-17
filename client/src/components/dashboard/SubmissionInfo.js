@@ -45,6 +45,20 @@ export default class SubmissionInfo extends React.Component {
     let latestSubmission = this.props.submissionStore.submissions[0]
     const uploadedDate = new Date(latestSubmission.createdAt)
     const uploadedTime = distanceInWords(new Date(), uploadedDate, {addSuffix: true})
+    let logUrl = (
+      <a tabIndex={0} style={{fontWeight: 'bold', cursor: 'not-allowed', color: '#dddddd'}}>
+      Build Log
+      </a>
+    )
+    console.log(latestSubmission.logUrl)
+    if (latestSubmission.logUrl !== null) {
+      logUrl = (
+        <a href={latestSubmission.logUrl} style={{ fontWeight: 'bold' }} download>
+          Build Log
+        </a>
+      )
+
+    }
 
     return (
       <div>
@@ -63,7 +77,7 @@ export default class SubmissionInfo extends React.Component {
             <span>Uploaded:</span> ({uploadedTime})  {uploadedDate.toDateString() + ' ' +  uploadedDate.toLocaleTimeString('en-US') }
           </div>
           <div className='row'>
-            <div className='col-md-4'><a href={latestSubmission.logUrl} style={{ fontWeight: 'bold' }} download>Build Log</a></div>
+            <div className='col-md-4'>{logUrl}</div>
             <div className='col-md-4'><span style={{ fontWeight: 'bold' }}>Version:</span> {latestSubmission.version}</div>
           </div>
           <p>
