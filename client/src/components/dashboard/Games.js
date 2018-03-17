@@ -43,7 +43,6 @@ export default class Games extends React.Component {
     this.handlePageClick = this.handlePageClick.bind(this)
     this.handleRefresh = this.handleRefresh.bind(this)
   }
-  // Need to slice up the array to display certain amount per page
   // I'm not really too sure on the proper way to call and modify parameters inside of a function
   handlePageClick (data) {
     // So this library we're using (React Paginate) thinks an awesome idea to 0-index page numbers.
@@ -68,7 +67,7 @@ export default class Games extends React.Component {
     let paginateSection
     if (this.props.gameStore.games.length > 0) {
       paginateSection = (
-        <div>
+        <div style={{height:90}}>
           <div className='col-xs-2' />
           <div className='games-paginate text-center col-xs-8'>
             <ReactPaginate

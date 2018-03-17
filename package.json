@@ -6,7 +6,13 @@
     "start": "node ./server/bin/www",
     "debug": "concurrently \"npm run server-debug\" \"cd client && npm start\"",
     "server-debug": "cd server && nodemon ./bin/www",
-    "setup": "npm install && cd client && npm install && cd ../server && npm install && cd .."
+    "setup": "npm install && npm run setup:client  && npm run setup:server",
+    "setup:client": "cd client && npm install && cd ..",
+    "setup:server": "cd server && npm install && cd ..",
+    "clean": "npm run clean:client && npm run clean:server && npm run clean:misc",
+    "clean:client": "rimraf client/node_modules client/build",
+    "clean:server": "rimraf server/node_modules",
+    "clean:misc": "rimraf node_modules/"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",
@@ -22,6 +28,7 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-react": "^7.3.0",
     "eslint-plugin-standard": "^3.0.1",
-    "nodemon": "^1.12.1"
+    "nodemon": "^1.12.1",
+    "rimraf": "^2.6.2"
   }
 }
