@@ -56,9 +56,9 @@ a svg #logButton {
   
     white-space: nowrap;
     overflow: hidden;
-  }
+}
 
-  .gutter-10 > [class*='col-'] {
+.gutter-10 > [class*='col-'] {
     padding-right:5px;
     padding-left:5px;
 }

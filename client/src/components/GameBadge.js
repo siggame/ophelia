@@ -13,23 +13,6 @@ import React, { Component } from 'react'
 export default class GameBadge extends Component {
   constructor (props) {
     super(props)
-
-    this.state = {
-      buttonActive: false
-    }
-
-    this.toggleHover = this.toggleHover.bind(this)
-  }
-
-  toggleHover () {
-    // TODO: Consider handling this via CSS
-    this.setState({
-      buttonActive: !this.state.buttonActive
-    })
-  }
-
-  componentDidMount(){
-    //document.getElementsByTagName.('data-toggle').tooltip();
   }
 
   render () {
@@ -37,10 +20,10 @@ export default class GameBadge extends Component {
     // The Background Color of the div should be different based on what the result of the game
     switch (this.props.status) {
       case 'Won':
-        bgColor = 'green'//'#2ecc71'
+        bgColor = 'green'
         break
       case 'Lost':
-        bgColor = '#c10303'//'rgb(251, 128, 116)'
+        bgColor = '#c10303'
         break
       case 'Queued':
         bgColor = '#f1c40f'
@@ -57,7 +40,7 @@ export default class GameBadge extends Component {
     // This code looks really crazy, but it's rendering the purple play button on the right side of the badge.
     // SVGs are nice because the browser renders them and they don't get pixellated as you zoom in.
     const playButtonVector = (
-      <svg data-toggle="tooltip" title="Watch simulation" style={{verticalAlign: 'middle', width: '60px', height: '60px', margin: '50% 5px 50% 5px' }} viewBox='0 0 69 69' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlnsXlink='http://www.w3.org/1999/xlink'>
+      <svg style={{verticalAlign: 'middle', width: '60px', height: '60px', margin: '50% 5px 50% 5px' }} viewBox='0 0 69 69' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlnsXlink='http://www.w3.org/1999/xlink'>
         <g id='Canvas' transform='translate(-26 92)'>
           <g id='Group 2'>
             <g id='Viz Link Button'>
@@ -82,7 +65,7 @@ export default class GameBadge extends Component {
     )
 
     const logButtonVector = (
-      <svg data-toggle="tooltip" title="Download log" style = {{verticalAlign: 'middle', width: 21, height: 26 }} version='1.1' viewBox="0 0 36 36" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+      <svg style = {{verticalAlign: 'middle', width: 21, height: 26 }} version='1.1' viewBox="0 0 36 36" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                 <path id="logButton" fill="#111" d="M34,11.12V6.58a4.5,4.5,0,0,0-4.5-4.5h-16A4.5,4.5,0,0,0,9,6.58v23a2.5,2.5,0,1,1-5,0V26H7.19V24H2v5.5A4.5,4.5,0,0,0,6.5,34H25.58a4.5,4.5,0,0,0,4.5-4.5V13.13h-2V29.54a2.5,2.5,0,0,1-2.5,2.5H10.24a4.47,4.47,0,0,0,.76-2.5v-23a2.5,2.5,0,0,1,5,0v4.54Zm-4.5-7A2.5,2.5,0,0,1,32,6.58V9.12H18V6.58a4.48,4.48,0,0,0-.76-2.5Z" className="clr-i-outline clr-i-outline-path-1"></path>
                 <rect x="0" y="0" width="36" height="36" fillOpacity="0"/>
             </svg>
@@ -90,7 +73,7 @@ export default class GameBadge extends Component {
     let visUrl = 'http://vis.siggame.io?log=' + this.props.logUrl
 
     return (
-      <div style={{ /*backgroundColor: bgColor,*/border: '1px solid ' + bgColor, borderLeft:'10px solid red', borderLeftColor: bgColor, margin: 10, marginRight: 0, minWidth: '320px', paddingRight: 10 /*height: '70px'/*height: '10vh'*/ }} className='row  gutter-10'>
+      <div style={{ border: '1px solid ' + bgColor, borderLeft:'10px solid red', borderLeftColor: bgColor, margin: 10, marginRight: 0, minWidth: '320px', paddingRight: 10 }} className='row  gutter-10'>
           <div style={{height:'90px'}} >
             <div className='row gutter-10'>
               <div className='col-xs-4 col-sm-4 text-center' style={{ height: '100%' }}>
@@ -142,37 +125,35 @@ export default class GameBadge extends Component {
                   </div>
                 </div>
               </div>
-              <div className='row'>
-                <div className='col-xs-10 ellipsis text-left' >
-                  <div className='row'>
-                    <div className='col-xs-12'>
-                      <span style={{fontStyle: 'italic'}} >Opponent:</span> <span style={{ textAlign: 'center', fontWeight: 'bold'}} >{this.props.opponent}</span>
-                    </div>
-                    <div className='col-xs-12'>
-                      <div className='row' >
-                        <div className='col-sm-6'>
+            <div className='row'>
+              <div className='col-xs-10 ellipsis text-left' >
+                <div className='row'>
+                  <div className='col-xs-12'>
+                    <span style={{fontStyle: 'italic'}} >Opponent:</span> <span style={{ textAlign: 'center', fontWeight: 'bold'}} >{this.props.opponent}</span>
+                  </div>
+                  <div className='col-xs-12'>
+                    <div className='row' >
+                      <div className='col-sm-6'>
                           <span style={{fontStyle: 'italic'}} >Code Version: </span> <span style={{ textAlign: 'center' }} >{this.props.version}</span>
-                        </div>
-                        <div className='col-sm-6'>
-                        </div>
+                      </div>
+                      <div className='col-sm-6'>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className='col-xs-2' style={{ height: '30px'}} >
-                      <a href={this.props.clientLogUrl} style={{ }} download>
-                        {logButtonVector}
-                      </a>
-                </div>
               </div>
-              <div className='col-xs-12 text-left'>
+              <div className='col-xs-2' style={{ height: '30px'}} >
+                <a href={this.props.clientLogUrl} style={{ }} download>
+                  {logButtonVector}
+                </a>
+              </div>
+            </div>
+            <div className='col-xs-12 text-left'>
               <span style={{fontStyle: 'italic'}} >Description:</span> <br/>
               <blockquote style={{ borderColor: '#f5f5f5', fontSize: 15}} >{this.props.description}</blockquote>
-                {/* <p style={{textIndent: '8px'}} >{this.props.description}</p> */}
             </div>
           </div>
-          </div>
-        {/* </div> */}
+        </div>
       </div>
     )
   }
