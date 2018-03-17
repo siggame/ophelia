@@ -37,8 +37,12 @@ function getGamesByTeamName (teamName, page, pageSize) {
         'submissions.id', '=', 'games_submissions.submission_id')
       .join('teams', 'teams.id', '=', 'submissions.team_id')
       .where('teams.name', '=', teamName)
-      .select('games.id', 'games.created_at', 'games.updated_at',
-        'submissions.version')
+      .select(
+        'games.id',
+        'games.created_at',
+        'games.updated_at',
+        'submissions.version',
+        'games_submissions.output_url as client_log_url')
       .orderBy('games.created_at', 'desc')
       .limit(pageSize).offset(offset)
     gamesQuery.then((rows) => {
@@ -48,7 +52,8 @@ function getGamesByTeamName (teamName, page, pageSize) {
       rows.forEach((row) => {
         versions.push({
           gameID: row.id,
-          version: row.version
+          version: row.version,
+          client_log_url: row.client_log_url
         })
       })
       /*
@@ -71,7 +76,6 @@ function getGamesByTeamName (teamName, page, pageSize) {
           'games.lose_reason',
           'games.winner_id',
           'games.log_url',
-          'games_submissions.output_url as client_log_url',
           'games.created_at',
           'games.updated_at')
         .where('teams.name', '!=', teamName)
@@ -84,6 +88,7 @@ function getGamesByTeamName (teamName, page, pageSize) {
           // By using the array we made earlier to store them together
           let ver = versions.find(o => o.gameID === row.id)
           game.version = ver.version
+          game.client_log_url = ver.client_log_url
           delete game.name
           if (game.team_id === game.winner_id) {
             game.winner = game.opponent
@@ -92,8 +97,12 @@ function getGamesByTeamName (teamName, page, pageSize) {
           }
           // This will let us contact the correct endpoint to actually retrieve
           // the log url from the arena
-          game.log_url = host + logEndpoint + game.log_url
-          game.client_log_url = host + logEndpoint + game.client_log_url
+          if (game.log_url !== null) {
+            game.log_url = host + logEndpoint + game.log_url
+          }
+          if (game.client_log_url !== null) {
+            game.client_log_url = host + logEndpoint + game.client_log_url
+          }
           delete game.winner_id
           delete game.team_id
           games.push(game)

@@ -70,7 +70,26 @@ export default class GameBadge extends Component {
                 <rect x="0" y="0" width="36" height="36" fillOpacity="0"/>
             </svg>
     )
-    let visUrl = 'http://vis.siggame.io?log=' + this.props.logUrl
+
+    const noButtonVector = ( <p> </p>)
+    let logButton = (noButtonVector)
+    if (this.props.clientLogUrl !== null) {
+      logButton = (
+          <a href={this.props.clientLogUrl} download>
+            {logButtonVector}
+          </a>
+      )
+    }
+    let vizLink = (noButtonVector)
+    if (this.props.logUrl !== null) {
+      let visUrl = 'http://vis.siggame.io?log=' + this.props.logUrl
+      vizLink = (
+        <a href={visUrl} onMouseEnter={this.toggleHover} onMouseLeave={this.toggleHover} target='_blank'>
+          {playButtonVector}
+        </a>
+      )
+
+    }
 
     return (
       <div style={{ border: '1px solid ' + bgColor, borderLeft:'10px solid red', borderLeftColor: bgColor, margin: 10, marginRight: 0, minWidth: '320px', paddingRight: 10 }} className='row  gutter-10'>
