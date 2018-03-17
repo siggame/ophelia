@@ -83,7 +83,26 @@ export default class GameBadge extends Component {
                 <rect x="0" y="0" width="36" height="36" fillOpacity="0"/>
             </svg>
     )
-    let visUrl = 'http://vis.siggame.io?log=' + this.props.logUrl
+
+    const noButtonVector = ( <p> </p>)
+    let logButton = (noButtonVector)
+    if (this.props.clientLogUrl !== null) {
+      logButton = (
+          <a href={this.props.clientLogUrl} download>
+            {logButtonVector}
+          </a>
+      )
+    }
+    let vizLink = (noButtonVector)
+    if (this.props.logUrl !== null) {
+      let visUrl = 'http://vis.siggame.io?log=' + this.props.logUrl
+      vizLink = (
+        <a href={visUrl} onMouseEnter={this.toggleHover} onMouseLeave={this.toggleHover} target='_blank'>
+          {playButtonVector}
+        </a>
+      )
+
+    }
 
     return (
       <div style={{ backgroundColor: bgColor, margin: 10, height: '10vh' }} className='row'>
@@ -98,14 +117,10 @@ export default class GameBadge extends Component {
           <div style={{ lineHeight: '10vh', fontSize: 26 }}>{this.props.version}</div>
         </div>
         <div className='col-xs-1 text-center' style={{ height: '100%', lineHeight: '10vh' }}>
-          <a href={this.props.clientLogUrl} download>
-            {logButtonVector}
-          </a>
+          {logButton}
         </div>
         <div className='col-xs-2 text-center' style={{ height: '100%', lineHeight: '10vh' }} >
-          <a href={visUrl} onMouseEnter={this.toggleHover} onMouseLeave={this.toggleHover} target='_blank'>
-            {playButtonVector}
-          </a>
+          {vizLink}
         </div>
       </div>
     )
