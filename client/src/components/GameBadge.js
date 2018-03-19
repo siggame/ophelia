@@ -121,9 +121,7 @@ export default class GameBadge extends Component {
                 </a>
               </div>
               <div className='col-xs-3 col-sm-2 text-center' style={{ height: '100%', lineHeight: '100%', paddingRight: '10px', width: '60px'}} >
-                <a href={visUrl} target='_blank'>
-                  {playButtonVector}
-                </a>
+                {vizLink}
               </div>
             </div>
           </div>
@@ -163,7 +161,7 @@ export default class GameBadge extends Component {
               </div>
               <div className='col-xs-2' style={{ height: '30px'}} >
                 <a href={this.props.clientLogUrl} style={{ }} download>
-                  {logButtonVector}
+                  {logButton}
                 </a>
               </div>
             </div>
