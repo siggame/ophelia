@@ -1,3 +1,5 @@
+// Example Test file
+
 module.exports = {
   'Click Login': function (browser) {
     browser
