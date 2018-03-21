@@ -4,7 +4,7 @@ const PG_UNIQUE_ERROR = '23505' // unique_violation error in postgres
 const DB_TEAM_UNIQUE = 'teams_name_unique'
 const DB_EMAIL_UNIQUE = 'teams_contact_email_unique'
 const DUPLICATE_NAME_MESSAGE = 'Team name is already in use.'
-const DUPLICATE_EMAIL_MESSAGE = 'Team email is already in use.'
+const DUPLICATE_EMAIL_MESSAGE = 'Email is invalid or already in use.'
 const MISSING_FIELD_MESSAGE = 'All args. must be defined and not empty'
 const knex = require('./connect').knex
 
