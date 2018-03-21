@@ -70,7 +70,7 @@ export function validateSignup (username, name, email, password, confirmPassword
           return reject({
             username: [errorMessage]
           })
-        } else if (errorMessage === 'Team email is already in use.') {
+        } else if (errorMessage === 'Email is invalid or already in use.') {
           return reject({
             email: [errorMessage]
           })

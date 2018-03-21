@@ -3,14 +3,16 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "e2e-setup": "node_modules/selenium-standalone/bin/selenium-standalone install",
     "start": "node ./server/bin/www",
     "debug": "concurrently \"npm run server-debug\" \"cd client && npm start\"",
     "server-debug": "cd server && nodemon ./bin/www",
-    "setup": "npm install && cd client && npm install && cd ../server && npm install && cd ..",
-    "nightwatch_install": "npm install nightwatch --save-dev && npm install selenium-standalone --save-dev && ./node_modules/.bin/selenium-standalone install",
-    "nightwatch": "./node_modules/.bin/nightwatch",
-    "selenium": "./node_modules/.bin/selenium-standalone start"
+    "setup": "npm install && npm run setup:client  && npm run setup:server",
+    "setup:client": "cd client && npm install && cd ..",
+    "setup:server": "cd server && npm install && cd ..",
+    "clean": "npm run clean:client && npm run clean:server && npm run clean:misc",
+    "clean:client": "rimraf client/node_modules client/build",
+    "clean:server": "rimraf server/node_modules",
+    "clean:misc": "rimraf node_modules/"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",
@@ -26,11 +28,7 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-react": "^7.3.0",
     "eslint-plugin-standard": "^3.0.1",
-    "nightwatch": "^0.9.19",
     "nodemon": "^1.12.1",
-    "selenium-standalone": "^6.12.0"
-  },
-  "dependencies": {
-    "react-paginate": "^5.1.0"
+    "rimraf": "^2.6.2"
   }
 }

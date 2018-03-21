@@ -1,7 +1,41 @@
 version: '2'
 services:
-  webserver:
-    build: .
-    image: siggame/ophelia
+  db:
+    image: siggame/colisee-db:latest
+    volumes:
+      - /mnt/disks/psql/db:/var/lib/postgresql/data
+    env_file:
+      - ./prod-setup/db.env
     ports:
-      - '3000:3000'
+      - '5432:5432'
+  server:
+    build: ./server
+    ports:
+      - '3001:3001'
+  client:
+    build:
+      context: ./client
+      dockerfile: ./Dockerfile-prod
+    ports:
+      - '3000:80'
+  reverse-proxy:
+    image: nginx
+    volumes:
+     - ./prod-setup/proxy_servers.template:/etc/nginx/conf.d/mysite.template
+     - /etc/letsencrypt:/etc/ssl:ro
+    ports:
+     - "80:80"
+     - "443:443"
+    links:
+      - client
+      - server
+    environment:
+     - NGINX_CLIENT_HOST=chess.siggame.io
+     - NGINX_SERVER_HOST=chess-server.siggame.io
+     - NGINX_ARENA_HOST=10.128.0.4
+    command: >
+        /bin/bash -c "envsubst
+        '$$NGINX_CLIENT_HOST $$NGINX_SERVER_HOST $$NGINX_ARENA_HOST'
+        < /etc/nginx/conf.d/mysite.template >
+        /etc/nginx/conf.d/default.conf
+        && nginx -g 'daemon off;'"
