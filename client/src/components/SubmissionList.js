@@ -17,8 +17,7 @@ export default class SubmissionList extends React.Component {
     this.handlePageClick = this.handlePageClick.bind(this)
     this.handleRefresh = this.handleRefresh.bind(this)
   }
-  //Need to slice up the array to display certain amount per page
-  //I'm not really too sure on the proper way to call and modify parameters inside of a function
+  
   handlePageClick (data) {
     // So this library we're using (React Paginate) thinks an awesome idea to 0-index page numbers.
     // In order to combat that, we have to add one, and type out this comment so someone doesn't get confused.
@@ -55,7 +54,6 @@ export default class SubmissionList extends React.Component {
             previousLabel='<<'
             nextLabel='>>'
             pageCount = {5}
-            // pageCount={this.props.submissionStore.numPages}
             pageRangeDisplayed={2}
             marginPagesDisplayed={1}
             forcePage={this.state.currentPage-1}
@@ -74,7 +72,6 @@ export default class SubmissionList extends React.Component {
           <div className='col-xs-2' style={{ padding: '3vh 0 4px 0'}}><ButtonRefresh buttonOnClick={this.handleRefresh} /></div>
         </div>
         <div className='row' style={{ margin: '0 10px 0 10px' }}>
-          <!-- Change these to match submissionStore-->
           <div className='col-xs-3 text-center' >Opponent Name</div>
           <div className='col-xs-5 text-center' >Result</div>
           <div className='col-xs-2 text-center' >Version</div>

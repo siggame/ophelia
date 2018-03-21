@@ -10,9 +10,7 @@ export default class StatusContainer extends React.Component {
     }
   }
   componentDidMount() {
-    console.log('DidMount')
     getCurrentStatus().then((data) => {
-      console.log('Data', data)
       this.setState({
         entries: data
       })
@@ -21,7 +19,6 @@ export default class StatusContainer extends React.Component {
     })
   }
   render () {
-    console.log('State', this.state)
     return (
       <div><Status entries={this.state.entries}/></div>
     )
