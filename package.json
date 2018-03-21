@@ -12,7 +12,10 @@
     "clean": "npm run clean:client && npm run clean:server && npm run clean:misc",
     "clean:client": "rimraf client/node_modules client/build",
     "clean:server": "rimraf server/node_modules",
-    "clean:misc": "rimraf node_modules/"
+    "clean:misc": "rimraf node_modules/",
+    "nightwatch_install": "npm install nightwatch --save-dev && npm install selenium-standalone --save-dev && ./node_modules/.bin/selenium-standalone install",
+    "nightwatch": "./node_modules/.bin/nightwatch",
+    "selenium": "./node_modules/.bin/selenium-standalone start"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",
@@ -28,7 +31,9 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-react": "^7.3.0",
     "eslint-plugin-standard": "^3.0.1",
+    "nightwatch": "^0.9.20",
     "nodemon": "^1.12.1",
-    "rimraf": "^2.6.2"
+    "rimraf": "^2.6.2",
+    "selenium-standalone": "^6.13.0"
   }
 }

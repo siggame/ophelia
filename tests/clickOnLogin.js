@@ -1,4 +1,4 @@
-// Example Test file
+// Example Test file for writing tests
 
 module.exports = {
   'Click Login': function (browser) {
