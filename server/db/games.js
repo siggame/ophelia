@@ -12,7 +12,7 @@ const logEndpoint = require('../vars').LOG_ENDPOINT
  * @return {Promise} resolves when there are no errors, rejects if there is a
  *  problem
  */
-function getGamesByTeamName (teamName, page, pageSize) {
+function getGamesByTeamName (teamName, page, pageSize, options) {
   return new Promise((resolve, reject) => {
     if (teamName === null || typeof teamName === 'undefined') {
       reject(new Error('TeamName is null or undefined'))
@@ -37,8 +37,12 @@ function getGamesByTeamName (teamName, page, pageSize) {
         'submissions.id', '=', 'games_submissions.submission_id')
       .join('teams', 'teams.id', '=', 'submissions.team_id')
       .where('teams.name', '=', teamName)
-      .select('games.id', 'games.created_at', 'games.updated_at',
-        'submissions.version')
+      .select(
+        'games.id',
+        'games.created_at',
+        'games.updated_at',
+        'submissions.version',
+        'games_submissions.output_url as client_log_url')
       .orderBy('games.created_at', 'desc')
       .limit(pageSize).offset(offset)
     gamesQuery.then((rows) => {
@@ -48,7 +52,8 @@ function getGamesByTeamName (teamName, page, pageSize) {
       rows.forEach((row) => {
         versions.push({
           gameID: row.id,
-          version: row.version
+          version: row.version,
+          client_log_url: row.client_log_url
         })
       })
       /*
@@ -65,7 +70,7 @@ function getGamesByTeamName (teamName, page, pageSize) {
         .join('teams', 'teams.id', '=', 'submissions.team_id')
         .select('submissions.team_id',
           'games.id',
-          'teams.name',
+          'teams.name as opponent',
           'games.status',
           'games.win_reason',
           'games.lose_reason',
@@ -83,16 +88,37 @@ function getGamesByTeamName (teamName, page, pageSize) {
           // By using the array we made earlier to store them together
           let ver = versions.find(o => o.gameID === row.id)
           game.version = ver.version
-          game.opponent = row.name
+          if (typeof options.version !== 'undefined') {
+            if (game.version !== options.version) {
+              continue
+            }
+          }
+          game.client_log_url = ver.client_log_url
           delete game.name
           if (game.team_id === game.winner_id) {
             game.winner = game.opponent
           } else {
             game.winner = teamName
           }
+          if (typeof options.result !== 'undefined') {
+            if (options.result === 'win') {
+              if (game.winner !== teamName) {
+                continue
+              }
+            } else if (options.result === 'loss') {
+              if (game.winner === teamName) {
+                continue
+              }
+            }
+          }
           // This will let us contact the correct endpoint to actually retrieve
           // the log url from the arena
-          game.log_url = host + logEndpoint + game.log_url
+          if (game.log_url !== null) {
+            game.log_url = host + logEndpoint + game.log_url
+          }
+          if (game.client_log_url !== null) {
+            game.client_log_url = host + logEndpoint + game.client_log_url
+          }
           delete game.winner_id
           delete game.team_id
           games.push(game)
