@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "start": "node ./server/bin/www",
-    "debug": "concurrently \"npm run server-debug\" \"cd client && npm start\"",
+    "debug": "concurrently \"npm run server-debug\" \"cd client && npm start\" \"npm run selenium\"",
+    "test": "npm run nightwatch",
     "server-debug": "cd server && nodemon ./bin/www",
-    "setup": "npm install && npm run setup:client  && npm run setup:server",
+    "setup": "npm install && npm run setup:client  && npm run setup:server && npm run nightwatch_install",
     "setup:client": "cd client && npm install && cd ..",
     "setup:server": "cd server && npm install && cd ..",
     "clean": "npm run clean:client && npm run clean:server && npm run clean:misc",
