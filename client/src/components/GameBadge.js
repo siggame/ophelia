@@ -65,7 +65,7 @@ export default class GameBadge extends Component {
     )
 
     const logButtonVector = (
-      <svg style = {{verticalAlign: 'middle', width: 21, height: 26 }} version='1.1' viewBox="0 0 36 36" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+      <svg style = {{verticalAlign: 'middle', width: 42, height: 52 }} version='1.1' viewBox="0 0 36 36" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                 <path id="logButton" fill="#111" d="M34,11.12V6.58a4.5,4.5,0,0,0-4.5-4.5h-16A4.5,4.5,0,0,0,9,6.58v23a2.5,2.5,0,1,1-5,0V26H7.19V24H2v5.5A4.5,4.5,0,0,0,6.5,34H25.58a4.5,4.5,0,0,0,4.5-4.5V13.13h-2V29.54a2.5,2.5,0,0,1-2.5,2.5H10.24a4.47,4.47,0,0,0,.76-2.5v-23a2.5,2.5,0,0,1,5,0v4.54Zm-4.5-7A2.5,2.5,0,0,1,32,6.58V9.12H18V6.58a4.48,4.48,0,0,0-.76-2.5Z" className="clr-i-outline clr-i-outline-path-1"></path>
                 <rect x="0" y="0" width="36" height="36" fillOpacity="0"/>
             </svg>
@@ -75,7 +75,7 @@ export default class GameBadge extends Component {
     let logButton = (noButtonVector)
     if (this.props.clientLogUrl !== null) {
       logButton = (
-          <a href={this.props.clientLogUrl} download>
+        <a href={this.props.clientLogUrl} style={{ marginTop: '50%'}} download>
             {logButtonVector}
           </a>
       )
@@ -116,16 +116,14 @@ export default class GameBadge extends Component {
                 </div>
               </div>
               <div className='col-sm-1 text-center hidden' style={{ height: '100%', lineHeight: '100%' }}>
-                <a href={this.props.clientLogUrl} style={{ marginTop: '50%'}} download>
                   {logButtonVector}
-                </a>
               </div>
-              <div className='col-xs-3 col-sm-2 text-center' style={{ height: '100%', lineHeight: '100%', paddingRight: '10px', width: '60px'}} >
+              <div className='col-xs-3 col-sm-2 text-center' style={{ height: '100%', lineHeight: '100%', paddingRight: '10px', width: '60px', align: 'center'}} >
                 {vizLink}
               </div>
             </div>
           </div>
-          <div className='col-xs-12 text-center' style={{margin: '0 10px 0 10px', width: '98%', borderTop: '1px solid #f5f5f5'}} >
+          <div className='col-xs-12 text-center' style={{margin: '0 10px 5px 10px', width: '98%', borderTop: '1px solid #f5f5f5'}} >
             <a href={'#more-detail-id-' + this.props.id } style={{textDecoration: 'none'}} data-toggle="collapse" ><span>Full Detail and Download <span style={{ fontSize: 10}} className='glyphicon glyphicon-chevron-down' ></span></span></a>
           </div>
           <div className='col-xs-12 text-center collapse' id={'more-detail-id-' + this.props.id }>
@@ -133,12 +131,13 @@ export default class GameBadge extends Component {
               <div className='col-xs-12' style={{ paddingBottom:'10px' }} >
                 <div className='row no-gutter' >
                   <div className='col-xs-3' >
+                    <span style={{fontStyle: 'italic', fontWeight: 'lighter' }} >{ updatedTime }</span>
                   </div>
                   <div className='col-xs-6' >
                     <span style={{ fontWeight: 'bold', textDecoration: 'underline', color: bgColor}} >Game {this.props.status}!</span>
                   </div>
                   <div className='col-xs-3' >
-                    <span style={{fontStyle: 'italic', fontWeight: 'lighter' }} >{ updatedTime }</span>
+                    <span style={{fontStyle: 'italic' }} >Client Log Download:</span>
                   </div>
                 </div>
               </div>
