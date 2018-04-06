@@ -1,23 +1,41 @@
 import axios from 'axios'
 
 import stores from '../stores'
+import { history } from '../index'
+
+axios.interceptors.response.use(
+  response => response,
+  error => {
+    // TODO: Add all error logging logic here
+    if (error.response.status === 401) {
+      stores.authStore.logUserOut()
+      history.push('/login')
+    }
+    return Promise.reject(error)
+  }
+)
 
 export default class RequestLayer {
-  fetchGames () {
+  fetchGames (pageNum, pageSize) {
     return new Promise((resolve, reject) => {
       // Check first to make sure the user is logged in
       if (!stores.authStore.isUserLoggedIn) {
         return reject(new Error('User must be logged in to fetch games'))
       }
-      axios.get('/games/', {
+      axios.get(process.env.REACT_APP_API_URL + '/games/', {
         headers: {
           Authorization: `Bearer ${stores.authStore.token}`
         },
         params: {
-          page: 1
+          page: pageNum,
+          pageSize: pageSize
         }
       }).then((response) => {
-        return resolve(response.data.games)
+        // This query also gives us the number of pages, so we need to grab both.
+        return resolve({
+          games: response.data.games,
+          numPages: response.data.pages
+        })
       }).catch((err) => {
         return reject(err)
       })
@@ -30,7 +48,7 @@ export default class RequestLayer {
       if (!stores.authStore.isUserLoggedIn) {
         return reject(new Error('User must be logged in to fetch submissions'))
       }
-      axios.get('/submissions/', {
+      axios.get(process.env.REACT_APP_API_URL + '/submissions/', {
         headers: {
           Authorization: `Bearer ${stores.authStore.token}`
         }
@@ -49,7 +67,7 @@ export default class RequestLayer {
       }
       let formData = new FormData()
       formData.append('file', file)
-      axios.post('/submissions/',
+      axios.post(process.env.REACT_APP_API_URL + '/submissions/',
         formData,
         {
           headers: {
@@ -57,10 +75,8 @@ export default class RequestLayer {
             'Content-Type': 'multipart/form-data'
           }
         }).then((result) => {
-        console.log('Got a result, neat')
         return resolve(result)
       }).catch((err) => {
-        // TODO: Log this happening (means Arena failed us basically)
         return reject(err)
       })
     })

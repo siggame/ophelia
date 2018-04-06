@@ -1,6 +1,8 @@
 'use strict'
 
 const knex = require('./connect').knex
+const host = require('../vars').SERVER_HOST
+const logEndpoint = require('../vars').LOG_ENDPOINT
 
 /**
  * Joins teams and submissions tables together and returns resulting rows that
@@ -19,6 +21,9 @@ function getSubmissionsByTeamName (teamName) {
         'submissions.created_at', 'submissions.updated_at')
       .where('teams.name', '=', teamName)
       .then((submissions) => {
+        for (const submission of submissions) {
+          submission.log_url = host + logEndpoint + submission.log_url
+        }
         submissions.sort(sortSubmissions)
         return resolve(submissions)
       }).catch((err) => {
@@ -36,6 +41,9 @@ function getSubmissionByID (submissionID) {
       .select('id', 'status', 'log_url', 'version', 'created_at', 'updated_at')
       .where('id', '=', submissionID)
     query.then((submission) => {
+      // This will let us contact the correct endpoint to actually retrieve
+      // the log url from the arena
+      submission[0].log_url = host + logEndpoint + submission[0].log_url
       return resolve(submission[0])
     }).catch((err) => {
       return reject(err)

@@ -1,6 +1,4 @@
-# Could use either from below, both refer to the LTS version of node 6 (aka boron)
-#FROM node:boron
-FROM node:7.10
+FROM node:latest
 
 # Who to contact with questions
 MAINTAINER siggame@mst.edu

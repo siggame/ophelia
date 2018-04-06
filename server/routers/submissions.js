@@ -4,11 +4,12 @@ const express = require('express')
 const router = express.Router()
 const submissions = require('../db/init').submissions
 const validator = require('validator')
-const arenaSubmissionHost = require('../vars').ARENA_SUBMISSIONS_HOST
+const arenaSubmissionHost = require('../vars').ARENA_HOST
+const submissionsEndpoint = require('../vars').SUBMISSIONS_ENDPOINT
 const request = require('request')
 // Acceptable mimetypes: application/zip application/octet-stream application/zip-compressed
 // application/x-zip-compressed multipart/x-zip
-const fileMimeTypeRegex = /(application\/(zip|gzip))/
+const fileMimeTypeRegex = /(application\/(x-)?(zip|gzip|tar))/
 
 // All paths in this file should start with this
 const path = '/submissions'
@@ -65,7 +66,7 @@ router.post(path + '/', (req, res) => {
   } else {
     // send file to arena submission end point here
     const options = {
-      url: arenaSubmissionHost + '/submit/' + userID,
+      url: arenaSubmissionHost + submissionsEndpoint + '/' + userID,
       method: 'POST'
     }
     const arenaRequest = request(options, function (err, arenaRes) {

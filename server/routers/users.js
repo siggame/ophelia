@@ -76,15 +76,15 @@ router.post(path + '/', (req, res) => {
 
   // sanitizing the inputs
   if (!sanitizer.isValidUsername(username)) {
-    response.message = 'Bad username'
+    response.message = 'Team name is already in use.'
     return res.status(400).json(response)
   }
   if (!sanitizer.isValidPassword(password)) {
-    response.message = 'Bad password'
+    response.message = 'Password does not meet requirements.'
     return res.status(400).json(response)
   }
   if (!sanitizer.isValidEmail(email)) {
-    response.message = 'Bad Email'
+    response.message = 'Email is invalid or already in use.'
     return res.status(400).json(response)
   }
   const passInfo = encrypt(body.password)
@@ -198,7 +198,7 @@ router.put(path + '/:teamName', (req, res) => {
           switch (field) {
             case 'password':
               if (!sanitizer.isValidPassword(editableFields[field])) {
-                response.message = 'invalid password'
+                response.message = 'Password does not meet requirements.'
                 return res.status(400).json(response)
               }
               // If the field is 'password' then we need to run encrypt to
@@ -207,7 +207,7 @@ router.put(path + '/:teamName', (req, res) => {
               break
             case 'email':
               if (!sanitizer.isValidEmail(editableFields[field])) {
-                response.message = 'invalid email'
+                response.message = 'Email is invalid or already in use.'
                 return res.status(400).json(response)
               }
               teamEditData[field] = editableFields[field]
