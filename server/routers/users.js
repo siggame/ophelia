@@ -115,14 +115,14 @@ router.post(path + '/', (req, res) => {
   })
 })
 
-router.get(path + '/:teamName', (req, res) => {
+router.get(path + '/:teamId', (req, res) => {
   const response = {
     success: false,
     message: '',
     user: null
-
   }
-  teams.getTeamByName(req.params.teamName).then((data) => {
+
+  teams.getTeam(req.params.teamId).then((data) => {
     if (data.length === 0) {
       response.success = false
       response.message = 'This team does not exist'
@@ -161,7 +161,7 @@ router.get(path + '/:teamName', (req, res) => {
  * }
  * Where each of the fields in editData is optional, but at least one must exist
  */
-router.put(path + '/:teamName', (req, res) => {
+router.put(path + '/:teamId', (req, res) => {
   const response = {
     success: false,
     message: ''

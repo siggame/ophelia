@@ -49,7 +49,7 @@ function getTeamByName (teamName) {
       if (team.length > 1) {
         reject(new Error('More than one team with same name'))
       } else {
-        return resolve(team[0])
+        return resolve(team)
       }
     }).catch((err) => {
       return reject(err)
