@@ -31,10 +31,7 @@
         "marionette": true
       },
       "integration" : {
-        "launch_url" : "http://localhost:3000",
-        "globals" : {
-          "myGlobalVar" : "other value"
-        }
+        "launch_url" : "http://localhost:3000"
       }
     }
   }
