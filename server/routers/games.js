@@ -57,7 +57,6 @@ router.get(path + '/', (req, res) => {
       switch (value) {
         case 'opponentName':
           if (!sanitizer.checkLength(param, 1, 100)) {
-            console.log('there')
             response.message = 'Optional field ' + value + ' is too long to be a username.'
             return res.status(400).json(response)
           }
@@ -71,8 +70,9 @@ router.get(path + '/', (req, res) => {
           options.result = param
           break
         case 'version':
-          if (isNaN(param) === false && Number(param) < 0) {
+          if (isNaN(param) === true || Number(param) < 0) {
             response.message = 'Optional field ' + value + ' must be a nonnegative number.'
+            return res.status(400).json(response)
           }
           options.version = parseInt(param)
           break
