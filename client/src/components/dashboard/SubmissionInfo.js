@@ -2,6 +2,7 @@ import { distanceInWords } from 'date-fns'
 import { inject, observer } from 'mobx-react'
 import React from 'react'
 import { Alert } from 'react-bootstrap'
+import DownloadButton from '../DownloadButton'
 
 import UploadButton from '../UploadButton'
 import ButtonRefresh from '../ButtonRefresh'
@@ -63,7 +64,8 @@ export default class SubmissionInfo extends React.Component {
             <span>Uploaded:</span> ({uploadedTime})  {uploadedDate.toDateString() + ' ' +  uploadedDate.toLocaleTimeString('en-US') }
           </div>
           <div className='row'>
-            <div className='col-md-4'><a href={latestSubmission.logUrl} style={{ fontWeight: 'bold' }} download>Build Log</a></div>
+            {/*<div className='col-md-4'><a href={latestSubmission.logUrl} style={{ fontWeight: 'bold' }} download>Build Log</a></div>*/}
+            <DownloadButton url={'http://localhost:3000/localhost/tmp/runner/fef2ebd7cf95/client_2_1_9.log.gz'} />
             <div className='col-md-4'><span style={{ fontWeight: 'bold' }}>Version:</span> {latestSubmission.version}</div>
           </div>
           <p>
