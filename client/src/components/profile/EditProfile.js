@@ -26,17 +26,26 @@ function equalTo (ref, msg) {
 
 Yup.addMethod(Yup.string, 'equalTo', equalTo)
 
-/*
- * Note:
- * Formik doesn't do anything with the image. Only using Formik has a convenient way to
- * update the image source attribute for the profile image.
-*/
 @inject('authStore')
 @observer
 export default class EditProfile extends React.Component {
+  state = {
+    type: '',
+    message: '',
+    showMessage: false
+  }
+
+  handleMessageClose = () => {
+    this.setState({
+      message: '',
+      type: '',
+      showMessage: false
+    })
+  }
   render () {
     const { authStore } = this.props
     const { user } = authStore
+    const { message, type, showMessage } = this.state
 
     return (
       <Formik
@@ -67,7 +76,17 @@ export default class EditProfile extends React.Component {
           await authStore.updateUser(values.password, values.email, values.name, values.newPassword)
           if (authStore.errors) {
             // console.log('onSubmit authStore.erors', authStore.errors)
+            this.setState({
+              type: 'danger',
+              message: 'There is something wrong with your submission!',
+              showMessage: true
+            })
           } else {
+            this.setState({
+              type: 'success',
+              message: 'Updated user profile succesfully!',
+              showMessage: true
+            })
             resetForm({
               ...values,
               password: '',
@@ -98,6 +117,12 @@ export default class EditProfile extends React.Component {
               </div>
               <div className='row'>
                 <div className='col-md-8 col-md-offset-2'>
+                  {
+                    showMessage && <div className={`alert alert-${type} alert-dismissible`} role='alert'>
+                      <button type='button' className='close' onClick={this.handleMessageClose} aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+                      {message}
+                    </div>
+                  }
                   <form onSubmit={handleSubmit}>
                     <div className={`form-group${touched.email && errors.email ? ' has-error' : ''}`}>
                       <label htmlFor='email'>Primary Contact Email*</label>
