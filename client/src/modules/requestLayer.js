@@ -7,7 +7,7 @@ axios.interceptors.response.use(
   response => response,
   error => {
     // TODO: Add all error logging logic here
-    if (error.response.status === 401) {
+    if (error.response.status === 401 && error.response.data.hasValidCredentials !== false) {
       stores.authStore.logUserOut()
       history.push('/login')
     }

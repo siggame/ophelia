@@ -75,7 +75,6 @@ export default class EditProfile extends React.Component {
         onSubmit={async (values, { setSubmitting, setErrors, resetForm }) => {
           await authStore.updateUser(values.password, values.email, values.name, values.newPassword)
           if (authStore.errors) {
-            // console.log('onSubmit authStore.erors', authStore.errors)
             this.setState({
               type: 'danger',
               message: 'There is something wrong with your submission!',
@@ -95,6 +94,7 @@ export default class EditProfile extends React.Component {
             })
           }
 
+          authStore.clearErrors()
           setSubmitting(false)
         }}
       >

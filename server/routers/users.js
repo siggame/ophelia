@@ -236,6 +236,7 @@ router.put(path + '/:teamName', (req, res) => {
       })
     } else {
       response.message = 'unauthorized'
+      response.hasValidCredentials = false
       return res.status(401).json(response)
     }
   }, (err) => {
