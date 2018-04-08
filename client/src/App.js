@@ -1,4 +1,4 @@
-import { observer } from 'mobx-react'
+import { observer, inject } from 'mobx-react'
 import React from 'react'
 import { Route, Switch, withRouter } from 'react-router-dom'
 
@@ -11,8 +11,16 @@ import LoginContainer from './containers/LoginContainer'
 import LogoutContainer from './containers/LogoutContainer'
 
 @withRouter
+@inject('authStore')
 @observer
 export default class App extends React.Component {
+  async componentDidMount () {
+    const { authStore } = this.props
+    if (authStore.token) {
+      await authStore.getCurrentUser()
+    }
+  }
+
   render () {
     return (
       <div>
@@ -21,7 +29,7 @@ export default class App extends React.Component {
           <Switch>
             <Route exact path='/' component={LandingPageContainer} />
             <Route exact path='/dashboard' component={DashboardContainer} />
-            <Route exact path='/profile/:userId' component={ProfileContainer} />
+            <Route exact path='/profile/:teamId' component={ProfileContainer} />
             <Route exact path='/register' component={RegisterContainer} />
             <Route exact path='/login' component={LoginContainer} />
             <Route exact path='/logout' component={LogoutContainer} />

@@ -161,7 +161,7 @@ router.get(path + '/:teamId', (req, res) => {
  * }
  * Where each of the fields in editData is optional, but at least one must exist
  */
-router.put(path + '/:teamId', (req, res) => {
+router.put(path + '/:teamName', (req, res) => {
   const response = {
     success: false,
     message: ''

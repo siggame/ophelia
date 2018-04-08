@@ -20,11 +20,12 @@ const compare = require('./auth').compare
  */
 function login (teamName, password) {
   return new Promise((resolve, reject) => {
-    teams.getTeamByName(teamName).then((team) => {
-      if (typeof team === 'undefined') {
+    teams.getTeamByName(teamName).then((data) => {
+      if (!data || typeof data === 'undefined') {
         // If the team is undefined then there must not have been a match
         return resolve(null)
       } else {
+        const team = data[0]
         const encryptedPassword = team.password
         const salt = team.salt
         const iterations = team.hash_iterations

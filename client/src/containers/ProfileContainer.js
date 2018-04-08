@@ -1,25 +1,31 @@
 import React from 'react'
-import { inject } from 'mobx-react'
+import { inject, observer } from 'mobx-react'
+import { Loader } from 'react-overlay-loader'
 
 import EditProfile from '../components/profile/EditProfile'
 import Profile from '../components/profile/Profile'
 
 @inject('authStore')
+@observer
 export default class ProfileContainer extends React.Component {
-  isLoggedInUsersProfile = userId => {
-    return userId === this.props.authStore.userId
+  componentWillUnmount () {
+    this.props.authStore.clearErrors()
   }
 
+  isLoggedInUsersProfile = userId => userId === this.props.authStore.userId
+
   render () {
-    const bio =
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum elementum elit ac vestibulum sodales. Mauris tempor consectetur mi nec tempor. Etiam fermentum maximus lacus, quis interdum ligula lacinia ac. Maecenas sagittis metus quis sem feugiat ultricies.'
+    const { authStore: { user } } = this.props
+    const paramsTeamId = parseInt(this.props.match.params.teamId, 10)
+
     return (
       <div className='container'>
-        {this.isLoggedInUsersProfile(parseInt(this.props.match.params.userId, 10)) ? (
-          <EditProfile username={'username'} bio={bio} email={'me@me.com'} name={'dummy name'} imageUrl={''} teamName={this.props.authStore.username} />
-        ) : (
-          <Profile username={'other user'} bio={bio} imageUrl={''} />
-        )}
+        {!user ? <Loader />
+          : this.isLoggedInUsersProfile(paramsTeamId) ? (
+            <EditProfile />
+          ) : (
+            <Profile name={''} email={''} teamName={''} />
+          )}
       </div>
     )
   }

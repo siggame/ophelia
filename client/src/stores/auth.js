@@ -1,14 +1,19 @@
 import axios from 'axios'
-import { action, computed, observable, reaction } from 'mobx'
+import { action, computed, observable, reaction, runInAction } from 'mobx'
 import jwtDecode from 'jwt-decode'
 
 import gameStore from './games'
 import submissionStore from './submissions'
+import RequestLayer from '../modules/requestLayer'
 
 export class AuthStore {
   @observable token = window.localStorage.getItem('jwt')
+  @observable user
+  @observable errors = undefined
 
   constructor () {
+    this.requestLayer = new RequestLayer()
+
     // Updates or removes our JSON Web Token in the localStorage of the browser.1
     reaction(
       () => this.token,
@@ -72,26 +77,67 @@ export class AuthStore {
 
   @action logUserIn (username, password) {
     return new Promise(action('login-callback', (resolve, reject) => {
-      axios.post(process.env.REACT_APP_API_URL + '/login',
-        {
-          username: username,
-          password: password
-        }
-      ).then((response) => {
-        this.setToken(response.data.token)
-        return resolve()
-      }).catch((err) => {
-        // TODO: Error handling
-        console.log('Axios Error - Auth Store')
-        return reject(err)
+      axios.post(`${process.env.REACT_APP_API_URL}/login`, {
+        username,
+        password
       })
+        .then((response) => {
+          this.setToken(response.data.token)
+          return resolve()
+        })
+        .then(() => this.requestLayer.getCurrentUser())
+        .then((response) => {
+          this.user = response.data.user
+          return resolve()
+        })
+        .catch((err) => {
+          // TODO: Error handling
+          console.log('Axios Error - Auth Store')
+          return reject(err)
+        })
     }))
+  }
+
+  @action async getCurrentUser () {
+    try {
+      const response = await this.requestLayer.getCurrentUser()
+      runInAction(() => {
+        this.user = response.data.user
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  @action async updateUser (oldPassword, email, name, password) {
+    try {
+      const response = await this.requestLayer.updateUserProfile(oldPassword, email, name, password)
+      runInAction(() => {
+        this.user = {
+          ...this.user,
+          contactEmail: email,
+          name
+        }
+      })
+
+      return response.data
+    } catch (err) {
+      runInAction(() => {
+        this.errors = err.response.data
+      })
+    }
   }
 
   @action logUserOut () {
     this.token = ''
+    this.user = undefined
+    this.clearErrors()
     gameStore.resetGameData()
     submissionStore.resetSubmissionData()
+  }
+
+  @action clearErrors () {
+    this.errors = undefined
   }
 
   /**

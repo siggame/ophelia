@@ -2,6 +2,17 @@ import axios from 'axios'
 
 import stores from '../stores'
 
+axios.interceptors.request.use(
+  config => {
+    if (stores.authStore && stores.authStore.token) {
+      config.headers.Authorization = `Bearer ${stores.authStore.token}`
+    }
+
+    return config
+  },
+  error => Promise.reject(error)
+)
+
 export default class RequestLayer {
   fetchGames (pageNum, pageSize) {
     return new Promise((resolve, reject) => {
@@ -67,5 +78,32 @@ export default class RequestLayer {
         return reject(err)
       })
     })
+  }
+
+  async getCurrentUser () {
+    try {
+      return axios.get(`${process.env.REACT_APP_API_URL}/users/${stores.authStore.userId}`)
+    } catch (err) {
+      throw err
+    }
+  }
+
+  async updateUserProfile (oldPassword, email, name, password) {
+    const { authStore } = stores
+    if (!authStore.isUserLoggedIn) {
+      throw new Error('Must be logged in to do that!')
+    }
+    try {
+      return axios.put(`${process.env.REACT_APP_API_URL}/users/${authStore.username}/`, {
+        oldPassword,
+        editData: {
+          email,
+          name,
+          password
+        }
+      })
+    } catch (err) {
+      throw err
+    }
   }
 }
