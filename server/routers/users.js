@@ -199,7 +199,7 @@ router.put(path + '/:teamName', (req, res) => {
           switch (field) {
             case 'password':
               if (!sanitizer.isValidPassword(editData[field])) {
-                response.message = 'invalid password'
+                response.message = 'Password does not meet requirements.'
                 return res.status(400).json(response)
               }
               // If the field is 'password' then we need to run encrypt to
@@ -208,7 +208,7 @@ router.put(path + '/:teamName', (req, res) => {
               break
             case 'email':
               if (!sanitizer.isValidEmail(editData[field])) {
-                response.message = 'invalid email'
+                response.message = 'Email is invalid or already in use.'
                 return res.status(400).json(response)
               }
               teamEditData[field] = editData[field]

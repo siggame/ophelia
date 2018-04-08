@@ -77,7 +77,7 @@ export default class EditProfile extends React.Component {
           if (authStore.errors) {
             this.setState({
               type: 'danger',
-              message: 'There is something wrong with your submission!',
+              message: authStore.errors.message,
               showMessage: true
             })
           } else {
