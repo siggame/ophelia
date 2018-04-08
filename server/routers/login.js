@@ -33,9 +33,8 @@ const path = '/login'
  */
 router.post(path + '/', (req, res, next) => {
   const body = req.body
-  let status = null
   let response = {
-    success: null,
+    success: false,
     message: '',
     token: null
   }
@@ -63,21 +62,19 @@ router.post(path + '/', (req, res, next) => {
     if (result === false || result === null) {
       // If result is false then they gave the wrong username or password
       // If the result is null then they must not exist in the db
-      status = 401
       response.success = false
-    } else {
-      const token = jsonwebtoken.sign({
-        username: username,
-        id: result.id,
-        role: result.role
-      }, tokenSecret, {
-        expiresIn: expired
-      })
-      status = 200
-      response.success = true
-      response.token = token
+      return res.status(401).json(response)
     }
-    return res.status(status).json(response)
+    const token = jsonwebtoken.sign({
+      username: username,
+      id: result.id,
+      role: result.role
+    }, tokenSecret, {
+      expiresIn: expired
+    })
+    response.success = true
+    response.token = token
+    return res.status(200).json(response)
   }, (err) => {
     return next(err)
   }).catch((err) => {
