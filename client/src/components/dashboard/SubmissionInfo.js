@@ -65,7 +65,7 @@ export default class SubmissionInfo extends React.Component {
           </div>
           <div className='row'>
             {/*<div className='col-md-4'><a href={latestSubmission.logUrl} style={{ fontWeight: 'bold' }} download>Build Log</a></div>*/}
-            <DownloadButton url={'http://localhost:3000/localhost/tmp/runner/fef2ebd7cf95/client_2_1_9.log.gz'} />
+            <DownloadButton url={'http://chess-server.siggame.io/storage/runner/fef2ebd7cf95/client_2_1_9.log.gz'} />
             <div className='col-md-4'><span style={{ fontWeight: 'bold' }}>Version:</span> {latestSubmission.version}</div>
           </div>
           <p>
