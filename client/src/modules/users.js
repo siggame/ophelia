@@ -57,33 +57,30 @@ export function validateSignup (username, name, email, password, confirmPassword
     if (errors) {
       return reject(errors)
     } else {
-      axios
-        .post(process.env.REACT_APP_API_URL + '/users/', {
-          username: username,
-          password: password,
-          email: email,
-          name: name
-        })
-        .then(data => {
-          return resolve(data)
-        })
-        .catch(err => {
-          let errorMessage = err.response.data.message
-          if (errorMessage === 'Team name is already in use.') {
-            return reject({
-              username: [errorMessage]
-            })
-          } else if (errorMessage === 'Team email is already in use.') {
-            return reject({
-              email: [errorMessage]
-            })
-          } else {
-            console.error(errorMessage)
-            return reject({
-              form: ['Something went wrong! Please contact a SIG-Game dev, and try again in a little bit.']
-            })
-          }
-        })
+      axios.post(process.env.REACT_APP_API_URL + '/users/', {
+        username: username,
+        password: password,
+        email: email,
+        name: name
+      }).then((data) => {
+        return resolve(data)
+      }).catch((err) => {
+        let errorMessage = err.response.data.message
+        if (errorMessage === 'Team name is already in use.') {
+          return reject({
+            username: [errorMessage]
+          })
+        } else if (errorMessage === 'Email is invalid or already in use.') {
+          return reject({
+            email: [errorMessage]
+          })
+        } else {
+          console.error(errorMessage)
+          return reject({
+            form: ['Something went wrong! Please contact a SIG-Game dev, and try again in a little bit.']
+          })
+        }
+      })
     }
   })
 }

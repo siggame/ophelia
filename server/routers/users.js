@@ -76,15 +76,15 @@ router.post(path + '/', (req, res) => {
 
   // sanitizing the inputs
   if (!sanitizer.isValidUsername(username)) {
-    response.message = 'Bad username'
+    response.message = 'Team name is already in use.'
     return res.status(400).json(response)
   }
   if (!sanitizer.isValidPassword(password)) {
-    response.message = 'Bad password'
+    response.message = 'Password does not meet requirements.'
     return res.status(400).json(response)
   }
   if (!sanitizer.isValidEmail(email)) {
-    response.message = 'Bad Email'
+    response.message = 'Email is invalid or already in use.'
     return res.status(400).json(response)
   }
   const passInfo = encrypt(body.password)
