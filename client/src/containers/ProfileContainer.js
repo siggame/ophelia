@@ -33,7 +33,7 @@ export default class ProfileContainer extends React.Component {
       return <EditProfile />
     } else {
       return (
-        !team ? <Loader /> : <Profile name={team.name} email={team.contactEmail} teamName={team.name} />
+        !team ? <Loader /> : <Profile name={team.contactName} email={team.contactEmail} teamName={team.name} />
       )
     }
   }
