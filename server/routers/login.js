@@ -8,8 +8,6 @@ const sanitizer = require('../utils/sanitizer')
 
 const tokenSecret = require('../vars').TOKEN_SECRET
 const expired = require('../vars').TOKEN_EXPIRE_TIME
-const Raven = require('../utils/ravenconfig')
-
 
 // All paths in this file should start with this
 const path = '/login'
@@ -33,7 +31,7 @@ const path = '/login'
  * 401 Unauthorized, incorrect username or password
  * 500 Server error
  */
-router.post(path + '/', (req, res) => {
+router.post(path + '/', (req, res, next) => {
   const body = req.body
   let status = null
   let response = {
@@ -80,20 +78,11 @@ router.post(path + '/', (req, res) => {
       response.token = token
     }
     return res.status(status).json(response)
-  }, loginErrorHandler.bind(null, res))
-    .catch(loginErrorHandler.bind(null, res))
+  }, (err) => {
+    return next(err)
+  }).catch((err) => {
+    return next(err)
+  })
 })
-
-function loginErrorHandler (res, err) {
-  const status = 500
-  let response = {
-    success: null,
-    message: '',
-    token: null
-  }
-  response.success = false
-  response.message = err.message
-  res.status(status).json(response)
-}
 
 module.exports = {router}

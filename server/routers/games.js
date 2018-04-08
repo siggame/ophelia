@@ -24,7 +24,7 @@ const path = '/games'
  * 401 Unauthorized, not signed in
  * 500 Server error
  */
-router.get(path + '/', (req, res) => {
+router.get(path + '/', (req, res, next) => {
   const response = {
     success: false,
     message: '',
@@ -66,21 +66,20 @@ router.get(path + '/', (req, res) => {
       // page - 1 because the array is indexed at 0
       // response.games = paginatedGames[page - 1]
       response.games = games
-      return res.status(200).json(response)
+      return next(new Error('super test'))
+      // return res.status(200).json(response)
     }).catch((err) => {
-      response.message = 'An error occurred: ' + err.message
-      return res.status(500).json(response)
+      return next(err)
     })
   }).catch((err) => {
-    response.message = 'An error occurred: ' + err.message
-    return res.status(500).json(response)
+    return next(err)
   })
   // else
   // success = 401
   // message = 'Not authorized'
 })
 
-router.get(path + '/:gameID', (req, res) => {
+router.get(path + '/:gameID', (req, res, next) => {
   // originally here
   // res.send('gameID is set to ' + req.params.gameID)
   const gameId = req.params.gameID
@@ -95,8 +94,7 @@ router.get(path + '/:gameID', (req, res) => {
     response.game = result
     res.status(200).json(response)
   }).catch((err) => {
-    response.message = 'An error occurred: ' + err.message
-    res.status(500).json(response)
+    return next(err)
   })
 })
 
