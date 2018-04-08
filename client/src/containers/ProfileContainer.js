@@ -19,14 +19,14 @@ export default class ProfileContainer extends React.Component {
     const paramsTeamId = parseInt(this.props.match.params.teamId, 10)
 
     return (
-      <div className='container'>
+      <React.Fragment>
         {!user ? <Loader />
           : this.isLoggedInUsersProfile(paramsTeamId) ? (
             <EditProfile />
           ) : (
             <Profile name={''} email={''} teamName={''} />
           )}
-      </div>
+      </React.Fragment>
     )
   }
 }

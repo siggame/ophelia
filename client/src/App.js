@@ -25,7 +25,7 @@ export default class App extends React.Component {
     return (
       <div>
         <NavBar />
-        <main>
+        <main className='container-fluid'>
           <Switch>
             <Route exact path='/' component={LandingPageContainer} />
             <Route exact path='/dashboard' component={DashboardContainer} />

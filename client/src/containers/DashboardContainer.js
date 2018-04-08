@@ -8,7 +8,7 @@ import Dashboard from '../components/dashboard/Dashboard'
 @observer
 export default class DashboardContainer extends React.Component {
   componentWillMount () {
-    if(this.props.authStore.isUserLoggedIn) {
+    if (this.props.authStore.isUserLoggedIn) {
       if (!this.props.gameStore.lastUpdated) {
         this.props.gameStore.makeDataStale()
       }

@@ -2,7 +2,6 @@ import { inject, observer } from 'mobx-react'
 import React from 'react'
 import { Redirect } from 'react-router'
 
-
 import LandingPage from '../components/LandingPage'
 
 @inject('authStore')

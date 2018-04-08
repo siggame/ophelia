@@ -87,7 +87,7 @@ export default class EditProfile extends React.Component {
           })
 
           return (
-            <div className='container'>
+            <div className='row'>
               <Loader loading={isSubmitting} fullPage />
               <div className='row'>
                 <div className='col-md-4 col-md-offset-4'>
