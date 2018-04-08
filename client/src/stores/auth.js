@@ -116,7 +116,7 @@ export class AuthStore {
         this.user = {
           ...this.user,
           contactEmail: email,
-          name
+          contactName: name
         }
       })
 

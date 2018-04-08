@@ -132,6 +132,7 @@ router.get(path + '/:teamId', (req, res) => {
     response.message = 'Success'
     response.user = {
       name: data[0].name,
+      contactName: data[0].contact_name,
       contactEmail: data[0].contact_email,
       isEligible: data[0].is_eligible
     }

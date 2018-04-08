@@ -50,7 +50,7 @@ export default class EditProfile extends React.Component {
     return (
       <Formik
         initialValues={{
-          name: user.name,
+          name: user.contactName,
           email: user.contactEmail,
           password: '',
           newPassword: '',
