@@ -116,7 +116,7 @@ export default class EditProfile extends React.Component {
                 </div>
               </div>
               <div className='row'>
-                <div className='col-md-8 col-md-offset-2'>
+                <div className='col-md-6 col-md-offset-3'>
                   {
                     showMessage && <div className={`alert alert-${type} alert-dismissible`} role='alert'>
                       <button type='button' className='close' onClick={this.handleMessageClose} aria-label='Close'><span aria-hidden='true'>&times;</span></button>
