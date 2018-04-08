@@ -6,12 +6,12 @@ const Profile = ({ name, email, teamName }) => (
     <div className='row'>
       <div className='col-md-4 col-md-offset-4'>
         <div className='page-header'>
-          <h1>{teamName}</h1>
+          <h1>{teamName}'s Profile</h1>
         </div>
       </div>
     </div>
     <div className='row'>
-      <div className='col-md-8 col-md-offset-2'>
+      <div className='col-md-8 col-md-offset-4'>
         <dl className='dl-horizontal'>
           <dt>Team Name</dt>
           <dd>{teamName}</dd>

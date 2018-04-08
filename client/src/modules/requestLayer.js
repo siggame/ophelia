@@ -101,6 +101,14 @@ export default class RequestLayer {
     }
   }
 
+  async getTeamById (teamId) {
+    try {
+      return axios.get(`${process.env.REACT_APP_API_URL}/users/${teamId}`)
+    } catch (err) {
+      throw err
+    }
+  }
+
   async updateUserProfile (oldPassword, email, name, password) {
     const { authStore } = stores
     if (!authStore.isUserLoggedIn) {
