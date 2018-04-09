@@ -30,7 +30,7 @@ export default class DownloadButton extends React.Component {
     )
 
     if ((/\.(gz|zip)$/i).test(this.props.url)) {
-      return <a href="#" onClick={() => fileDownload(this.getFile(this.props.url), 'filename.txt')} style={{ fontWeight: 'bold' }}>{logButtonVector}</a>
+      return <a href="#" onClick={() => fileDownload(this.getFile(this.props.url), 'filename.txt')}>{logButtonVector}</a>
 
     }
     else {
