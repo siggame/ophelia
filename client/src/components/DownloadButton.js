@@ -18,7 +18,7 @@ export default class DownloadButton extends React.Component {
 
   render() {
 
-    if ((/\.(gz|zip)$/i).test(this.props.url)) {
+    if ((/\.(gz|zip|tar)$/i).test(this.props.url)) {
       return (
         <a onClick={() => {
         this.getFile(this.props.url).then((file) => {
