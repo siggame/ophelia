@@ -91,7 +91,7 @@ export default class GameBadge extends Component {
       logButton = (
           <DownloadButton
             url={this.props.clientLogUrl}
-            html={<a style={{cursor: 'pointer'}}>{logButtonVector}</a>}
+            html={<div style={{cursor: 'pointer'}}>{logButtonVector}</div>}
           />
       )
     }
