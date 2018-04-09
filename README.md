@@ -26,12 +26,12 @@ This file sets some global stuff for the fronend, but **none of it is actually s
 
 Once you've installed the needed programs and set up the .env files, go ahead and run the following:
 ```
-$ yarn run setup
+$ yarn setup
 ```
 
 This will install all of the needed packages and put you back in the base directory of the repo. Once you're there, run the following to start the server in debug mode:
 ```
-$ yarn run debug
+$ yarn debug
 ```
 You can then navigate to [localhost:3000](localhost:3000) to use the site.
 
