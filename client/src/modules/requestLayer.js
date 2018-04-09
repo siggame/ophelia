@@ -81,4 +81,12 @@ export default class RequestLayer {
       })
     })
   }
+
+  changeEligibility (username, newEligibility) {
+    return new Promise((resolve, reject) => {
+      axios.post(process.env.REACT_APP_API_URL + '/admin/user/' + username, {
+        eligibility: newEligibility
+      })
+    })
+  }
 }

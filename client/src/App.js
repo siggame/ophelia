@@ -9,6 +9,7 @@ import ProfileContainer from './containers/ProfileContainer'
 import RegisterContainer from './containers/RegisterContainer'
 import LoginContainer from './containers/LoginContainer'
 import LogoutContainer from './containers/LogoutContainer'
+import AdminContainer from './containers/admin/AdminContainer';
 
 @withRouter
 @observer
@@ -25,6 +26,7 @@ export default class App extends React.Component {
             <Route exact path='/register' component={RegisterContainer} />
             <Route exact path='/login' component={LoginContainer} />
             <Route exact path='/logout' component={LogoutContainer} />
+            <Route exact path='/admin' component={AdminContainer} />
           </Switch>
         </main>
 

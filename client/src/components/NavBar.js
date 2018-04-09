@@ -14,6 +14,7 @@ export default class NavBar extends React.Component {
 
     if (this.props.authStore.isUserLoggedIn) {
       // If the user is logged in, they should have different buttons over on the right side.
+      // TODO: Check if user is an admin, and display a navbar option for the Admin Panel
       rightSection = (
         <ul className='nav navbar-nav navbar-right'>
           <li><Link to='/logout'>Log Out</Link></li>
