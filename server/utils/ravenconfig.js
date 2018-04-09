@@ -1,10 +1,16 @@
 const SENTRY_DSN = require('../vars').SENTRY_DSN
 
 const Raven = require('raven')
-Raven.config(SENTRY_DSN).install(function (err, initialErr, eventId) {
-  console.error(err)
-  process.exit(1)
-})
+try {
+  Raven.config(SENTRY_DSN).install(function (err, initialErr, eventId) {
+    console.error(err)
+    process.exit(1)
+  })
+} catch (err) {
+  if (process.env.NODE_ENV === 'production') {
+    throw err
+  }
+}
 
 function info (message, context) {
   const options = {

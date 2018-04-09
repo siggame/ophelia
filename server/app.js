@@ -105,7 +105,7 @@ app.use(function (err, req, res) {
     message: ''
   }
   if (req.app.get('env') === 'development') {
-    response.message = 'An error occur: ' + err.message
+    response.message = 'An error occurred: ' + err.message
   }
   return res.status(err.status || 500).json(response)
 })

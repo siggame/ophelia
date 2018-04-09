@@ -66,8 +66,7 @@ router.get(path + '/', (req, res, next) => {
       // page - 1 because the array is indexed at 0
       // response.games = paginatedGames[page - 1]
       response.games = games
-      return next(new Error('super test'))
-      // return res.status(200).json(response)
+      return res.status(200).json(response)
     }).catch((err) => {
       return next(err)
     })
