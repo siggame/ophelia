@@ -89,10 +89,10 @@ export default class GameBadge extends Component {
     let logButton = (noButtonVector)
     if (this.props.clientLogUrl !== null) {
       logButton = (
-          <DownloadButton url={this.props.clientLogUrl}/>
-          // <a href={this.props.clientLogUrl} download>
-          //   {logButtonVector}
-          // </a>
+          <DownloadButton
+            url={this.props.clientLogUrl}
+            html={<a style={{cursor: 'pointer'}}>{logButtonVector}</a>}
+          />
       )
     }
     let vizLink = (noButtonVector)
