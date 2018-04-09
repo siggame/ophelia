@@ -1,5 +1,6 @@
 import { distanceInWords } from 'date-fns'
 import React, { Component } from 'react'
+import DownloadButton from '../components/DownloadButton.js'
 
 /**
  * GameBadge - used to display concise results of a game played in the Arena.
@@ -88,9 +89,10 @@ export default class GameBadge extends Component {
     let logButton = (noButtonVector)
     if (this.props.clientLogUrl !== null) {
       logButton = (
-          <a href={this.props.clientLogUrl} download>
-            {logButtonVector}
-          </a>
+          <DownloadButton url={this.props.clientLogUrl}/>
+          // <a href={this.props.clientLogUrl} download>
+          //   {logButtonVector}
+          // </a>
       )
     }
     let vizLink = (noButtonVector)
