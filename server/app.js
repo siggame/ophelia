@@ -75,14 +75,17 @@ app.use(function (err, req, res, next) {
   next(err)
 })
 
+// General error handler
 app.use(function (err, req, res, next) {
+  // This should be called whenever an error is passed to next()
   err.status = 500
+  // Here we set the extra information to send to Sentry.io
   const context = {
     user: req.user,
     params: req.params,
     body: req.body,
     query: req.query,
-    req: req
+    whole_req: req
   }
   raven.error(err, context)
   next(err)

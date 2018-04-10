@@ -7,6 +7,8 @@ try {
     process.exit(1)
   })
 } catch (err) {
+  // If we are in production then we need to throw the error
+  // But otherwise it shouldn't matter that we can't set up the logger
   if (process.env.NODE_ENV === 'production') {
     throw err
   }
