@@ -20,6 +20,17 @@ function getTeam (teamId) {
   })
 }
 
+function isUserAdmin (teamId) {
+  return new Promise((resolve, reject) => {
+    getTeam(teamId).then((team) => {
+      if (typeof team !== 'undefined' && team !== null) {
+        return resolve(team.role === 'admin')
+      }
+      return resolve(false)
+    }).catch((err) => { return reject(err) })
+  })
+}
+
 /**
  * getAllTeamNames - grabs all current teams from the database
  * @returns {Promise} - returns an array of strings if successful that contains all team names in the database.
@@ -32,6 +43,18 @@ function getAllTeamNames () {
         returnData.push(row.name)
       })
       return resolve(returnData)
+    }).catch((err) => {
+      return reject(err)
+    })
+  })
+}
+
+function getAllTeams () {
+  return new Promise((resolve, reject) => {
+    knex('teams').select(
+      'id', 'name', 'contact_email', 'contact_name', 'is_eligible', 'role'
+    ).then((data) => {
+      return resolve(data)
     }).catch((err) => {
       return reject(err)
     })
@@ -174,6 +197,8 @@ function createTeam (
 module.exports = {
   createTeam,
   getTeam,
+  getAllTeams,
+  isUserAdmin,
   getTeamByName,
   editTeam,
   getAllTeamNames,
