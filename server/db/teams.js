@@ -118,6 +118,9 @@ function editTeam (teamName, dataToUpdate) {
             teamData.salt = passInfo.salt
             teamData.hash_iterations = passInfo.iterations
             break
+          case 'is_eligible':
+            teamData.is_eligible = dataToUpdate[dataName]
+            break
           default:
             return reject(new Error('Can only edit name, email, and password'))
         }
