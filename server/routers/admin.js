@@ -32,9 +32,10 @@ router.get(path + '/users', (req, res, next) => {
       }).catch((err) => {
         next(err)
       })
+    } else {
+      response.message = 'forbidden'
+      return res.status(403).json(response)
     }
-    response.message = 'forbidden'
-    return res.status(403).json(response)
   }).catch((err) => {
     next(err)
   })
