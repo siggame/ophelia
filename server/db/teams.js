@@ -13,7 +13,7 @@ function getTeam (teamId) {
     knex('teams').where({
       id: teamId
     }).then((res) => {
-      resolve(res)
+      resolve(res[0])
     }).catch((err) => {
       reject(err)
     })
