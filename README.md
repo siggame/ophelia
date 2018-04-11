@@ -7,7 +7,7 @@ for competitors of MegaMinerAI.
 
 ## Getting Started - Developers
 
-To develop on the project, you'll need a newer version of [NodeJS](https://nodejs.org/en/) (LTS is preferred).
+To develop on the project, you'll need a newer version of [NodeJS](https://nodejs.org/en/) (LTS is preferred) and [Yarn](https://yarnpkg.com/en/docs/install).
 
 If you're on Windows, [Git Bash](https://git-scm.com/downloads) is reccomended as a replacement for Command Prompt.
 
@@ -26,12 +26,12 @@ This file sets some global stuff for the fronend, but **none of it is actually s
 
 Once you've installed the needed programs and set up the .env files, go ahead and run the following:
 ```
-$ npm run setup
+$ yarn setup
 ```
 
 This will install all of the needed packages and put you back in the base directory of the repo. Once you're there, run the following to start the server in debug mode:
 ```
-$ npm run debug
+$ yarn debug
 ```
 You can then navigate to [localhost:3000](localhost:3000) to use the site.
 

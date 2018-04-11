@@ -1,22 +1,21 @@
 {
-  "name": "webserver",
-  "version": "0.0.0",
+  "name": "ophelia",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "start": "node ./server/bin/www",
-    "debug": "concurrently \"npm run server-debug\" \"cd client && npm start\" \"npm run selenium\"",
-    "test": "npm run nightwatch",
+    "debug": "concurrently \"yarn run server-debug\" \"cd client && yarn start\" \"yarn run selenium\"",
+    "test": "./node_modules/.bin/nightwatch",
     "server-debug": "cd server && nodemon ./bin/www",
-    "setup": "npm install && npm run setup:client  && npm run setup:server && npm run nightwatch_install",
-    "setup:client": "cd client && npm install && cd ..",
-    "setup:server": "cd server && npm install && cd ..",
-    "clean": "npm run clean:client && npm run clean:server && npm run clean:misc",
+    "setup": "yarn install && yarn run setup:client  && yarn run setup:server && yarn run selenium_install",
+    "setup:client": "cd client && yarn install && cd ..",
+    "setup:server": "cd server && yarn install && cd ..",
+    "clean": "yarn run clean:client && yarn run clean:server && yarn run clean:misc",
     "clean:client": "rimraf client/node_modules client/build",
     "clean:server": "rimraf server/node_modules",
     "clean:misc": "rimraf node_modules/",
-    "nightwatch_install": "npm install nightwatch --save-dev && npm install selenium-standalone --save-dev && ./node_modules/.bin/selenium-standalone install",
-    "nightwatch": "./node_modules/.bin/nightwatch",
-    "selenium": "./node_modules/.bin/selenium-standalone start"
+    "selenium": "./node_modules/.bin/selenium-standalone start",
+    "selenium_install": "./node_modules/.bin/selenium-standalone install"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",
