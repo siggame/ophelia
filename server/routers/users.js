@@ -192,9 +192,11 @@ router.put(path + '/:teamName', (req, res) => {
     if (user.success) {
       // This will hold all of the data to be edited
       const teamEditData = {}
-      // Iterate over each of the fields allowed to be edited
+      // Iterate over each of the fields in the request
       for (const field in editData) {
         if (editData.hasOwnProperty(field)) {
+          // If the field is not in the array of editable fields
+          // then they must be trying to edit something not allowed
           if (editableFields.indexOf(field) === -1) {
             response.message = 'Editable fields include only: ' + editableFields
             return res.status(400).json(response)

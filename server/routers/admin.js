@@ -24,7 +24,11 @@ router.get(path + '/users', (req, res, next) => {
   }
   const userId = req.user.id
   teams.isUserAdmin(userId).then((result) => {
-    if (result) {
+    if (!result) {
+      // The user is not an admin, they are not allowed to access this endpoint
+      response.message = 'forbidden'
+      return res.status(403).json(response)
+    } else {
       teams.getAllTeams().then((data) => {
         response.success = true
         response.users = data
@@ -32,9 +36,6 @@ router.get(path + '/users', (req, res, next) => {
       }).catch((err) => {
         next(err)
       })
-    } else {
-      response.message = 'forbidden'
-      return res.status(403).json(response)
     }
   }).catch((err) => {
     next(err)
@@ -72,13 +73,16 @@ router.put(path + '/users/:teamName', (req, res, next) => {
   }
   const editData = body.editData
 
-  // Use the login function to check if they are signed in properly
   teams.isUserAdmin(userId).then((result) => {
-    // user.success determines whether or not the user successfully logged in
-    if (result) {
+    // result contains whether or not the user is an admin
+    if (!result) {
+      // The user is not an admin, they are not allowed to access this endpoint
+      response.message = 'forbidden'
+      return res.status(403).json(response)
+    } else {
       // This will hold all of the data to be edited
       const teamEditData = {}
-      // Iterate over each of the fields allowed to be edited
+      // Iterate over each of the fields in the request
       for (const field in editData) {
         if (editData.hasOwnProperty(field)) {
           if (editableFields.indexOf(field) === -1) {
@@ -112,9 +116,6 @@ router.put(path + '/users/:teamName', (req, res, next) => {
       }).catch((err) => {
         next(err)
       })
-    } else {
-      response.message = 'forbidden'
-      return res.status(403).json(response)
     }
   }, (err) => {
     next(err)
