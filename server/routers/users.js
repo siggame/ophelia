@@ -193,8 +193,12 @@ router.put(path + '/:teamName', (req, res) => {
       // This will hold all of the data to be edited
       const teamEditData = {}
       // Iterate over each of the fields allowed to be edited
-      for (const field of editableFields) {
+      for (const field in editData) {
         if (editData.hasOwnProperty(field)) {
+          if (editableFields.indexOf(field) === -1) {
+            response.message = 'Editable fields include only: ' + editableFields
+            return res.status(400).json(response)
+          }
           switch (field) {
             case 'password':
               if (!sanitizer.isValidPassword(editableFields[field])) {
