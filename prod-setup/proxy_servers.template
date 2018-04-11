@@ -1,0 +1,71 @@
+server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+
+        server_name $NGINX_CLIENT_HOST;
+
+        location / {
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                return 301 https://$server_name$request_uri;
+        }
+
+}
+
+server {
+        listen 443;
+        server_name $NGINX_CLIENT_HOST;
+
+        client_max_body_size 150M;
+        client_body_timeout 120s;
+
+        ssl on;
+        ssl_certificate /etc/ssl/live/$NGINX_CLIENT_HOST/cert.pem;
+        ssl_certificate_key /etc/ssl/live/$NGINX_CLIENT_HOST/privkey.pem;
+
+        location ^~ /storage/ {
+            proxy_pass http://$NGINX_ARENA_HOST/storage/;
+        }
+
+        location / {
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_pass http://client;
+        }
+}
+
+server {
+        listen 80;
+        listen [::]:80;
+
+        server_name $NGINX_SERVER_HOST;
+
+        location / {
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                return 301 https://$server_name$request_uri;
+        }
+
+}
+
+server {
+        listen 443;
+        server_name $NGINX_SERVER_HOST;
+
+        client_max_body_size 150M;
+        client_body_timeout 120s;
+
+        ssl on;
+        ssl_certificate /etc/ssl/live/$NGINX_SERVER_HOST/cert.pem;
+        ssl_certificate_key /etc/ssl/live/$NGINX_SERVER_HOST/privkey.pem;
+
+        location ^~ /storage/ {
+                    proxy_pass http://$NGINX_ARENA_HOST/storage/;
+                }
+
+        location / {
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_pass http://server:3001;
+        }
+}
