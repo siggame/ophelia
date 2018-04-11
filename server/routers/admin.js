@@ -39,3 +39,5 @@ router.get(path + '/users', (req, res, next) => {
     next(err)
   })
 })
+
+module.exports = {router}
