@@ -6,6 +6,7 @@ const teams = require('../db/init').teams
 const encrypt = require('../session/auth').encrypt
 const login = require('../session/login').login
 const sanitizer = require('../utils/sanitizer')
+const ELIGIBLE_DEFAULT = require('../vars').ELIGIBLE_DEFAULT
 
 // All paths in this file should start with this
 const path = '/users'
@@ -88,6 +89,9 @@ router.post(path + '/', (req, res) => {
     return res.status(400).json(response)
   }
   const passInfo = encrypt(body.password)
+  // Change the default eligibility
+  // using !! to make sure it is a boolean
+  const eligibile = !!ELIGIBLE_DEFAULT
   teams.createTeam(
     username,
     email,
@@ -96,7 +100,7 @@ router.post(path + '/', (req, res) => {
     passInfo.iterations,
     'user',
     name,
-    true
+    eligibile
   ).then(() => {
     response.success = true
     response.message = 'Created user successfully'
