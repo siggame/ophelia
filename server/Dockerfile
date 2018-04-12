@@ -17,6 +17,8 @@ EXPOSE 3001
 # override this with -e NODE_ENV="development"
 ENV NODE_ENV production
 
+RUN npm install -g -s --no-progress yarn
+
 # Copy over the package.json file
 COPY package.json $HOME/ophelia/
 
@@ -28,7 +30,7 @@ USER siggame
 # Set the work directory to the ophelia directory
 WORKDIR $HOME/ophelia
 # Install the webserver's dependencies in the workdir
-RUN npm install
+RUN yarn install
 
 # Change back to the root user
 USER root
