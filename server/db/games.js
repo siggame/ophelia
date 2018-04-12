@@ -9,6 +9,11 @@ const logEndpoint = require('../vars').LOG_ENDPOINT
  * @param teamName String, name of the team to grab submissions for
  * @param page number, desired page
  * @param pageSize number, size of each page
+ * @param options filtering options
+ * {
+ *    version: number,
+ *    result: 'win' | 'loss'
+ * }
  * @return {Promise} resolves when there are no errors, rejects if there is a
  *  problem
  */
@@ -35,7 +40,16 @@ function getGamesByTeamName (teamName, page, pageSize, options) {
       .join('games_submissions', 'games_submissions.game_id', '=', 'games.id')
       .join('submissions',
         'submissions.id', '=', 'games_submissions.submission_id')
-      .join('teams', 'teams.id', '=', 'submissions.team_id')
+      .join('teams', function () {
+        this.on('teams.id', '=', 'submissions.team_id')
+        if (typeof options.result !== 'undefined') {
+          if (options.result === 'win') {
+            this.andOn('games.winner_id', '=', 'submissions.id')
+          } else if (options.result === 'loss') {
+            this.andOn('games.winner_id', '!=', 'submissions.id')
+          }
+        }
+      })
       .where('teams.name', '=', teamName)
       .select(
         'games.id',
@@ -45,6 +59,9 @@ function getGamesByTeamName (teamName, page, pageSize, options) {
         'games_submissions.output_url as client_log_url')
       .orderBy('games.created_at', 'desc')
       .limit(pageSize).offset(offset)
+    if (typeof options.version !== 'undefined') {
+      gamesQuery.andWhere('submissions.version', '=', options.version)
+    }
     gamesQuery.then((rows) => {
       // This gets the IDs for each game that the user is in
       rows.forEach((row) => { gameIDs.push(row.id) })
@@ -68,7 +85,7 @@ function getGamesByTeamName (teamName, page, pageSize, options) {
         .join('games', 'games_submissions.game_id', '=', 'games.id')
         .where('games.id', 'in', gameIDs)
         .join('teams', 'teams.id', '=', 'submissions.team_id')
-        .select('submissions.team_id',
+        .select('submissions.id as team_submission_id',
           'games.id',
           'teams.name as opponent',
           'games.status',
@@ -88,28 +105,12 @@ function getGamesByTeamName (teamName, page, pageSize, options) {
           // By using the array we made earlier to store them together
           let ver = versions.find(o => o.gameID === row.id)
           game.version = ver.version
-          if (typeof options.version !== 'undefined') {
-            if (game.version !== options.version) {
-              continue
-            }
-          }
           game.client_log_url = ver.client_log_url
           delete game.name
-          if (game.team_id === game.winner_id) {
+          if (game.team_submission_id === game.winner_id) {
             game.winner = game.opponent
           } else {
             game.winner = teamName
-          }
-          if (typeof options.result !== 'undefined') {
-            if (options.result === 'win') {
-              if (game.winner !== teamName) {
-                continue
-              }
-            } else if (options.result === 'loss') {
-              if (game.winner === teamName) {
-                continue
-              }
-            }
           }
           // This will let us contact the correct endpoint to actually retrieve
           // the log url from the arena
