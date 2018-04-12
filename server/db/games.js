@@ -22,8 +22,6 @@ function getGamesByTeamName (teamName, page, pageSize, options) {
     if (teamName === null || typeof teamName === 'undefined') {
       reject(new Error('TeamName is null or undefined'))
     }
-    const gameIDs = []
-    const versions = []
     // This is the offset for the query, it subtracts 1 from the page
     // so that page 1 causes it to be 0, which will work like it isn't there
     const offset = (page - 1) * pageSize
@@ -36,7 +34,19 @@ function getGamesByTeamName (teamName, page, pageSize, options) {
       We also use this to get the version number of the submission
       that the given teamName submitted.
     */
-    const gamesQuery = knex('games')
+    const playerQuery = knex('games')
+      .select(
+        'games.id as game_id',
+        'games.status',
+        'submissions.version',
+        'submissions.id as submission_id',
+        'games.win_reason',
+        'games.lose_reason',
+        'games.winner_id',
+        'games.log_url',
+        'games.created_at',
+        'games.updated_at'
+      )
       .join('games_submissions', 'games_submissions.game_id', '=', 'games.id')
       .join('submissions',
         'submissions.id', '=', 'games_submissions.submission_id')
@@ -51,85 +61,72 @@ function getGamesByTeamName (teamName, page, pageSize, options) {
         }
       })
       .where('teams.name', '=', teamName)
-      .select(
-        'games.id',
-        'games.created_at',
-        'games.updated_at',
-        'submissions.version',
-        'games_submissions.output_url as client_log_url')
-      .orderBy('games.created_at', 'desc')
-      .limit(pageSize).offset(offset)
-    if (typeof options.version !== 'undefined') {
-      gamesQuery.andWhere('submissions.version', '=', options.version)
-    }
-    gamesQuery.then((rows) => {
-      // This gets the IDs for each game that the user is in
-      rows.forEach((row) => { gameIDs.push(row.id) })
-      // Get a list of versions associated with game IDs
-      rows.forEach((row) => {
-        versions.push({
-          gameID: row.id,
-          version: row.version,
-          client_log_url: row.client_log_url
-        })
-      })
-      /*
-       Here we join all of the tables together, limiting it to the
-       gameIDs we found in the earlier query, as well as only looking
-       for rows where the team name is not the same as our given name
-       because we are only looking for the opponents name
-      */
-      const submissions = knex('submissions')
-        .join('games_submissions',
-          'games_submissions.submission_id', '=', 'submissions.id')
-        .join('games', 'games_submissions.game_id', '=', 'games.id')
-        .where('games.id', 'in', gameIDs)
-        .join('teams', 'teams.id', '=', 'submissions.team_id')
-        .select('submissions.id as team_submission_id',
-          'games.id',
-          'teams.name as opponent',
-          'games.status',
-          'games.win_reason',
-          'games.lose_reason',
-          'games.winner_id',
-          'games.log_url',
-          'games.created_at',
-          'games.updated_at')
-        .where('teams.name', '!=', teamName)
-
-      submissions.then((subRows) => {
-        const games = []
-        for (const row of subRows) {
-          let game = row
-          // This finds the version number of the teamName we searched for
-          // By using the array we made earlier to store them together
-          let ver = versions.find(o => o.gameID === row.id)
-          game.version = ver.version
-          game.client_log_url = ver.client_log_url
-          delete game.name
-          if (game.team_submission_id === game.winner_id) {
-            game.winner = game.opponent
-          } else {
-            game.winner = teamName
+      .as('player')
+    const opponentQuery = knex('games')
+      .select('teams.name', 'games.id as game_id')
+      .join('games_submissions', 'games_submissions.game_id', '=', 'games.id')
+      .join('submissions',
+        'submissions.id', '=', 'games_submissions.submission_id')
+      .join('teams', function () {
+        this.on('teams.id', '=', 'submissions.team_id')
+        if (typeof options.result !== 'undefined') {
+          if (options.result === 'win') {
+            this.andOn('games.winner_id', '=', 'submissions.id')
+          } else if (options.result === 'loss') {
+            this.andOn('games.winner_id', '!=', 'submissions.id')
           }
-          // This will let us contact the correct endpoint to actually retrieve
-          // the log url from the arena
-          if (game.log_url !== null) {
-            game.log_url = host + logEndpoint + game.log_url
-          }
-          if (game.client_log_url !== null) {
-            game.client_log_url = host + logEndpoint + game.client_log_url
-          }
-          delete game.winner_id
-          delete game.team_id
-          games.push(game)
         }
-        // We need to re-sort the games
-        games.sort(sortGames)
-        return resolve(games)
       })
+      .where('teams.name', '!=', teamName)
+      .as('opponent')
+    const gamesQuery = knex(playerQuery)
+      .join(opponentQuery, 'player.game_id', '=', 'opponent.game_id')
+      .select(
+        'player.game_id',
+        'opponent.name as opponent',
+        'player.submission_id',
+        'player.status',
+        'player.win_reason',
+        'player.version',
+        'player.lose_reason',
+        'player.winner_id',
+        'player.log_url',
+        'player.created_at',
+        'player.updated_at')
+      .orderBy('player.created_at', 'desc')
+      .limit(pageSize).offset(offset)
+    // if (typeof options.version !== 'undefined') {
+    //   gamesQuery.andWhere('submissions.version', '=', options.version)
+    // }
+    gamesQuery.then((rows) => {
+      console.log(rows)
+      const games = []
+      for (const row of rows) {
+        let game = row
+        // This finds the version number of the teamName we searched for
+        // By using the array we made earlier to store them together
+        if (game.submission_id === game.winner_id) {
+          game.winner = game.opponent
+        } else {
+          game.winner = teamName
+        }
+        // This will let us contact the correct endpoint to actually retrieve
+        // the log url from the arena
+        if (game.log_url !== null) {
+          game.log_url = host + logEndpoint + game.log_url
+        }
+        if (game.client_log_url !== null) {
+          game.client_log_url = host + logEndpoint + game.client_log_url
+        }
+        delete game.winner_id
+        delete game.team_id
+        games.push(game)
+      }
+      // We need to re-sort the games
+      games.sort(sortGames)
+      return resolve(games)
     }).catch((err) => {
-      return reject(err)
+      reject(err)
     })
   })
 }
