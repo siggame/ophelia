@@ -60,7 +60,7 @@ router.get(path + '/', (req, res) => {
             response.message = 'Optional field ' + value + ' is too long to be a username.'
             return res.status(400).json(response)
           }
-          options.opponentName = param
+          options.opponent = param
           break
         case 'result':
           if (param !== 'win' && param !== 'loss') {
@@ -93,7 +93,7 @@ router.get(path + '/', (req, res) => {
       // response.message = 'Incorrect page number'
       // return res.status(400).json(response)
     }
-    dbGames.countGamesByTeamName(teamName).then((count) => {
+    dbGames.countGamesByTeamName(teamName, options).then((count) => {
       response.success = true
       response.message = 'Games successfully retrieved'
       response.pages = Math.ceil(count / pageSize)

@@ -104,8 +104,6 @@ function getGamesByTeamName (teamName, page, pageSize, options) {
       const games = []
       for (const row of rows) {
         let game = row
-        // This finds the version number of the teamName we searched for
-        // By using the array we made earlier to store them together
         if (game.submission_id === game.winner_id) {
           game.winner = teamName
         } else {
@@ -132,18 +130,57 @@ function getGamesByTeamName (teamName, page, pageSize, options) {
   })
 }
 
-function countGamesByTeamName (teamName) {
+function countGamesByTeamName (teamName, options) {
   return new Promise((resolve, reject) => {
     if (teamName === null || typeof teamName === 'undefined') {
       reject(new Error('TeamName is null or undefined'))
     }
-    const query = knex('games')
+    const playerQuery = knex('games')
+      .select('games.id as game_id')
+      .join('games_submissions', 'games_submissions.game_id', '=', 'games.id')
+      .join('submissions',
+        'submissions.id', '=', 'games_submissions.submission_id')
+      .join('teams', function () {
+        this.on('teams.id', '=', 'submissions.team_id')
+        // Checks the 'options' parameter for the result field
+        if (typeof options.result !== 'undefined') {
+          console.log(options)
+          // If it is win then we need to check if the submission id is equal to
+          // the winner id on the game
+          if (options.result === 'win') {
+            this.andOn('games.winner_id', '=', 'submission_id')
+          } else if (options.result === 'loss') {
+            this.andOn('games.winner_id', '!=', 'submission_id')
+          }
+        }
+      })
+      .where('teams.name', '=', teamName)
+      // gives this sub query the alias 'player'
+      .as('player')
+    if (typeof options.version !== 'undefined') {
+      playerQuery.andWhere('submissions.version', '=', options.version)
+    }
+    /*
+      This sub query is just like the one above, except this will be looking for
+      the opponent. It doesn't need the extra query for checking the result, and
+      we can also use this to search for a specific opponent if it is requested
+     */
+    const opponentQuery = knex('games')
+      .select('games.id as game_id')
       .join('games_submissions', 'games_submissions.game_id', '=', 'games.id')
       .join('submissions',
         'submissions.id', '=', 'games_submissions.submission_id')
       .join('teams', 'teams.id', '=', 'submissions.team_id')
-      .where('teams.name', '=', teamName)
-      .count('games.id')
+      .as('opponent')
+    // Check to see if we need to search for a specific opponent
+    if (typeof options.opponent !== 'undefined') {
+      opponentQuery.where('teams.name', '=', options.opponent)
+    } else {
+      opponentQuery.where('teams.name', '!=', teamName)
+    }
+    const query = knex(playerQuery)
+      .join(opponentQuery, 'player.game_id', '=', 'opponent.game_id')
+      .count('player.game_id')
     query.then((count) => {
       resolve(parseInt(count[0].count))
     }).catch((err) => {
