@@ -26,14 +26,10 @@ function getGamesByTeamName (teamName, page, pageSize, options) {
     // so that page 1 causes it to be 0, which will work like it isn't there
     const offset = (page - 1) * pageSize
     /*
-      Here we join all the tables together to get a list of ids from
-      the games table that we will use in the next query.
-      We then limit how many rows we are getting by created_at,
-      and then limiting them to one pageSize worth of games,
-      offset to the specific page we want.
-      We also use this to get the version number of the submission
-      that the given teamName submitted.
-    */
+      This sub query is to find the rows of the current player. It joins
+      all of the required tables together and selects the rows out that have
+      the teams.name column = the passed in team name
+     */
     const playerQuery = knex('games')
       .select(
         'games.id as game_id',
@@ -52,7 +48,10 @@ function getGamesByTeamName (teamName, page, pageSize, options) {
         'submissions.id', '=', 'games_submissions.submission_id')
       .join('teams', function () {
         this.on('teams.id', '=', 'submissions.team_id')
+        // Checks the 'options' parameter for the result field
         if (typeof options.result !== 'undefined') {
+          // If it is win then we need to check if the submission id is equal to
+          // the winner id on the game
           if (options.result === 'win') {
             this.andOn('games.winner_id', '=', 'submission_id')
           } else if (options.result === 'loss') {
@@ -61,10 +60,16 @@ function getGamesByTeamName (teamName, page, pageSize, options) {
         }
       })
       .where('teams.name', '=', teamName)
+      // gives this sub query the alias 'player'
       .as('player')
     if (typeof options.version !== 'undefined') {
       playerQuery.andWhere('submissions.version', '=', options.version)
     }
+    /*
+      This sub query is just like the one above, except this will be looking for
+      the opponent. It doesn't need the extra query for checking the result, and
+      we can also use this to search for a specific opponent if it is requested
+     */
     const opponentQuery = knex('games')
       .select('teams.name', 'games.id as game_id')
       .join('games_submissions', 'games_submissions.game_id', '=', 'games.id')
@@ -72,6 +77,7 @@ function getGamesByTeamName (teamName, page, pageSize, options) {
         'submissions.id', '=', 'games_submissions.submission_id')
       .join('teams', 'teams.id', '=', 'submissions.team_id')
       .as('opponent')
+    // Check to see if we need to search for a specific opponent
     if (typeof options.opponent !== 'undefined') {
       opponentQuery.where('teams.name', '=', options.opponent)
     } else {
