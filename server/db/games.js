@@ -54,31 +54,29 @@ function getGamesByTeamName (teamName, page, pageSize, options) {
         this.on('teams.id', '=', 'submissions.team_id')
         if (typeof options.result !== 'undefined') {
           if (options.result === 'win') {
-            this.andOn('games.winner_id', '=', 'submissions.id')
+            this.andOn('games.winner_id', '=', 'submission_id')
           } else if (options.result === 'loss') {
-            this.andOn('games.winner_id', '!=', 'submissions.id')
+            this.andOn('games.winner_id', '!=', 'submission_id')
           }
         }
       })
       .where('teams.name', '=', teamName)
       .as('player')
+    if (typeof options.version !== 'undefined') {
+      playerQuery.andWhere('submissions.version', '=', options.version)
+    }
     const opponentQuery = knex('games')
       .select('teams.name', 'games.id as game_id')
       .join('games_submissions', 'games_submissions.game_id', '=', 'games.id')
       .join('submissions',
         'submissions.id', '=', 'games_submissions.submission_id')
-      .join('teams', function () {
-        this.on('teams.id', '=', 'submissions.team_id')
-        if (typeof options.result !== 'undefined') {
-          if (options.result === 'win') {
-            this.andOn('games.winner_id', '=', 'submissions.id')
-          } else if (options.result === 'loss') {
-            this.andOn('games.winner_id', '!=', 'submissions.id')
-          }
-        }
-      })
-      .where('teams.name', '!=', teamName)
+      .join('teams', 'teams.id', '=', 'submissions.team_id')
       .as('opponent')
+    if (typeof options.opponentName !== 'undefined') {
+      opponentQuery.where('teams.name', '=', options.opponentName)
+    } else {
+      opponentQuery.where('teams.name', '!=', teamName)
+    }
     const gamesQuery = knex(playerQuery)
       .join(opponentQuery, 'player.game_id', '=', 'opponent.game_id')
       .select(
@@ -95,9 +93,6 @@ function getGamesByTeamName (teamName, page, pageSize, options) {
         'player.updated_at')
       .orderBy('player.created_at', 'desc')
       .limit(pageSize).offset(offset)
-    // if (typeof options.version !== 'undefined') {
-    //   gamesQuery.andWhere('submissions.version', '=', options.version)
-    // }
     gamesQuery.then((rows) => {
       console.log(rows)
       const games = []
@@ -106,9 +101,9 @@ function getGamesByTeamName (teamName, page, pageSize, options) {
         // This finds the version number of the teamName we searched for
         // By using the array we made earlier to store them together
         if (game.submission_id === game.winner_id) {
-          game.winner = game.opponent
-        } else {
           game.winner = teamName
+        } else {
+          game.winner = game.opponent
         }
         // This will let us contact the correct endpoint to actually retrieve
         // the log url from the arena
