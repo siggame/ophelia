@@ -12,8 +12,8 @@ const path = '/games'
  *  page: The requested page
  *  pageSize: How many games desired on each page
  * Option URL parameters
- *  opponentName: the name of the opponent
- *  result: the result of the game (win or loss)
+ *  opponent: the name of the opponent
+ *  result: the result of the game ('win' or 'loss')
  *  version: the version of the ai the game was ran with
  * Responds with a body of the form:
  *{
@@ -38,7 +38,7 @@ router.get(path + '/', (req, res) => {
   // Check for the existence of required parameters, and make sure that
   // they are passed as positive numbers
   const requiredValues = ['page', 'pageSize']
-  const optionalValues = ['opponentName', 'result', 'version']
+  const optionalValues = ['opponent', 'result', 'version']
   for (const value of requiredValues) {
     let param = req.query[value]
     if (typeof param === 'undefined') {
@@ -55,7 +55,7 @@ router.get(path + '/', (req, res) => {
     let param = req.query[value]
     if (typeof param !== 'undefined') {
       switch (value) {
-        case 'opponentName':
+        case 'opponent':
           if (!sanitizer.checkLength(param, 1, 100)) {
             response.message = 'Optional field ' + value + ' is too long to be a username.'
             return res.status(400).json(response)

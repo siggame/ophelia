@@ -72,8 +72,8 @@ function getGamesByTeamName (teamName, page, pageSize, options) {
         'submissions.id', '=', 'games_submissions.submission_id')
       .join('teams', 'teams.id', '=', 'submissions.team_id')
       .as('opponent')
-    if (typeof options.opponentName !== 'undefined') {
-      opponentQuery.where('teams.name', '=', options.opponentName)
+    if (typeof options.opponent !== 'undefined') {
+      opponentQuery.where('teams.name', '=', options.opponent)
     } else {
       opponentQuery.where('teams.name', '!=', teamName)
     }
