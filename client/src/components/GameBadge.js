@@ -11,10 +11,6 @@ import React, { Component } from 'react'
  * gameId - Identifier used to link to the gamelog
  */
 export default class GameBadge extends Component {
-  constructor (props) {
-    super(props)
-  }
-
   render () {
     let bgColor = ''
     // The Background Color of the div should be different based on what the result of the game
