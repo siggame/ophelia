@@ -6,6 +6,7 @@ const teams = require('../db/init').teams
 const encrypt = require('../session/auth').encrypt
 const login = require('../session/login').login
 const sanitizer = require('../utils/sanitizer')
+const ELIGIBLE_DEFAULT = require('../vars').ELIGIBLE_DEFAULT
 
 // All paths in this file should start with this
 const path = '/users'
@@ -21,7 +22,7 @@ const path = '/users'
  * 200 - Successfully retrieved
  * 500 - Something went wrong
  */
-router.get(path + '/', (req, res) => {
+router.get(path + '/', (req, res, next) => {
   const response = {
     success: false,
     users: []
@@ -30,9 +31,9 @@ router.get(path + '/', (req, res) => {
   teams.getAllTeamNames().then((data) => {
     response.success = true
     response.users = data
-    res.status(200).json(response)
-  }).catch(() => {
-    res.status(500).json(response)
+    return res.status(200).json(response)
+  }).catch((err) => {
+    return next(err)
   })
 })
 
@@ -55,7 +56,7 @@ router.get(path + '/', (req, res) => {
  * 400 - User error
  * 500 - Something went wrong
  */
-router.post(path + '/', (req, res) => {
+router.post(path + '/', (req, res, next) => {
   const response = {
     success: false,
     message: ''
@@ -88,6 +89,9 @@ router.post(path + '/', (req, res) => {
     return res.status(400).json(response)
   }
   const passInfo = encrypt(body.password)
+  // Change the default eligibility
+  // using !! to make sure it is a boolean
+  const eligibile = !!ELIGIBLE_DEFAULT
   teams.createTeam(
     username,
     email,
@@ -96,7 +100,7 @@ router.post(path + '/', (req, res) => {
     passInfo.iterations,
     'user',
     name,
-    true
+    eligibile
   ).then(() => {
     response.success = true
     response.message = 'Created user successfully'
@@ -110,12 +114,11 @@ router.post(path + '/', (req, res) => {
     // Throw any other errors, these are server related errors and are handled below
     throw err
   }).catch((err) => {
-    response.message = err.message
-    res.status(500).json(response)
+    return next(err)
   })
 })
 
-router.get(path + '/:teamId', (req, res) => {
+router.get(path + '/:teamId', (req, res, next) => {
   const response = {
     success: false,
     message: '',
@@ -139,13 +142,9 @@ router.get(path + '/:teamId', (req, res) => {
 
     return res.status(200).json(response)
   }, (err) => {
-    response.success = false
-    response.message = err.message
-    return res.status(500).json(response)
+    return next(err)
   }).catch((err) => {
-    response.success = false
-    response.message = err.message
-    return res.status(500).json(response)
+    return next(err)
   })
 })
 
@@ -162,7 +161,7 @@ router.get(path + '/:teamId', (req, res) => {
  * }
  * Where each of the fields in editData is optional, but at least one must exist
  */
-router.put(path + '/:teamName', (req, res) => {
+router.put(path + '/:teamName', (req, res, next) => {
   const response = {
     success: false,
     message: ''
@@ -193,9 +192,15 @@ router.put(path + '/:teamName', (req, res) => {
     if (user) {
       // This will hold all of the data to be edited
       const teamEditData = {}
-      // Iterate over each of the fields allowed to be edited
-      for (const field of editableFields) {
-        if (editData.hasOwnProperty(field) && editData[field] !== '') {
+      // Iterate over each of the fields in the request
+      for (const field in editData) {
+        if (editData.hasOwnProperty(field)) {
+          // If the field is not in the array of editable fields
+          // then they must be trying to edit something not allowed
+          if (editableFields.indexOf(field) === -1) {
+            response.message = 'Editable fields include only: ' + editableFields
+            return res.status(400).json(response)
+          }
           switch (field) {
             case 'password':
               if (!sanitizer.isValidPassword(editData[field])) {
@@ -228,11 +233,9 @@ router.put(path + '/:teamName', (req, res) => {
         response.message = 'Edited user successfully'
         res.status(200).json(response)
       }, (err) => {
-        response.message = err.message
-        res.status(500).json(response)
+        return next(err)
       }).catch((err) => {
-        response.message = err.message
-        res.status(500).json(response)
+        return next(err)
       })
     } else {
       response.message = 'unauthorized'
@@ -240,11 +243,9 @@ router.put(path + '/:teamName', (req, res) => {
       return res.status(401).json(response)
     }
   }, (err) => {
-    console.log(err)
-    res.status(500).json(response)
+    return next(err)
   }).catch((err) => {
-    console.log(err)
-    res.status(500).json(response)
+    return next(err)
   })
 })
 
