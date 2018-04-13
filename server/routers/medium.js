@@ -10,7 +10,7 @@ const mediumFeed = 'http://medium.com/feed/siggame'
  * GET '/medium/' - gets the 5 newest posts from the SIG-Game Medium page.
  * Posts include: title, desc, link, url, created
  */
-router.get(path + '/', (req, res) => {
+router.get(path + '/', (req, res, next) => {
   const response = {
     success: false,
     message: '',
@@ -21,9 +21,7 @@ router.get(path + '/', (req, res) => {
       if (typeof err !== 'undefined' && err !== null) {
         console.log('uh oh', err)
         response.success = false
-        // TODO Log error instead of responding with it
-        response.message = err.message
-        res.status(500).json(response)
+        return next(err)
       } else {
         response.success = true
         response.entries = parsed.feed.entries.slice(0, 5)
@@ -31,9 +29,7 @@ router.get(path + '/', (req, res) => {
       }
     })
   } catch (err) {
-    // TODO Log this instead of responding with it
-    response.message = err.message
-    res.status(500).json(response)
+    return next(err)
   }
 })
 

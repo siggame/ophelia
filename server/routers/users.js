@@ -22,7 +22,7 @@ const path = '/users'
  * 200 - Successfully retrieved
  * 500 - Something went wrong
  */
-router.get(path + '/', (req, res) => {
+router.get(path + '/', (req, res, next) => {
   const response = {
     success: false,
     users: []
@@ -31,9 +31,9 @@ router.get(path + '/', (req, res) => {
   teams.getAllTeamNames().then((data) => {
     response.success = true
     response.users = data
-    res.status(200).json(response)
-  }).catch(() => {
-    res.status(500).json(response)
+    return res.status(200).json(response)
+  }).catch((err) => {
+    return next(err)
   })
 })
 
@@ -56,7 +56,7 @@ router.get(path + '/', (req, res) => {
  * 400 - User error
  * 500 - Something went wrong
  */
-router.post(path + '/', (req, res) => {
+router.post(path + '/', (req, res, next) => {
   const response = {
     success: false,
     message: ''
@@ -114,12 +114,11 @@ router.post(path + '/', (req, res) => {
     // Throw any other errors, these are server related errors and are handled below
     throw err
   }).catch((err) => {
-    response.message = err.message
-    res.status(500).json(response)
+    return next(err)
   })
 })
 
-router.get(path + '/:teamName', (req, res) => {
+router.get(path + '/:teamName', (req, res, next) => {
   const response = {
     success: false,
     message: '',
@@ -142,13 +141,9 @@ router.get(path + '/:teamName', (req, res) => {
 
     return res.status(200).json(response)
   }, (err) => {
-    response.success = false
-    response.message = err.message
-    return res.status(500).json(response)
+    return next(err)
   }).catch((err) => {
-    response.success = false
-    response.message = err.message
-    return res.status(500).json(response)
+    return next(err)
   })
 })
 
@@ -165,7 +160,7 @@ router.get(path + '/:teamName', (req, res) => {
  * }
  * Where each of the fields in editData is optional, but at least one must exist
  */
-router.put(path + '/:teamName', (req, res) => {
+router.put(path + '/:teamName', (req, res, next) => {
   const response = {
     success: false,
     message: ''
@@ -237,22 +232,18 @@ router.put(path + '/:teamName', (req, res) => {
         response.message = 'Edited user successfully'
         res.status(200).json(response)
       }, (err) => {
-        response.message = err.message
-        res.status(500).json(response)
+        return next(err)
       }).catch((err) => {
-        response.message = err.message
-        res.status(500).json(response)
+        return next(err)
       })
     } else {
       response.message = 'unauthorized'
       return res.status(401).json(response)
     }
   }, (err) => {
-    console.log(err)
-    res.status(500).json(response)
+    return next(err)
   }).catch((err) => {
-    console.log(err)
-    res.status(500).json(response)
+    return next(err)
   })
 })
 
