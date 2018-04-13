@@ -40,6 +40,8 @@ function login (teamName, password) {
         return resolve(false)
       }
     }, (err) => {
+      raven.captureException(err)
+      console.log("testing the change")
       reject(err)
     }).catch((err) => {
       reject(err)

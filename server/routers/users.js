@@ -21,7 +21,7 @@ const path = '/users'
  * 200 - Successfully retrieved
  * 500 - Something went wrong
  */
-router.get(path + '/', (req, res) => {
+router.get(path + '/', (req, res, next) => {
   const response = {
     success: false,
     users: []
@@ -30,9 +30,9 @@ router.get(path + '/', (req, res) => {
   teams.getAllTeamNames().then((data) => {
     response.success = true
     response.users = data
-    res.status(200).json(response)
-  }).catch(() => {
-    res.status(500).json(response)
+    return res.status(200).json(response)
+  }).catch((err) => {
+    return next(err)
   })
 })
 
@@ -55,7 +55,7 @@ router.get(path + '/', (req, res) => {
  * 400 - User error
  * 500 - Something went wrong
  */
-router.post(path + '/', (req, res) => {
+router.post(path + '/', (req, res, next) => {
   const response = {
     success: false,
     message: ''
@@ -76,15 +76,15 @@ router.post(path + '/', (req, res) => {
 
   // sanitizing the inputs
   if (!sanitizer.isValidUsername(username)) {
-    response.message = 'Bad username'
+    response.message = 'Team name is already in use.'
     return res.status(400).json(response)
   }
   if (!sanitizer.isValidPassword(password)) {
-    response.message = 'Bad password'
+    response.message = 'Password does not meet requirements.'
     return res.status(400).json(response)
   }
   if (!sanitizer.isValidEmail(email)) {
-    response.message = 'Bad Email'
+    response.message = 'Email is invalid or already in use.'
     return res.status(400).json(response)
   }
   const passInfo = encrypt(body.password)
@@ -110,12 +110,11 @@ router.post(path + '/', (req, res) => {
     // Throw any other errors, these are server related errors and are handled below
     throw err
   }).catch((err) => {
-    response.message = err.message
-    res.status(500).json(response)
+    return next(err)
   })
 })
 
-router.get(path + '/:teamName', (req, res) => {
+router.get(path + '/:teamName', (req, res, next) => {
   const response = {
     success: false,
     message: '',
@@ -138,13 +137,9 @@ router.get(path + '/:teamName', (req, res) => {
 
     return res.status(200).json(response)
   }, (err) => {
-    response.success = false
-    response.message = err.message
-    return res.status(500).json(response)
+    return next(err)
   }).catch((err) => {
-    response.success = false
-    response.message = err.message
-    return res.status(500).json(response)
+    return next(err)
   })
 })
 
@@ -161,7 +156,7 @@ router.get(path + '/:teamName', (req, res) => {
  * }
  * Where each of the fields in editData is optional, but at least one must exist
  */
-router.put(path + '/:teamName', (req, res) => {
+router.put(path + '/:teamName', (req, res, next) => {
   const response = {
     success: false,
     message: ''
@@ -198,7 +193,7 @@ router.put(path + '/:teamName', (req, res) => {
           switch (field) {
             case 'password':
               if (!sanitizer.isValidPassword(editableFields[field])) {
-                response.message = 'invalid password'
+                response.message = 'Password does not meet requirements.'
                 return res.status(400).json(response)
               }
               // If the field is 'password' then we need to run encrypt to
@@ -207,7 +202,7 @@ router.put(path + '/:teamName', (req, res) => {
               break
             case 'email':
               if (!sanitizer.isValidEmail(editableFields[field])) {
-                response.message = 'invalid email'
+                response.message = 'Email is invalid or already in use.'
                 return res.status(400).json(response)
               }
               teamEditData[field] = editableFields[field]
@@ -227,22 +222,18 @@ router.put(path + '/:teamName', (req, res) => {
         response.message = 'Edited user successfully'
         res.status(200).json(response)
       }, (err) => {
-        response.message = err.message
-        res.status(500).json(response)
+        return next(err)
       }).catch((err) => {
-        response.message = err.message
-        res.status(500).json(response)
+        return next(err)
       })
     } else {
       response.message = 'unauthorized'
       return res.status(401).json(response)
     }
   }, (err) => {
-    console.log(err)
-    res.status(500).json(response)
+    return next(err)
   }).catch((err) => {
-    console.log(err)
-    res.status(500).json(response)
+    return next(err)
   })
 })
 

@@ -56,12 +56,12 @@ export default class SubmissionInfo extends React.Component {
             <ButtonRefresh buttonOnClick={this.props.submissionStore.makeDataStale} />
           </div>
         </div>
-
-        <div style={{ marginLeft: 10 }} >
+        
+        <div style={{ marginLeft: 10 }} className='row' >
           {uploadError}
-          <p>
-            <span>Uploaded:</span> ({uploadedTime})  {uploadedDate.toDateString() + ' ' + uploadedDate.toLocaleTimeString('en-US') }
-          </p>
+          <div>
+            <span>Uploaded:</span> ({uploadedTime})  {uploadedDate.toDateString() + ' ' +  uploadedDate.toLocaleTimeString('en-US') }
+          </div>
           <div className='row'>
             <div className='col-md-4'><a href={latestSubmission.logUrl} style={{ fontWeight: 'bold' }} download>Build Log</a></div>
             <div className='col-md-4'><span style={{ fontWeight: 'bold' }}>Version:</span> {latestSubmission.version}</div>

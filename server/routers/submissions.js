@@ -9,12 +9,12 @@ const submissionsEndpoint = require('../vars').SUBMISSIONS_ENDPOINT
 const request = require('request')
 // Acceptable mimetypes: application/zip application/octet-stream application/zip-compressed
 // application/x-zip-compressed multipart/x-zip
-const fileMimeTypeRegex = /(application\/(zip|gzip))/
+const fileMimeTypeRegex = /(application\/(x-)?(zip|gzip|tar))/
 
 // All paths in this file should start with this
 const path = '/submissions'
 
-router.get(path + '/', (req, res) => {
+router.get(path + '/', (req, res, next) => {
   const user = req.user.username
   const response = {
     success: false,
@@ -25,17 +25,15 @@ router.get(path + '/', (req, res) => {
     response.success = true
     response.message = 'Data successfully retrieved'
     response.submissions = result
-    res.status(200).json(response)
+    return res.status(200).json(response)
   }, (err) => {
-    response.message = err.message
-    res.status(500).json(response)
+    return next(err)
   }).catch((err) => {
-    response.message = 'An error occured: ' + err.message
-    res.status(500).json(err)
+    return next(err)
   })
 })
 
-router.post(path + '/', (req, res) => {
+router.post(path + '/', (req, res, next) => {
   const response = {
     success: false,
     message: ''
@@ -71,11 +69,9 @@ router.post(path + '/', (req, res) => {
     }
     const arenaRequest = request(options, function (err, arenaRes) {
       if (err) {
-        response.message = 'Error sending response to arena'
-        return res.status(500).json(response)
+        return next(new Error('Error sending submission to arena: ' + arenaRes))
       } else if (arenaRes.statusCode >= 400) {
-        response.message = 'Error sending response to arena'
-        return res.status(500).json(response)
+        return next(new Error('Error sending submission to arena: ' + arenaRes))
       } else {
         response.message = 'File successfully uploaded'
         response.success = true
@@ -90,7 +86,7 @@ router.post(path + '/', (req, res) => {
   }
 })
 
-router.get(path + '/:submissionID', (req, res) => {
+router.get(path + '/:submissionID', (req, res, next) => {
   const submissionID = req.params.submissionID
   const response = {
     success: false,
@@ -107,8 +103,7 @@ router.get(path + '/:submissionID', (req, res) => {
     console.log(submission)
     return res.status(200).json(response)
   }).catch((err) => {
-    response.message = 'An error occured: ' + err.message
-    res.status(500).json(err)
+    return next(err)
   })
 })
 
