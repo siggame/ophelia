@@ -35,5 +35,9 @@
     "nodemon": "^1.12.1",
     "rimraf": "^2.6.2",
     "selenium-standalone": "^6.13.0"
+  },
+  "dependencies": {
+    "fusioncharts": "^3.12.2",
+    "react-fusioncharts": "^1.0.5"
   }
 }
