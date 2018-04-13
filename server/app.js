@@ -14,6 +14,7 @@ require('dotenv').config()
 const maxFileSize = require('./vars').MAX_FILE_SIZE
 const jwtSecret = require('./vars').TOKEN_SECRET
 const hostname = require('./vars').HOST
+const raven = require('./utils/ravenconfig')
 
 const routers = require('./routers/init')
 
@@ -69,8 +70,25 @@ app.use(function (err, req, res, next) {
       success: false,
       message: 'unauthorized'
     }
-    res.status(401).json(response)
+    return res.status(401).json(response)
   }
+  next(err)
+})
+
+// General error handler
+app.use(function (err, req, res, next) {
+  // This should be called whenever an error is passed to next()
+  err.status = 500
+  // Here we set the extra information to send to Sentry.io
+  const context = {
+    user: req.user,
+    params: req.params,
+    body: req.body,
+    query: req.query,
+    whole_req: req
+  }
+  raven.error(err, context)
+  next(err)
 })
 
 // catch 404 and forward to error handler
@@ -85,10 +103,14 @@ app.use(function (err, req, res) {
   // set locals, only providing error in development
   res.locals.message = err.message
   res.locals.error = req.app.get('env') === 'development' ? err : {}
-
-  // render the error page
-  res.status(err.status || 500)
-  res.render('error')
+  const response = {
+    success: false,
+    message: ''
+  }
+  if (req.app.get('env') === 'development') {
+    response.message = 'An error occurred: ' + err.message
+  }
+  return res.status(err.status || 500).json(response)
 })
 
 // for parsing application/json

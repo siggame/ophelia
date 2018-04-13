@@ -1,13 +1,14 @@
 # build environment
 FROM node:latest as builder
+RUN npm install -g -s --no-progress yarn
 RUN mkdir /usr/src/app
 WORKDIR /usr/src/app
 ENV PATH /usr/src/app/node_modules/.bin:$PATH
 ADD package.json /usr/src/app/package.json
-RUN npm install --silent
-RUN npm install react-scripts@1.1.0 -g --silent
+RUN yarn install
+RUN yarn global add react-scripts@1.1.0
 ADD . /usr/src/app
-RUN npm run build
+RUN yarn run build
 
 # production environment
 FROM nginx:1.13.5-alpine
