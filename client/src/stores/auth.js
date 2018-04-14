@@ -123,6 +123,7 @@ export class AuthStore {
       return response.data
     } catch (err) {
       runInAction(() => {
+        console.log(err)
         this.errors = err.response.status !== 401 ? err.response.data : {message: 'There is something wrong with your submission!'}
       })
     }
