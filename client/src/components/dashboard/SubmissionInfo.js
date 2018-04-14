@@ -1,5 +1,4 @@
 import { distanceInWords } from 'date-fns'
-import { Formik } from 'formik'
 import { inject, observer } from 'mobx-react'
 import React from 'react'
 import { Alert } from 'react-bootstrap'
@@ -14,6 +13,21 @@ const langOptions = langs.map(data => <option key={data.slug} value={data.slug}>
 @inject('submissionStore')
 @observer
 export default class SubmissionInfo extends React.Component {
+  constructor (props) {
+    super(props)
+    const previousLang = localStorage.getItem('lang')
+    const newLang = previousLang ? previousLang : ''
+    this.state = {
+      lang: newLang
+    }
+
+    this.handleLangChange = this.handleLangChange.bind(this)
+  }
+
+  handleLangChange (event) {
+    this.setState({ lang: event.target.value })
+  }
+
   render () {
     const statusStyle = {}
     let uploadError
@@ -26,7 +40,13 @@ export default class SubmissionInfo extends React.Component {
     }
 
     const uploadForm = (
-      
+      <form className='row'>
+        <select className='form-control col-xs-6' value={this.state.lang} onChange={this.handleLangChange} style={{ width:'auto', marginRight:'10%' }}>
+          <option value='' disabled='disabled'>Submission Language</option>
+          {langOptions}
+        </select>
+        <UploadButton className='col-xs-6' data={{ lang:this.state.lang }} style={{ width:'45%'}} />
+      </form>
     )
 
     if (!this.props.submissionStore.submissions.length) {
@@ -45,6 +65,7 @@ export default class SubmissionInfo extends React.Component {
             <p>
               You haven't uploaded any code. Click the button below to submit some to the Arena.
             </p>
+            {uploadForm}
             <UploadButton />
           </div>
         </div>
@@ -79,6 +100,11 @@ export default class SubmissionInfo extends React.Component {
             <span style={{ fontWeight: 'bold' }}>Status:</span> <span style={statusStyle} >{latestSubmission.status}</span>
           </p>
         </div>
+        <div style={{ marginLeft: 10 }} className='row'>
+          {uploadForm}
+          
+        </div>
+        
       </div>
     )
   }
