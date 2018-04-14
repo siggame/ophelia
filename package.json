@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./server/bin/www",
-    "debug": "concurrently \"yarn run server-debug\" \"cd client && yarn start\" \"yarn run selenium\"",
+    "debug": "concurrently \"yarn run server-debug\" \"cd client && yarn start\" \"yarn run selenium\" --kill-others",
     "test": "./node_modules/.bin/nightwatch",
     "server-debug": "cd server && nodemon ./bin/www",
     "setup": "yarn install && yarn run setup:client  && yarn run setup:server && yarn run selenium_install",
