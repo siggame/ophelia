@@ -41,7 +41,7 @@ export default class SubmissionInfo extends React.Component {
 
     const uploadForm = (
       <form className='row'>
-        <select className='form-control col-xs-6' value={this.state.lang} onChange={this.handleLangChange} style={{ width:'auto', marginRight:'10%' }}>
+        <select className='form-control col-xs-6' value={this.state.lang} onChange={this.handleLangChange} style={{ width:'auto', marginRight:'10%', marginLeft: 15 }}>
           <option value='' disabled='disabled'>Submission Language</option>
           {langOptions}
         </select>
@@ -54,7 +54,7 @@ export default class SubmissionInfo extends React.Component {
         <div>
           <div className='row'>
             <div className='col-xs-10'>
-              <h2>Latest Submission</h2>
+              <h2 style={{ fontWeight:'bold' }}>Latest Submission</h2>
             </div>
             <div className='col-xs-2' style={{padding: '3vh 0 4px 0'}}>
               <ButtonRefresh buttonOnClick={this.props.submissionStore.makeDataStale} />
@@ -62,11 +62,10 @@ export default class SubmissionInfo extends React.Component {
           </div>
           <div style={{ marginLeft: 10 }}>
             {uploadError}
-            <p>
-              You haven't uploaded any code. Click the button below to submit some to the Arena.
-            </p>
+            <h4 style={{ marginBottom: 20 }}>
+              You haven't uploaded any code. Select your language and upload your AI below.
+            </h4>
             {uploadForm}
-            <UploadButton />
           </div>
         </div>
       )
@@ -80,7 +79,7 @@ export default class SubmissionInfo extends React.Component {
       <div>
         <div className='row'>
           <div className='col-xs-10'>
-            <h2>Latest Submission</h2>
+            <h2 style={{ fontWeight:'bold' }}>Latest Submission</h2>
           </div>
           <div className='col-xs-2' style={{padding: '3vh 0 4px 0'}}>
             <ButtonRefresh buttonOnClick={this.props.submissionStore.makeDataStale} />
@@ -89,8 +88,8 @@ export default class SubmissionInfo extends React.Component {
 
         <div style={{ marginLeft: 10 }} className='row' >
           {uploadError}
-          <div>
-            <span>Uploaded:</span> ({uploadedTime})  {uploadedDate.toDateString() + ' ' +  uploadedDate.toLocaleTimeString('en-US') }
+          <div style={{ marginBottom: 15 }}>
+            <span>Uploaded:</span> {uploadedDate.toDateString() + ' ' +  uploadedDate.toLocaleTimeString('en-US') } ({uploadedTime})
           </div>
           <div className='row'>
             <div className='col-md-4'><a href={latestSubmission.logUrl} style={{ fontWeight: 'bold' }} download>Build Log</a></div>
@@ -102,7 +101,6 @@ export default class SubmissionInfo extends React.Component {
         </div>
         <div style={{ marginLeft: 10 }} className='row'>
           {uploadForm}
-          
         </div>
         
       </div>
