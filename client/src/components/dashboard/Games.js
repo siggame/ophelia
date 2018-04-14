@@ -127,7 +127,7 @@ export default class Games extends React.Component {
     let paginateSection
     if (this.props.gameStore.games.length > 0) {
       paginateSection = (
-        <div style={{height:90}}>
+        <div style={{height: 90}}>
           <div className='col-xs-2' />
           <div className='games-paginate text-center col-xs-8'>
             <ReactPaginate
