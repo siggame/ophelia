@@ -1,5 +1,6 @@
 import { distanceInWords } from 'date-fns'
 import React, { Component } from 'react'
+import DownloadButton from '../components/DownloadButton.js'
 import { Link } from 'react-router-dom'
 
 
@@ -73,9 +74,10 @@ export default class GameBadge extends Component {
     let logButton = (noButtonVector)
     if (this.props.clientLogUrl !== null) {
       logButton = (
-        <a href={this.props.clientLogUrl} style={{ marginTop: '50%'}} download>
-            {logButtonVector}
-        </a>
+          <DownloadButton
+            url={this.props.clientLogUrl}
+            html={<a style={{cursor: 'pointer', marginTop: '50%'}}>{logButtonVector}</a>}
+          />
       )
     }
     let vizLink = (noButtonVector)
