@@ -20,13 +20,16 @@ export default class StatsContainer extends React.Component {
   }
 
   componentDidMount () {
-    axios.get(process.env.REACT_APP_API_URL + '/stats/comp_sigh', {
+    axios.get(process.env.REACT_APP_API_URL + '/stats/comp_sigh/ratio', {
       headers: {
         Authorization: `Bearer ${stores.authStore.token}`
+      },
+      params: {
+        version: stores.authStore.version
       }
     }).then((response) => {
       this.setState({
-        stats: response.data.winsPerOpponent
+        stats: response.data.stats
       })
     }, (err) => {
       console.error(err)
