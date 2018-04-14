@@ -31,17 +31,17 @@ const path = '/login'
  * 401 Unauthorized, incorrect username or password
  * 500 Server error
  */
-router.post(path + '/', (req, res) => {
+router.post(path + '/', (req, res, next) => {
   const body = req.body
-  let status = null
   let response = {
-    success: null,
+    success: false,
     message: '',
     token: null
   }
   const requiredValues = ['username', 'password']
   for (const value of requiredValues) {
     if (typeof body[value] === 'undefined') {
+      // Raven.captureException("The error i want to record", { req: req })
       response.message = 'Required field ' + value + ' is missing or blank'
       return res.status(400).json(response)
     }
@@ -49,6 +49,7 @@ router.post(path + '/', (req, res) => {
   const username = body.username
   const password = body.password
   if (!sanitizer.isValidUsername(username)) {
+    // raven.captureException("incorrect login password")
     response.message = 'Bad username'
     return res.status(400).json(response)
   }
@@ -57,39 +58,27 @@ router.post(path + '/', (req, res) => {
     return res.status(400).json(response)
   }
   login(username, password).then((result) => {
-    console.log(result)
     if (result === false || result === null) {
       // If result is false then they gave the wrong username or password
       // If the result is null then they must not exist in the db
-      status = 401
       response.success = false
-    } else {
-      const token = jsonwebtoken.sign({
-        username: username,
-        id: result.id,
-        role: result.role
-      }, tokenSecret, {
-        expiresIn: expired
-      })
-      status = 200
-      response.success = true
-      response.token = token
+      return res.status(401).json(response)
     }
-    return res.status(status).json(response)
-  }, loginErrorHandler.bind(null, res))
-    .catch(loginErrorHandler.bind(null, res))
+    const token = jsonwebtoken.sign({
+      username: username,
+      id: result.id,
+      role: result.role
+    }, tokenSecret, {
+      expiresIn: expired
+    })
+    response.success = true
+    response.token = token
+    return res.status(200).json(response)
+  }, (err) => {
+    return next(err)
+  }).catch((err) => {
+    return next(err)
+  })
 })
-
-function loginErrorHandler (res, err) {
-  const status = 500
-  let response = {
-    success: null,
-    message: '',
-    token: null
-  }
-  response.success = false
-  response.message = err.message
-  res.status(status).json(response)
-}
 
 module.exports = {router}

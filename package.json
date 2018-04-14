@@ -1,18 +1,21 @@
 {
-  "name": "webserver",
-  "version": "0.0.0",
+  "name": "ophelia",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "start": "node ./server/bin/www",
-    "debug": "concurrently \"npm run server-debug\" \"cd client && npm start\"",
+    "debug": "concurrently \"yarn run server-debug\" \"cd client && yarn start\" \"yarn run selenium\"",
+    "test": "./node_modules/.bin/nightwatch",
     "server-debug": "cd server && nodemon ./bin/www",
-    "setup": "npm install && npm run setup:client  && npm run setup:server",
-    "setup:client": "cd client && npm install && cd ..",
-    "setup:server": "cd server && npm install && cd ..",
-    "clean": "npm run clean:client && npm run clean:server && npm run clean:misc",
+    "setup": "yarn install && yarn run setup:client  && yarn run setup:server && yarn run selenium_install",
+    "setup:client": "cd client && yarn install && cd ..",
+    "setup:server": "cd server && yarn install && cd ..",
+    "clean": "yarn run clean:client && yarn run clean:server && yarn run clean:misc",
     "clean:client": "rimraf client/node_modules client/build",
     "clean:server": "rimraf server/node_modules",
-    "clean:misc": "rimraf node_modules/"
+    "clean:misc": "rimraf node_modules/",
+    "selenium": "./node_modules/.bin/selenium-standalone start",
+    "selenium_install": "./node_modules/.bin/selenium-standalone install"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",
@@ -28,11 +31,21 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-react": "^7.3.0",
     "eslint-plugin-standard": "^3.0.1",
+    "nightwatch": "^0.9.20",
     "nodemon": "^1.12.1",
-    "rimraf": "^2.6.2"
+    "selenium-standalone": "^6.13.0",
+    "standard": "^11.0.0"
   },
   "dependencies": {
+    "react-paginate": "^5.1.0",
     "decompress": "^4.2.0",
     "js-file-download": "^0.4.1"
+  },
+  "standard": {
+    "parser": "babel-eslint",
+    "nightwatch": "^0.9.20",
+    "nodemon": "^1.12.1",
+    "rimraf": "^2.6.2",
+    "selenium-standalone": "^6.14.0"
   }
 }

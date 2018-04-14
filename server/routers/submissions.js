@@ -6,6 +6,7 @@ const submissions = require('../db/init').submissions
 const validator = require('validator')
 const arenaSubmissionHost = require('../vars').ARENA_HOST
 const submissionsEndpoint = require('../vars').SUBMISSIONS_ENDPOINT
+const languages = require('../vars').LANGUAGES
 const request = require('request')
 // Acceptable mimetypes: application/zip application/octet-stream application/zip-compressed
 // application/x-zip-compressed multipart/x-zip
@@ -14,7 +15,7 @@ const fileMimeTypeRegex = /(application\/(x-)?(zip|gzip|tar))/
 // All paths in this file should start with this
 const path = '/submissions'
 
-router.get(path + '/', (req, res) => {
+router.get(path + '/', (req, res, next) => {
   const user = req.user.username
   const response = {
     success: false,
@@ -25,17 +26,32 @@ router.get(path + '/', (req, res) => {
     response.success = true
     response.message = 'Data successfully retrieved'
     response.submissions = result
-    res.status(200).json(response)
+    return res.status(200).json(response)
   }, (err) => {
-    response.message = err.message
-    res.status(500).json(response)
+    return next(err)
   }).catch((err) => {
-    response.message = 'An error occured: ' + err.message
-    res.status(500).json(err)
+    return next(err)
   })
 })
 
-router.post(path + '/', (req, res) => {
+/**
+ * Submits code to the arena
+ * Request body format:
+ *  multipart form of the file in question
+ * Expected URL Parameters
+ *  lang: The language slug that they want to submit this code as
+ *      list of acceptable languages defined in vars.js
+ * Response body format:
+ * {
+ *     success: Boolean, - true if success, false otherwise
+ *     message: String - error message/success message
+ * }
+ * Response codes:
+ * 201 - Successfully created
+ * 400 - User error
+ * 500 - Something went wrong
+ */
+router.post(path + '/', (req, res, next) => {
   const response = {
     success: false,
     message: ''
@@ -45,6 +61,19 @@ router.post(path + '/', (req, res) => {
     response.message = 'No file were uploaded'
     return res.status(400).json(response)
   }
+  // Check for the existence of required parameters, and make sure that
+  // they are passed as positive numbers
+  const requiredValues = ['lang']
+  for (const value of requiredValues) {
+    let param = req.query[value]
+    if (typeof param === 'undefined') {
+      response.message = 'Required field ' + value + ' is missing or blank'
+      return res.status(400).json(response)
+    } else if (value === 'lang' && !languages.includes(param)) {
+      response.message = value + ' must be one of: ' + languages
+      return res.status(400).json(response)
+    }
+  }
   // This is the file sent by the user
   const file = req.files.file
   // These are various components of the file we need
@@ -52,6 +81,9 @@ router.post(path + '/', (req, res) => {
   const filename = file.name
   const mimeType = file.mimetype
   const truncated = file.truncated
+
+  // This is the language that the user is submitting their code as
+  const lang = req.query.lang
 
   // This is the db ID of the user, stored in their JWT
   const userID = req.user.id
@@ -66,16 +98,14 @@ router.post(path + '/', (req, res) => {
   } else {
     // send file to arena submission end point here
     const options = {
-      url: arenaSubmissionHost + submissionsEndpoint + '/' + userID,
+      url: arenaSubmissionHost + submissionsEndpoint + '/' + lang + '/' + userID,
       method: 'POST'
     }
     const arenaRequest = request(options, function (err, arenaRes) {
       if (err) {
-        response.message = 'Error sending response to arena'
-        return res.status(500).json(response)
+        return next(new Error('Error sending submission to arena: ' + arenaRes))
       } else if (arenaRes.statusCode >= 400) {
-        response.message = 'Error sending response to arena'
-        return res.status(500).json(response)
+        return next(new Error('Error sending submission to arena: ' + arenaRes))
       } else {
         response.message = 'File successfully uploaded'
         response.success = true
@@ -90,7 +120,7 @@ router.post(path + '/', (req, res) => {
   }
 })
 
-router.get(path + '/:submissionID', (req, res) => {
+router.get(path + '/:submissionID', (req, res, next) => {
   const submissionID = req.params.submissionID
   const response = {
     success: false,
@@ -107,8 +137,7 @@ router.get(path + '/:submissionID', (req, res) => {
     console.log(submission)
     return res.status(200).json(response)
   }).catch((err) => {
-    response.message = 'An error occured: ' + err.message
-    res.status(500).json(err)
+    return next(err)
   })
 })
 

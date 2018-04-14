@@ -30,8 +30,8 @@ function signup (username, pass, passConfirm, contactName, contactEmail, isEligi
     }
 
     db.teams.getTeamByName(username).then((res) => {
-      if (res[0]) {
-        if (res[0].name === username) {
+      if (res) {
+        if (res.name === username) {
           errorObject.duplicateUsername = true
         }
       }
@@ -45,14 +45,12 @@ function signup (username, pass, passConfirm, contactName, contactEmail, isEligi
           password: sha256(pass),
           is_eligible: isEligible
         }).then((res) => {
-          console.log('res', res)
           resolve(res)
         }).catch((err) => {
           reject(err)
         })
       }
     }).catch((err) => {
-      console.log(err)
       reject(err)
     })
   })

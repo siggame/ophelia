@@ -21,7 +21,13 @@ export default class UploadButton extends React.Component {
     ]
     if (file) {
       if (acceptedFiletypes.includes(file.type)) {
-        this.props.submissionStore.uploadSubmission(file)
+        if (this.props.data && this.props.data.hasOwnProperty('lang')) {
+          // Set the language in localStorage, so that it can get loaded automatically.
+          localStorage.setItem('lang', this.props.data.lang)
+          this.props.submissionStore.uploadSubmission(file, this.props.data.lang)  
+        } else {
+          this.props.submissionStore.uploadSubmission(file, null)
+        }
       } else {
         this.props.submissionStore.uploadError = 'Incorrect filetype - file must be .zip, .tar or .tar.gz.'
       }
@@ -30,18 +36,18 @@ export default class UploadButton extends React.Component {
 
   render () {
     return (
-      <div className='col-sm-4'>
+      <span>
         <UploadField
           onFiles={files => this.uploadFile(files[0])}
           uploadProps={{
             accept: '.zip,.tar,.tar.gz'
           }}
         >
-          <div style={{ width: '100%' }} className='btn btn-primary'>
+          <div style={this.props.style} className='btn btn-primary'>
             Upload AI
           </div>
         </UploadField>
-      </div>
+      </span>
     )
   }
 }

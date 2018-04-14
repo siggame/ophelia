@@ -21,7 +21,7 @@ const compare = require('./auth').compare
 function login (teamName, password) {
   return new Promise((resolve, reject) => {
     teams.getTeamByName(teamName).then((team) => {
-      if (typeof team === 'undefined') {
+      if (!team || typeof team === 'undefined') {
         // If the team is undefined then there must not have been a match
         return resolve(null)
       } else {
