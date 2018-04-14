@@ -113,7 +113,7 @@ function getTeamsWins (teamName, options) {
   })
 }
 
-function getWinLossRatio(teamName, options) {
+function getWinLossRatio (teamName, options) {
   return new Promise((resolve, reject) => {
     if (teamName === null || typeof teamName === 'undefined') {
       reject(new Error('teamName is null or undefined'))

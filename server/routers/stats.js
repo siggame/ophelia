@@ -44,7 +44,15 @@ router.get(path + '/', (req, res) => {
  * {
  *    success: false,
  *    message: '',
- *    winsPerOpponenet: []
+ *    stats: [
+ *    {
+ *      "name":
+ *      "stats": {
+ *        "wins":
+ *        "losses":
+ *      }
+ *    },
+ *    ]
  * }
  * Response codes:
  * 200 Successfully returns stats
@@ -56,7 +64,7 @@ router.get(path + '/:teamName', (req, res) => {
   const response = {
     success: false,
     message: '',
-    winsPerOpponent: []
+    stats: []
   }
   // optional field version number
   let param = req.query['version']
@@ -71,7 +79,7 @@ router.get(path + '/:teamName', (req, res) => {
   dbStats.getTeamsWins(teamName, options).then((stats) => {
     response.success = true
     response.message = 'Statistics successfully retrieved'
-    response.winsPerOpponent = stats
+    response.stats = stats
     return res.status(200).json(response)
   }).catch((err) => {
     response.message = 'An error occurred: ' + err.message
@@ -87,7 +95,12 @@ router.get(path + '/:teamName', (req, res) => {
  * {
  *    success: false,
  *    message: '',
- *    winLosses: []
+ *    stats: {
+ *      "wins":
+ *      "losses":
+ *      "totalGames":
+ *      "winRatio":
+ *    }
  * }
  * Response codes:
  * 200 Successfully returns stats
@@ -99,7 +112,7 @@ router.get(path + '/:teamName/ratio', (req, res) => {
   const response = {
     success: false,
     message: '',
-    winLosses: {}
+    stats: {}
   }
   // optional field version number
   let param = req.query['version']
@@ -114,7 +127,7 @@ router.get(path + '/:teamName/ratio', (req, res) => {
   dbStats.getWinLossRatio(teamName, options).then((stats) => {
     response.success = true
     response.message = 'Stats successfully retrieved'
-    response.winLosses = stats
+    response.stats = stats
     return res.status(200).json(response)
   }).catch((err) => {
     response.message = 'An error occurred' + err.message

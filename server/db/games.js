@@ -100,7 +100,6 @@ function getGamesByTeamName (teamName, page, pageSize, options) {
       .orderBy('player.created_at', 'desc')
       .limit(pageSize).offset(offset)
     gamesQuery.then((rows) => {
-      console.log(rows)
       const games = []
       for (const row of rows) {
         let game = row
