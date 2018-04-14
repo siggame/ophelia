@@ -16,20 +16,24 @@ axios.interceptors.response.use(
 )
 
 export default class RequestLayer {
-  fetchGames (pageNum, pageSize) {
+  fetchGames (pageNum, pageSize, filter = {}) {
     return new Promise((resolve, reject) => {
       // Check first to make sure the user is logged in
       if (!stores.authStore.isUserLoggedIn) {
         return reject(new Error('User must be logged in to fetch games'))
       }
-      axios.get(process.env.REACT_APP_API_URL + '/games/', {
+      let params = {}
+      if (filter.opponent) params.opponent = filter.opponent
+      if (filter.version) params.version = filter.version
+      if (filter.result) params.result = filter.result
+      params.page = pageNum
+      params.pageSize = pageSize
+      console.log('params', params)
+      axios.get(process.env.REACT_APP_API_URL + '/games', {
         headers: {
           Authorization: `Bearer ${stores.authStore.token}`
         },
-        params: {
-          page: pageNum,
-          pageSize: pageSize
-        }
+        params: params
       }).then((response) => {
         // This query also gives us the number of pages, so we need to grab both.
         return resolve({

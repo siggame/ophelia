@@ -41,10 +41,10 @@ export class GameStore {
    *
    * @memberof GameStore
    */
-  @action loadGames (pageNum = 1) {
+  @action loadGames (pageNum = 1, filter = {}) {
     this.isLoading = true
     // Actual HTTP request is abstracted to requestLayer object
-    this.requestLayer.fetchGames(pageNum, this.pageSize).then(action('loadGames-callback', (data) => {
+    this.requestLayer.fetchGames(pageNum, this.pageSize, filter).then(action('loadGames-callback', (data) => {
       this.games = []
       this.numPages = data.numPages
       data.games.forEach((json) => {
@@ -99,7 +99,7 @@ export class GameStore {
     } else if (status === 'failed') {
       // TODO: Handle failed building
     }
-    let game = new Game(json.id, json.opponent, status, description, json.log_url, json.client_log_url, json.version, json.created_at, json.updated_at)
+    let game = new Game(json.game_id, json.opponent, status, description, json.log_url, json.client_log_url, json.version, json.created_at, json.updated_at)
     this.games.push(game)
   }
 }
