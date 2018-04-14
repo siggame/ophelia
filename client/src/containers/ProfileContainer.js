@@ -9,9 +9,9 @@ import Profile from '../components/profile/Profile'
 @observer
 export default class ProfileContainer extends React.Component {
   async componentDidMount () {
-    const paramsTeamId = parseInt(this.props.match.params.teamId, 10)
-    if (!this.isLoggedInUsersProfile(paramsTeamId)) {
-      await this.props.teamStore.loadTeam(paramsTeamId)
+    const paramsTeamName = this.props.match.params.teamName
+    if (!this.isLoggedInUsersProfile(paramsTeamName)) {
+      await this.props.teamStore.loadTeam(paramsTeamName)
     }
   }
 
@@ -19,17 +19,17 @@ export default class ProfileContainer extends React.Component {
     this.props.authStore.clearErrors()
   }
 
-  isLoggedInUsersProfile = userId => userId === this.props.authStore.userId
+  isLoggedInUsersProfile = username => username === this.props.authStore.username
 
   render () {
     const { authStore: { user }, teamStore: { team } } = this.props
-    const paramsTeamId = parseInt(this.props.match.params.teamId, 10)
+    const paramsTeamName = this.props.match.params.teamName
 
     if (!user) {
       return <Loader />
     }
 
-    if (this.isLoggedInUsersProfile(paramsTeamId)) {
+    if (this.isLoggedInUsersProfile(paramsTeamName)) {
       return <EditProfile />
     } else {
       return (

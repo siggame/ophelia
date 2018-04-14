@@ -95,15 +95,15 @@ export default class RequestLayer {
 
   async getCurrentUser () {
     try {
-      return axios.get(`${process.env.REACT_APP_API_URL}/users/${stores.authStore.userId}`)
+      return axios.get(`${process.env.REACT_APP_API_URL}/users/${stores.authStore.username}`)
     } catch (err) {
       throw err
     }
   }
 
-  async getTeamById (teamId) {
+  async getTeamByName (teamName) {
     try {
-      return axios.get(`${process.env.REACT_APP_API_URL}/users/${teamId}`)
+      return axios.get(`${process.env.REACT_APP_API_URL}/users/${teamName}`)
     } catch (err) {
       throw err
     }

@@ -9,9 +9,9 @@ class TeamStore {
     this.requestLayer = new RequestLayer()
   }
 
-  @action async loadTeam (teamId) {
+  @action async loadTeam (teamName) {
     try {
-      const response = await this.requestLayer.getTeamById(teamId)
+      const response = await this.requestLayer.getTeamByName(teamName)
       runInAction(() => {
         this.team = response.data.user
       })

@@ -118,15 +118,16 @@ router.post(path + '/', (req, res, next) => {
   })
 })
 
-router.get(path + '/:teamId', (req, res, next) => {
+router.get(path + '/:teamName', (req, res, next) => {
   const response = {
     success: false,
     message: '',
     user: null
   }
 
-  teams.getTeam(req.params.teamId).then((data) => {
-    if (data.length === 0) {
+  const teamName = req.params.teamName
+  teams.getTeamByName(teamName).then((data) => {
+    if (typeof data === 'undefined' || data === null) {
       response.success = false
       response.message = 'This team does not exist'
       return res.status(404).json(response)
@@ -134,10 +135,10 @@ router.get(path + '/:teamId', (req, res, next) => {
     response.success = true
     response.message = 'Success'
     response.user = {
-      name: data[0].name,
-      contactName: data[0].contact_name,
-      contactEmail: data[0].contact_email,
-      isEligible: data[0].is_eligible
+      name: data.name,
+      contactName: data.contact_name,
+      contactEmail: data.contact_email,
+      isEligible: data.is_eligible
     }
 
     return res.status(200).json(response)
