@@ -14,8 +14,10 @@ const games = require('./games')
 const login = require('./login')
 const medium = require('./medium')
 const stats = require('./statistics')
+const admin = require('./admin')
 
 module.exports = {
+  admin,
   games,
   submissions,
   users,

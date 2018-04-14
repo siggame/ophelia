@@ -6,6 +6,7 @@ const teams = require('../db/init').teams
 const encrypt = require('../session/auth').encrypt
 const login = require('../session/login').login
 const sanitizer = require('../utils/sanitizer')
+const ELIGIBLE_DEFAULT = require('../vars').ELIGIBLE_DEFAULT
 
 // All paths in this file should start with this
 const path = '/users'
@@ -88,6 +89,9 @@ router.post(path + '/', (req, res, next) => {
     return res.status(400).json(response)
   }
   const passInfo = encrypt(body.password)
+  // Change the default eligibility
+  // using !! to make sure it is a boolean
+  const eligibile = !!ELIGIBLE_DEFAULT
   teams.createTeam(
     username,
     email,
@@ -96,7 +100,7 @@ router.post(path + '/', (req, res, next) => {
     passInfo.iterations,
     'user',
     name,
-    true
+    eligibile
   ).then(() => {
     response.success = true
     response.message = 'Created user successfully'
@@ -187,9 +191,15 @@ router.put(path + '/:teamName', (req, res, next) => {
     if (user.success) {
       // This will hold all of the data to be edited
       const teamEditData = {}
-      // Iterate over each of the fields allowed to be edited
-      for (const field of editableFields) {
+      // Iterate over each of the fields in the request
+      for (const field in editData) {
         if (editData.hasOwnProperty(field)) {
+          // If the field is not in the array of editable fields
+          // then they must be trying to edit something not allowed
+          if (editableFields.indexOf(field) === -1) {
+            response.message = 'Editable fields include only: ' + editableFields
+            return res.status(400).json(response)
+          }
           switch (field) {
             case 'password':
               if (!sanitizer.isValidPassword(editableFields[field])) {

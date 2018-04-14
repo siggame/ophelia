@@ -34,7 +34,7 @@
     "nightwatch": "^0.9.20",
     "nodemon": "^1.12.1",
     "rimraf": "^2.6.2",
-    "selenium-standalone": "^6.13.0"
+    "selenium-standalone": "^6.14.0"
   },
   "dependencies": {
     "fusioncharts": "^3.12.2",

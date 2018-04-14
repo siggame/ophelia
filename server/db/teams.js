@@ -13,10 +13,21 @@ function getTeam (teamId) {
     knex('teams').where({
       id: teamId
     }).then((res) => {
-      resolve(res)
+      resolve(res[0])
     }).catch((err) => {
       reject(err)
     })
+  })
+}
+
+function isUserAdmin (teamId) {
+  return new Promise((resolve, reject) => {
+    getTeam(teamId).then((team) => {
+      if (typeof team !== 'undefined' && team !== null) {
+        return resolve(team.role === 'admin')
+      }
+      return resolve(false)
+    }).catch((err) => { return reject(err) })
   })
 }
 
@@ -32,6 +43,18 @@ function getAllTeamNames () {
         returnData.push(row.name)
       })
       return resolve(returnData)
+    }).catch((err) => {
+      return reject(err)
+    })
+  })
+}
+
+function getAllTeams () {
+  return new Promise((resolve, reject) => {
+    knex('teams').select(
+      'id', 'name', 'contact_email', 'contact_name', 'is_eligible', 'role'
+    ).then((data) => {
+      return resolve(data)
     }).catch((err) => {
       return reject(err)
     })
@@ -94,6 +117,9 @@ function editTeam (teamName, dataToUpdate) {
             teamData.password = passInfo.epass
             teamData.salt = passInfo.salt
             teamData.hash_iterations = passInfo.iterations
+            break
+          case 'is_eligible':
+            teamData.is_eligible = dataToUpdate[dataName]
             break
           default:
             return reject(new Error('Can only edit name, email, and password'))
@@ -174,6 +200,8 @@ function createTeam (
 module.exports = {
   createTeam,
   getTeam,
+  getAllTeams,
+  isUserAdmin,
   getTeamByName,
   editTeam,
   getAllTeamNames,
