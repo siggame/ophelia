@@ -115,13 +115,13 @@ export default class RequestLayer {
       throw new Error('Must be logged in to do that!')
     }
     try {
+      const editData = {}
+      // Only edit fields that have something in them
+      if (email) {editData.email = email}
+      if (name) {editData.name = name}
+      if (password) {editData.password = password}
       return axios.put(`${process.env.REACT_APP_API_URL}/users/${authStore.username}/`, {
-        oldPassword,
-        editData: {
-          email,
-          name,
-          password
-        }
+        oldPassword, editData
       })
     } catch (err) {
       throw err
