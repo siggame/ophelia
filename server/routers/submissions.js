@@ -6,6 +6,7 @@ const submissions = require('../db/init').submissions
 const validator = require('validator')
 const arenaSubmissionHost = require('../vars').ARENA_HOST
 const submissionsEndpoint = require('../vars').SUBMISSIONS_ENDPOINT
+const languages = require('../vars').LANGUAGES
 const request = require('request')
 // Acceptable mimetypes: application/zip application/octet-stream application/zip-compressed
 // application/x-zip-compressed multipart/x-zip
@@ -33,6 +34,23 @@ router.get(path + '/', (req, res, next) => {
   })
 })
 
+/**
+ * Submits code to the arena
+ * Request body format:
+ *  multipart form of the file in question
+ * Expected URL Parameters
+ *  lang: The language slug that they want to submit this code as
+ *      list of acceptable languages defined in vars.js
+ * Response body format:
+ * {
+ *     success: Boolean, - true if success, false otherwise
+ *     message: String - error message/success message
+ * }
+ * Response codes:
+ * 201 - Successfully created
+ * 400 - User error
+ * 500 - Something went wrong
+ */
 router.post(path + '/', (req, res, next) => {
   const response = {
     success: false,
@@ -43,6 +61,19 @@ router.post(path + '/', (req, res, next) => {
     response.message = 'No file were uploaded'
     return res.status(400).json(response)
   }
+  // Check for the existence of required parameters, and make sure that
+  // they are passed as positive numbers
+  const requiredValues = ['lang']
+  for (const value of requiredValues) {
+    let param = req.query[value]
+    if (typeof param === 'undefined') {
+      response.message = 'Required field ' + value + ' is missing or blank'
+      return res.status(400).json(response)
+    } else if (value === 'lang' && !languages.includes(param)) {
+      response.message = value + ' must be one of: ' + languages
+      return res.status(400).json(response)
+    }
+  }
   // This is the file sent by the user
   const file = req.files.file
   // These are various components of the file we need
@@ -50,6 +81,9 @@ router.post(path + '/', (req, res, next) => {
   const filename = file.name
   const mimeType = file.mimetype
   const truncated = file.truncated
+
+  // This is the language that the user is submitting their code as
+  const lang = req.query.lang
 
   // This is the db ID of the user, stored in their JWT
   const userID = req.user.id
@@ -64,7 +98,7 @@ router.post(path + '/', (req, res, next) => {
   } else {
     // send file to arena submission end point here
     const options = {
-      url: arenaSubmissionHost + submissionsEndpoint + '/' + userID,
+      url: arenaSubmissionHost + submissionsEndpoint + '/' + lang + '/' + userID,
       method: 'POST'
     }
     const arenaRequest = request(options, function (err, arenaRes) {
