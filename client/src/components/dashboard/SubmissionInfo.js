@@ -45,15 +45,17 @@ export default class SubmissionInfo extends React.Component {
     let latestSubmission = this.props.submissionStore.submissions[0]
     const uploadedDate = new Date(latestSubmission.createdAt)
     const uploadedTime = distanceInWords(new Date(), uploadedDate, {addSuffix: true})
+    // TODO: Making this disabled w/ an anchor still allows users w/ assitive tech to click the link.
+    // This would be best solved by using a Button element w/ the disabled class.
     let logUrl = (
-      <a tabIndex={0} style={{fontWeight: 'bold', cursor: 'not-allowed', color: '#dddddd'}}>
-      Build Log
+      <a className='disabled btn btn-info btn-sm' tabIndex={0} style={{ fontWeight: 'bold' }}>
+        Build Log
       </a>
     )
     console.log(latestSubmission.logUrl)
     if (latestSubmission.logUrl !== null) {
       logUrl = (
-        <a href={latestSubmission.logUrl} style={{ fontWeight: 'bold' }} download>
+        <a className='btn btn-info btn-sm' href={latestSubmission.logUrl} style={{ fontWeight: 'bold' }} download>
           Build Log
         </a>
       )
@@ -70,15 +72,16 @@ export default class SubmissionInfo extends React.Component {
             <ButtonRefresh buttonOnClick={this.props.submissionStore.makeDataStale} />
           </div>
         </div>
-        
+
         <div style={{ marginLeft: 10 }} className='row' >
           {uploadError}
           <div>
             <span>Uploaded:</span> ({uploadedTime})  {uploadedDate.toDateString() + ' ' +  uploadedDate.toLocaleTimeString('en-US') }
           </div>
-          <div className='row'>
+          <div className='row' style={{ padding: '10px 0 10px 0' }}>
+
             <div className='col-md-4'>{logUrl}</div>
-            <div className='col-md-4'><span style={{ fontWeight: 'bold' }}>Version:</span> {latestSubmission.version}</div>
+            <div className='col-md-4 text-center'><span style={{ fontWeight: 'bold' }}>Version:</span> {latestSubmission.version}</div>
           </div>
           <p>
             <span style={{ fontWeight: 'bold' }}>Status:</span> <span style={statusStyle} >{latestSubmission.status}</span>
