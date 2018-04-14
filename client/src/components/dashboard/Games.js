@@ -11,7 +11,7 @@ export class GamesList extends React.Component {
     if (games) {
       if (games.length === 0) {
         gamesList = (
-          <div className='text-center' style={{ paddingTop: '5vh' }} >
+          <div className='text-center' style={{ paddingTop: '5vh', height: '130px', minWidth: '320px' }} >
             No games have been played yet. Upload some code for games to run!
           </div>
         )
@@ -95,13 +95,6 @@ export default class Games extends React.Component {
           <div className='col-xs-4'><h2>Games</h2></div>
           <div className='col-xs-6' />
           <div className='col-xs-2' style={{padding: '3vh 0 4px 0'}}><ButtonRefresh buttonOnClick={this.handleRefresh} /></div>
-        </div>
-        <div className='row' style={{ margin: '0 10px 0 10px' }}>
-          <div className='col-xs-3 text-center' >Opponent Name</div>
-          <div className='col-xs-5 text-center' >Result</div>
-          <div className='col-xs-1 text-center' >Version</div>
-          <div className='col-xs-1 text-center' >Log</div>
-          <div className='col-xs-2 text-center' >Viz Link</div>
         </div>
         <GamesList games={this.props.gameStore.games} />
         {paginateSection}
