@@ -52,7 +52,7 @@ export function validateSignup (username, name, email, password, confirmPassword
       if (typeof errors === 'undefined') {
         errors = {}
       }
-      errors.confirmPassword = [ 'Passwords must match' ]
+      errors.confirmPassword = ['Passwords must match']
     }
     if (errors) {
       return reject(errors)
@@ -87,13 +87,59 @@ export function validateSignup (username, name, email, password, confirmPassword
 
 export function validateLogin (username, password) {
   return new Promise((resolve, reject) => {
-    axios.post(process.env.REACT_APP_API_URL + '/login', {
-      username: username,
-      password: password
-    }).then((data) => {
-      return resolve(data)
-    }).catch((err) => {
-      return reject(err)
-    })
+    axios
+      .post(process.env.REACT_APP_API_URL + '/login', {
+        username: username,
+        password: password
+      })
+      .then(data => {
+        return resolve(data)
+      })
+      .catch(err => {
+        return reject(err)
+      })
   })
+}
+
+export function validateProfileUpdate (values) {
+  const constraints = {
+    username: {
+      presence: true,
+      format: {
+        pattern: /(\w)+/,
+        message: 'can only contain alphanumerics and _'
+      },
+      length: {
+        minimum: 4,
+        maximum: 32,
+        message: 'must be between 4 and 32 characters'
+      }
+    },
+    teamName: {
+      presence: false
+    },
+    name: {
+      presence: {
+        allowEmpty: false
+      }
+    },
+    email: {
+      presence: true,
+      email: true
+    },
+    bio: {
+      presence: false,
+      length: {
+        maximum: 512,
+        message: 'must be less than 512 characters'
+      }
+    },
+    password: {
+      presence: {
+        allowEmpty: false
+      }
+    }
+  }
+
+  return validate(values, constraints)
 }

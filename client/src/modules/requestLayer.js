@@ -7,12 +7,23 @@ axios.interceptors.response.use(
   response => response,
   error => {
     // TODO: Add all error logging logic here
-    if (error.response.status === 401) {
+    if (error.response.status === 401 && error.response.data.hasValidCredentials !== false) {
       stores.authStore.logUserOut()
       history.push('/login')
     }
     return Promise.reject(error)
   }
+)
+
+axios.interceptors.request.use(
+  config => {
+    if (stores.authStore && stores.authStore.token) {
+      config.headers.Authorization = `Bearer ${stores.authStore.token}`
+    }
+
+    return config
+  },
+  error => Promise.reject(error)
 )
 
 export default class RequestLayer {
@@ -80,5 +91,40 @@ export default class RequestLayer {
         return reject(err)
       })
     })
+  }
+
+  async getCurrentUser () {
+    try {
+      return axios.get(`${process.env.REACT_APP_API_URL}/users/${stores.authStore.username}`)
+    } catch (err) {
+      throw err
+    }
+  }
+
+  async getTeamByName (teamName) {
+    try {
+      return axios.get(`${process.env.REACT_APP_API_URL}/users/${teamName}`)
+    } catch (err) {
+      throw err
+    }
+  }
+
+  async updateUserProfile (oldPassword, email, name, password) {
+    const { authStore } = stores
+    if (!authStore.isUserLoggedIn) {
+      throw new Error('Must be logged in to do that!')
+    }
+    try {
+      const editData = {}
+      // Only edit fields that have something in them
+      if (email) {editData.email = email}
+      if (name) {editData.name = name}
+      if (password) {editData.password = password}
+      return axios.put(`${process.env.REACT_APP_API_URL}/users/${authStore.username}/`, {
+        oldPassword, editData
+      })
+    } catch (err) {
+      throw err
+    }
   }
 }

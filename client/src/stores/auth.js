@@ -1,22 +1,27 @@
 import axios from 'axios'
-import { action, computed, observable, reaction } from 'mobx'
+import { action, computed, observable, reaction, runInAction } from 'mobx'
 import jwtDecode from 'jwt-decode'
 
 import gameStore from './games'
 import submissionStore from './submissions'
+import RequestLayer from '../modules/requestLayer'
 
 export class AuthStore {
-  @observable token = localStorage.getItem('jwt')
+  @observable token = window.localStorage.getItem('jwt')
+  @observable user
+  @observable errors = undefined
 
   constructor () {
+    this.requestLayer = new RequestLayer()
+
     // Updates or removes our JSON Web Token in the localStorage of the browser.1
     reaction(
       () => this.token,
       token => {
         if (token) {
-          localStorage.setItem('jwt', token)
+          window.localStorage.setItem('jwt', token)
         } else {
-          localStorage.removeItem('jwt')
+          window.localStorage.removeItem('jwt')
         }
       }
     )
@@ -30,6 +35,19 @@ export class AuthStore {
     try {
       const { username } = jwtDecode(this.token)
       return username
+    } catch (err) {
+      return null
+    }
+  }
+
+  /**
+   * @description Get username from user's jwt token
+   * @return {number | null} id if jwt token is valid. Otherwise, null
+   */
+  @computed get userId () {
+    try {
+      const { id } = jwtDecode(this.token)
+      return id
     } catch (err) {
       return null
     }
@@ -59,26 +77,68 @@ export class AuthStore {
 
   @action logUserIn (username, password) {
     return new Promise(action('login-callback', (resolve, reject) => {
-      axios.post(process.env.REACT_APP_API_URL + '/login',
-        {
-          username: username,
-          password: password
-        }
-      ).then((response) => {
-        this.setToken(response.data.token)
-        return resolve()
-      }).catch((err) => {
-        // TODO: Error handling
-        console.log('Axios Error - Auth Store')
-        return reject(err)
+      axios.post(`${process.env.REACT_APP_API_URL}/login`, {
+        username,
+        password
       })
+        .then((response) => {
+          this.setToken(response.data.token)
+          return resolve()
+        })
+        .then(() => this.requestLayer.getCurrentUser())
+        .then((response) => {
+          this.user = response.data.user
+          return resolve()
+        })
+        .catch((err) => {
+          // TODO: Error handling
+          console.log('Axios Error - Auth Store')
+          return reject(err)
+        })
     }))
+  }
+
+  @action async getCurrentUser () {
+    try {
+      const response = await this.requestLayer.getCurrentUser()
+      runInAction(() => {
+        this.user = response.data.user
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  @action async updateUser (oldPassword, email, name, password) {
+    try {
+      const response = await this.requestLayer.updateUserProfile(oldPassword, email, name, password)
+      runInAction(() => {
+        this.user = {
+          ...this.user,
+          contactEmail: email,
+          contactName: name
+        }
+      })
+
+      return response.data
+    } catch (err) {
+      runInAction(() => {
+        console.log(err)
+        this.errors = err.response.status !== 401 ? err.response.data : {message: 'There is something wrong with your submission!'}
+      })
+    }
   }
 
   @action logUserOut () {
     this.token = ''
+    this.user = undefined
+    this.clearErrors()
     gameStore.resetGameData()
     submissionStore.resetSubmissionData()
+  }
+
+  @action clearErrors () {
+    this.errors = undefined
   }
 
   /**

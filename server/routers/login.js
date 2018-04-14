@@ -58,7 +58,6 @@ router.post(path + '/', (req, res, next) => {
     return res.status(400).json(response)
   }
   login(username, password).then((result) => {
-    console.log(result)
     if (result === false || result === null) {
       // If result is false then they gave the wrong username or password
       // If the result is null then they must not exist in the db

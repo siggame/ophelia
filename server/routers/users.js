@@ -123,10 +123,11 @@ router.get(path + '/:teamName', (req, res, next) => {
     success: false,
     message: '',
     user: null
-
   }
-  teams.getTeamByName(req.params.teamName).then((data) => {
-    if (data.length === 0) {
+
+  const teamName = req.params.teamName
+  teams.getTeamByName(teamName).then((data) => {
+    if (typeof data === 'undefined' || data === null) {
       response.success = false
       response.message = 'This team does not exist'
       return res.status(404).json(response)
@@ -134,9 +135,10 @@ router.get(path + '/:teamName', (req, res, next) => {
     response.success = true
     response.message = 'Success'
     response.user = {
-      name: data[0].name,
-      contactEmail: data[0].contact_email,
-      isEligible: data[0].is_eligible
+      name: data.name,
+      contactName: data.contact_name,
+      contactEmail: data.contact_email,
+      isEligible: data.is_eligible
     }
 
     return res.status(200).json(response)
@@ -177,7 +179,7 @@ router.put(path + '/:teamName', (req, res, next) => {
   // If these values aren't here then we can't move forward.
   const requiredValues = ['oldPassword', 'editData']
   for (const value of requiredValues) {
-    if (typeof body[value] === 'undefined') {
+    if (typeof body[value] === 'undefined' || (typeof body[value] === 'string' && body[value] === '')) {
       response.message = 'Required field ' + value + ' is missing or blank'
       return res.status(400).json(response)
     }
@@ -187,8 +189,8 @@ router.put(path + '/:teamName', (req, res, next) => {
 
   // Use the login function to check if they are signed in properly
   login(teamName, oldPassword).then((user) => {
-    // user.success determines whether or not the user successfully logged in
-    if (user.success) {
+    // user determines whether or not the user successfully logged in
+    if (user) {
       // This will hold all of the data to be edited
       const teamEditData = {}
       // Iterate over each of the fields in the request
@@ -202,7 +204,7 @@ router.put(path + '/:teamName', (req, res, next) => {
           }
           switch (field) {
             case 'password':
-              if (!sanitizer.isValidPassword(editableFields[field])) {
+              if (!sanitizer.isValidPassword(editData[field])) {
                 response.message = 'Password does not meet requirements.'
                 return res.status(400).json(response)
               }
@@ -211,14 +213,14 @@ router.put(path + '/:teamName', (req, res, next) => {
               teamEditData[field] = encrypt(editData.password)
               break
             case 'email':
-              if (!sanitizer.isValidEmail(editableFields[field])) {
+              if (!sanitizer.isValidEmail(editData[field])) {
                 response.message = 'Email is invalid or already in use.'
                 return res.status(400).json(response)
               }
-              teamEditData[field] = editableFields[field]
+              teamEditData[field] = editData[field]
               break
             default:
-              teamEditData[field] = editableFields[field]
+              teamEditData[field] = editData[field]
           }
         }
       }
@@ -238,6 +240,7 @@ router.put(path + '/:teamName', (req, res, next) => {
       })
     } else {
       response.message = 'unauthorized'
+      response.hasValidCredentials = false
       return res.status(401).json(response)
     }
   }, (err) => {
