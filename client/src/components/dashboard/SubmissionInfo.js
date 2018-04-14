@@ -1,10 +1,15 @@
 import { distanceInWords } from 'date-fns'
+import { Formik } from 'formik'
 import { inject, observer } from 'mobx-react'
 import React from 'react'
 import { Alert } from 'react-bootstrap'
 
 import UploadButton from '../UploadButton'
 import ButtonRefresh from '../ButtonRefresh'
+import { langs } from '../../vars'
+
+// TODO: There might be an argument for not having this here - but I'm just not sure. Should do some research into that. - RD
+const langOptions = langs.map(data => <option key={data.slug} value={data.slug}>{data.name}</option>)
 
 @inject('submissionStore')
 @observer
@@ -19,6 +24,10 @@ export default class SubmissionInfo extends React.Component {
         </Alert>
       )
     }
+
+    const uploadForm = (
+      
+    )
 
     if (!this.props.submissionStore.submissions.length) {
       return (
@@ -56,7 +65,7 @@ export default class SubmissionInfo extends React.Component {
             <ButtonRefresh buttonOnClick={this.props.submissionStore.makeDataStale} />
           </div>
         </div>
-        
+
         <div style={{ marginLeft: 10 }} className='row' >
           {uploadError}
           <div>
@@ -69,7 +78,6 @@ export default class SubmissionInfo extends React.Component {
           <p>
             <span style={{ fontWeight: 'bold' }}>Status:</span> <span style={statusStyle} >{latestSubmission.status}</span>
           </p>
-          <UploadButton />
         </div>
       </div>
     )
