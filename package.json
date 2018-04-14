@@ -33,6 +33,18 @@
     "eslint-plugin-standard": "^3.0.1",
     "nightwatch": "^0.9.20",
     "nodemon": "^1.12.1",
+    "selenium-standalone": "^6.13.0",
+    "standard": "^11.0.0"
+  },
+  "dependencies": {
+    "react-paginate": "^5.1.0",
+    "decompress": "^4.2.0",
+    "js-file-download": "^0.4.1"
+  },
+  "standard": {
+    "parser": "babel-eslint",
+    "nightwatch": "^0.9.20",
+    "nodemon": "^1.12.1",
     "rimraf": "^2.6.2",
     "selenium-standalone": "^6.14.0"
   },

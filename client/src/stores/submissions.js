@@ -2,7 +2,6 @@ import { action, observable, reaction } from 'mobx'
 
 import RequestLayer from '../modules/requestLayer'
 
-
 export class SubmissionStore {
   @observable submissions = []
   @observable isLoading = false
@@ -20,16 +19,16 @@ export class SubmissionStore {
     reaction(
       () => this.isStale,
       () => {
-      if (this.isStale) {
-        this.loadSubmissions()
-      }
-    })
+        if (this.isStale) {
+          this.loadSubmissions()
+        }
+      })
   }
 
   @action loadSubmissions () {
     this.isLoading = true
     // Actual HTTP request is abstracted to requestLayer object
-    this.requestLayer.fetchSubmissions().then(action("loadSubmissions-callback", (data) => {
+    this.requestLayer.fetchSubmissions().then(action('loadSubmissions-callback', (data) => {
       this.submissions = []
       data.forEach((json) => {
         this.createSubmissionFromServer(json)
@@ -46,11 +45,11 @@ export class SubmissionStore {
     })
   }
 
-  @action uploadSubmission (file) {
+  @action uploadSubmission (file, lang) {
     return new Promise((resolve, reject) => {
       this.uploadError = ''
       this.isLoading = true
-      this.requestLayer.uploadSubmissions(file).then((response) => {
+      this.requestLayer.uploadSubmissions(file, lang).then((response) => {
         this.isLoading = false
         this.makeDataStale()
         return resolve()
@@ -67,10 +66,9 @@ export class SubmissionStore {
             this.uploadError = 'Incorrect filetype - file must be .zip, .tar or .tar.gz.'
             break
           default:
-            this.uploadError = 'Uh oh! Something went wrong. Please wait a bit and try again. If the problem persists, contact the SIG-Game devs at siggame@mst.edu.'    
+            this.uploadError = 'Uh oh! Something went wrong. Please wait a bit and try again. If the problem persists, contact the SIG-Game devs at siggame@mst.edu.'
             break
         }
-        
       })
     })
   }
@@ -81,7 +79,7 @@ export class SubmissionStore {
 
   /**
    * Used to remove all submission from the store. Mainly useful when a user logs out.
-   * 
+   *
    * @memberof SubmissionStore
    */
   @action resetSubmissionData () {
@@ -91,7 +89,7 @@ export class SubmissionStore {
 
   @action createSubmissionFromServer (json) {
     let submission = new Submission(json.version, json.status, json.submission_url, json.log_url, json.image_name, json.created_at,
-                                    json.updated_at)
+      json.updated_at)
     this.submissions.push(submission)
   }
 }
@@ -100,7 +98,7 @@ export class Submission {
   @observable status
   @observable logUrl
   @observable updatedAt
-  
+
   constructor (version, status, submissionUrl, logUrl, imageName, createdAt, updatedAt) {
     this.version = version
     this.status = status

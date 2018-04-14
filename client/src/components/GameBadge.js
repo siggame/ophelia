@@ -1,5 +1,8 @@
 import { distanceInWords } from 'date-fns'
 import React, { Component } from 'react'
+import DownloadButton from '../components/DownloadButton.js'
+import { Link } from 'react-router-dom'
+
 
 /**
  * GameBadge - used to display concise results of a game played in the Arena.
@@ -67,13 +70,14 @@ export default class GameBadge extends Component {
             </svg>
     )
 
-    const noButtonVector = ( <p> </p>)
+    const noButtonVector = (<p />)
     let logButton = (noButtonVector)
     if (this.props.clientLogUrl !== null) {
       logButton = (
-        <a href={this.props.clientLogUrl} style={{ marginTop: '50%'}} download>
-            {logButtonVector}
-          </a>
+          <DownloadButton
+            url={this.props.clientLogUrl}
+            html={<a style={{cursor: 'pointer', marginTop: '50%'}}>{logButtonVector}</a>}
+          />
       )
     }
     let vizLink = (noButtonVector)
@@ -84,8 +88,15 @@ export default class GameBadge extends Component {
           {playButtonVector}
         </a>
       )
-
     }
+
+    const opponentLink = (
+      <Link
+        style={{textDecoration: 'none', color: bgColor}}
+        to={'/profile/' + this.props.opponent } >
+        {this.props.opponent}
+        </Link>
+    )
 
     return (
       <div style={{ border: '1px solid ' + bgColor, borderLeft:'10px solid red', borderLeftColor: bgColor, margin: 10, marginRight: 0, minWidth: '320px', paddingRight: 10 }} className='row  gutter-10'>
@@ -96,7 +107,7 @@ export default class GameBadge extends Component {
                   <div  style={{ paddingTop: '10px', fontSize: 16 }} >Opponent:
                   </div>
                   <div className='col-xs-12 text-center' style={{ height: '80%' }}>
-                    <div className='ellipsis' style={{ marginTop: '9%', marginLeft: '20px', fontSize: 18, fontWeight: 'bold'}} >{this.props.opponent}
+                    <div className='ellipsis' style={{ marginTop: '9%', marginLeft: '20px', fontSize: 18, fontWeight: 'bold'}} >{opponentLink}
                     </div>
                   </div>
                 </div>
@@ -141,7 +152,7 @@ export default class GameBadge extends Component {
               <div className='col-xs-10 ellipsis text-left' >
                 <div className='row'>
                   <div className='col-xs-12'>
-                    <span style={{fontStyle: 'italic'}} >Opponent:</span> <span style={{ textAlign: 'center', fontWeight: 'bold'}} >{this.props.opponent}</span>
+                    <span style={{fontStyle: 'italic'}} >Opponent:</span> <span style={{ textAlign: 'center', fontWeight: 'bold'}} >{opponentLink}</span>
                   </div>
                   <div className='col-xs-12'>
                     <div className='row' >
