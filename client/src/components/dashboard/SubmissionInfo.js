@@ -85,9 +85,10 @@ export default class SubmissionInfo extends React.Component {
     console.log(latestSubmission.logUrl)
     if (latestSubmission.logUrl !== null) {
       logUrl = (
-        <a className='btn btn-info btn-sm' href={latestSubmission.logUrl} style={{ fontWeight: 'bold' }} download>
+        <DownloadButton url={latestSubmission.logUrl}
+        html={(<a className='btn btn-info btn-sm' style={{ fontWeight: 'bold' }}>
           Build Log
-        </a>
+        </a>)}/>
       )
 
     }
@@ -110,7 +111,9 @@ export default class SubmissionInfo extends React.Component {
           </div>
           <div className='row' style={{ padding: '10px 0 10px 0' }}>
 
-            <div className='col-md-4'>{logUrl}</div>
+            <div className='col-md-4'>
+              {logUrl}
+            </div>
             <div className='col-md-4 text-center'><span style={{ fontWeight: 'bold' }}>Version:</span> {latestSubmission.version}</div>
           </div>
           <p>
