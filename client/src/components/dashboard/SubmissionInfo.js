@@ -89,7 +89,7 @@ export default class SubmissionInfo extends React.Component {
         <div style={{ marginLeft: 10 }} className='row' >
           {uploadError}
           <div style={{ marginBottom: 15 }}>
-            <span>Uploaded:</span> {uploadedDate.toDateString() + ' ' +  uploadedDate.toLocaleTimeString('en-US') } ({uploadedTime})
+            <span>Uploaded:</span> {uploadedDate.toDateString() + ' ' +  uploadedDate.toLocaleTimeString('en-US') } ({uploadedTime})  
           </div>
           <div className='row'>
             <div className='col-md-4'><a href={latestSubmission.logUrl} style={{ fontWeight: 'bold' }} download>Build Log</a></div>
