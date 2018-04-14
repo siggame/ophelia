@@ -22,7 +22,9 @@ function getSubmissionsByTeamName (teamName) {
       .where('teams.name', '=', teamName)
       .then((submissions) => {
         for (const submission of submissions) {
-          submission.log_url = host + logEndpoint + submission.log_url
+          if (submission.log_url !== null) {
+            submission.log_url = host + logEndpoint + submission.log_url
+          }
         }
         submissions.sort(sortSubmissions)
         return resolve(submissions)
@@ -43,7 +45,9 @@ function getSubmissionByID (submissionID) {
     query.then((submission) => {
       // This will let us contact the correct endpoint to actually retrieve
       // the log url from the arena
-      submission[0].log_url = host + logEndpoint + submission[0].log_url
+      if (submission[0].log_url !== null) {
+        submission[0].log_url = host + logEndpoint + submission[0].log_url
+      }
       return resolve(submission[0])
     }).catch((err) => {
       return reject(err)

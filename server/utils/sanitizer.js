@@ -68,5 +68,6 @@ module.exports = {
   isValidEmail,
   isValidUsername,
   isValidPassword,
-  isValidLogin
+  isValidLogin,
+  checkLength
 }
