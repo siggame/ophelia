@@ -75,7 +75,7 @@ export default class RequestLayer {
     })
   }
 
-  uploadSubmissions (file) {
+  uploadSubmissions (file, lang) {
     return new Promise((resolve, reject) => {
       if (!stores.authStore.isUserLoggedIn) {
         return reject(new Error('User must be logged in to upload submissions'))
@@ -88,6 +88,9 @@ export default class RequestLayer {
           headers: {
             Authorization: `Bearer ${stores.authStore.token}`,
             'Content-Type': 'multipart/form-data'
+          },
+          params: {
+            lang: lang
           }
         }).then((result) => {
         return resolve(result)

@@ -20,5 +20,6 @@ module.exports = {
   ARENA_HOST: _.defaultTo(process.env.ARENA_HOST, 'localhost'),
   SUBMISSIONS_ENDPOINT: _.defaultTo(process.env.SUBMISSIONS_ENDPOINT, '/tmp'),
   LOG_ENDPOINT: _.defaultTo(process.env.LOG_ENDPOINT, '/tmp'),
-  ELIGIBLE_DEFAULT: _.defaultTo(process.env.ELIGIBLE_DEFAULT, false)
+  ELIGIBLE_DEFAULT: _.defaultTo(process.env.ELIGIBLE_DEFAULT, false),
+  LANGUAGES: ['cs', 'cpp', 'java', 'js', 'py']
 }

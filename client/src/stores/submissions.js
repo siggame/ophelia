@@ -45,11 +45,11 @@ export class SubmissionStore {
     })
   }
 
-  @action uploadSubmission (file) {
+  @action uploadSubmission (file, lang) {
     return new Promise((resolve, reject) => {
       this.uploadError = ''
       this.isLoading = true
-      this.requestLayer.uploadSubmissions(file).then((response) => {
+      this.requestLayer.uploadSubmissions(file, lang).then((response) => {
         this.isLoading = false
         this.makeDataStale()
         return resolve()

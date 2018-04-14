@@ -5,10 +5,29 @@ import { Alert } from 'react-bootstrap'
 
 import UploadButton from '../UploadButton'
 import ButtonRefresh from '../ButtonRefresh'
+import { langs } from '../../vars'
+
+// TODO: There might be an argument for not having this here - but I'm just not sure. Should do some research into that. - RD
+const langOptions = langs.map(data => <option key={data.slug} value={data.slug}>{data.name}</option>)
 
 @inject('submissionStore')
 @observer
 export default class SubmissionInfo extends React.Component {
+  constructor (props) {
+    super(props)
+    const previousLang = localStorage.getItem('lang')
+    const newLang = previousLang ? previousLang : ''
+    this.state = {
+      lang: newLang
+    }
+
+    this.handleLangChange = this.handleLangChange.bind(this)
+  }
+
+  handleLangChange (event) {
+    this.setState({ lang: event.target.value })
+  }
+
   render () {
     const statusStyle = {}
     let uploadError
@@ -20,12 +39,22 @@ export default class SubmissionInfo extends React.Component {
       )
     }
 
+    const uploadForm = (
+      <form className='row'>
+        <select className='form-control col-xs-6' value={this.state.lang} onChange={this.handleLangChange} style={{ width:'auto', marginRight:'10%', marginLeft: 15 }}>
+          <option value='' disabled='disabled'>Submission Language</option>
+          {langOptions}
+        </select>
+        <UploadButton className='col-xs-6' data={{ lang:this.state.lang }} style={{ width:'45%'}} />
+      </form>
+    )
+
     if (!this.props.submissionStore.submissions.length) {
       return (
         <div>
           <div className='row'>
             <div className='col-xs-10'>
-              <h2>Latest Submission</h2>
+              <h2 style={{ fontWeight:'bold' }}>Latest Submission</h2>
             </div>
             <div className='col-xs-2' style={{padding: '3vh 0 4px 0'}}>
               <ButtonRefresh buttonOnClick={this.props.submissionStore.makeDataStale} />
@@ -33,10 +62,10 @@ export default class SubmissionInfo extends React.Component {
           </div>
           <div style={{ marginLeft: 10 }}>
             {uploadError}
-            <p>
-              You haven't uploaded any code. Click the button below to submit some to the Arena.
-            </p>
-            <UploadButton />
+            <h4 style={{ marginBottom: 20 }}>
+              You haven't uploaded any code. Select your language and upload your AI below.
+            </h4>
+            {uploadForm}
           </div>
         </div>
       )
@@ -66,7 +95,7 @@ export default class SubmissionInfo extends React.Component {
       <div>
         <div className='row'>
           <div className='col-xs-10'>
-            <h2>Latest Submission</h2>
+            <h2 style={{ fontWeight:'bold' }}>Latest Submission</h2>
           </div>
           <div className='col-xs-2' style={{padding: '3vh 0 4px 0'}}>
             <ButtonRefresh buttonOnClick={this.props.submissionStore.makeDataStale} />
@@ -75,8 +104,8 @@ export default class SubmissionInfo extends React.Component {
 
         <div style={{ marginLeft: 10 }} className='row' >
           {uploadError}
-          <div>
-            <span>Uploaded:</span> ({uploadedTime})  {uploadedDate.toDateString() + ' ' + uploadedDate.toLocaleTimeString('en-US') }
+          <div style={{ marginBottom: 15 }}>
+            <span>Uploaded:</span> {uploadedDate.toDateString() + ' ' +  uploadedDate.toLocaleTimeString('en-US') } ({uploadedTime})
           </div>
           <div className='row' style={{ padding: '10px 0 10px 0' }}>
 
@@ -86,8 +115,11 @@ export default class SubmissionInfo extends React.Component {
           <p>
             <span style={{ fontWeight: 'bold' }}>Status:</span> <span style={statusStyle} >{latestSubmission.status}</span>
           </p>
-          <UploadButton />
         </div>
+        <div style={{ marginLeft: 10 }} className='row'>
+          {uploadForm}
+        </div>
+
       </div>
     )
   }
