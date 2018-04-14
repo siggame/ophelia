@@ -92,7 +92,7 @@ export default class Games extends React.Component {
     return (
       <div>
         <div className='row' style={{ margin: '0 10px 0 10px', display: 'flex' }} >
-          <div className='col-xs-4'><h2>Games</h2></div>
+          <div className='col-xs-4'><h2 style={{ fontWeight:'bold' }}>Games</h2></div>
           <div className='col-xs-6' />
           <div className='col-xs-2' style={{padding: '3vh 0 4px 0'}}><ButtonRefresh buttonOnClick={this.handleRefresh} /></div>
         </div>
