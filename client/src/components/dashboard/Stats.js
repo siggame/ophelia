@@ -6,18 +6,21 @@ import {
   Hint
 } from 'react-vis'
 
-
-
 @inject('submissionStore')
 @observer
 export default class Stats extends React.Component {
   constructor (props) {
     super(props)
-
     this.state = {
       stats: [],
-      value: false
+      value: false,
+      versionFilter: ''
     }
+    this.handleFilter = this.handleFilter.bind(this)
+  }
+
+  handleFilter (e) {
+    this.props.handleFilterChange(e)
   }
 
     render () {
@@ -39,13 +42,19 @@ export default class Stats extends React.Component {
         'Win Percentage': String(Math.round(this.props.stats.winRatio * 100 * 100) / 100) + '%'
       }
       const lossStats = {
-        Losses: this.props.stats.wins,
+        Losses: this.props.stats.losses,
         'Loss Percentage': String(Math.round((1 - this.props.stats.winRatio) * 100 * 100) / 100) + '%'
       }
-    console.log(data)
 
-    return (
+      let versionOptions = this.props.submissionStore.submissions.map(submission => <option key={submission.version} value={submission.version}>{submission.version}</option>)
+      versionOptions.reverse()
+      return (
       <div>
+        <div className='col-xs-4'><h2>Win/Loss Ratio</h2></div>
+        <select className='col-xs-4 form-control' name='version' value={this.state.versionFilter} onChange={this.handleFilter}>
+          <option value=''>Version Filter</option>
+          {versionOptions}
+        </select>
         <RadialChart
           colorType={'literal'}
           colorDomain={[0, 100]}

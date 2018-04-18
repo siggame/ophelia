@@ -37,8 +37,6 @@
     "standard": "^11.0.0"
   },
   "dependencies": {
-    "react-paginate": "^5.1.0",
-    "decompress": "^4.2.0",
     "js-file-download": "^0.4.1"
   },
   "standard": {
@@ -47,6 +45,5 @@
     "nodemon": "^1.12.1",
     "rimraf": "^2.6.2",
     "selenium-standalone": "^6.14.0"
-  },
-  "dependencies": {}
+  }
 }

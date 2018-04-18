@@ -60,7 +60,7 @@ function getTeamsWins (teamName, options) {
         .join('games', 'games_submissions.game_id', '=', 'games.id')
         .where('games.id', 'in', gameIDs)
         .join('teams', 'teams.id', '=', 'submissions.team_id')
-        .select('submissions.team_id',
+        .select('submissions.id as submission_id',
           'games.id',
           'teams.name',
           'games.status',
@@ -90,7 +90,9 @@ function getTeamsWins (teamName, options) {
             }
           }
           // count the wins and losses against each team
-          if (row.team_id !== row.winner_id) {
+          // since the data we have here is all of the games of opponents,
+          // check if the opponent did not win
+          if (row.submission_id !== row.winner_id) {
             statsAgainstTeam[row.name].wins += 1
           } else {
             statsAgainstTeam[row.name].losses += 1
@@ -128,7 +130,7 @@ function getWinLossRatio (teamName, options) {
       .join('submissions', 'submissions.id', '=', 'games_submissions.submission_id')
       .join('teams', 'teams.id', '=', 'submissions.team_id')
       .where('teams.name', '=', teamName)
-      .select('games.id', 'games.winner_id', 'submissions.version', 'submissions.team_id')
+      .select('games.id', 'games.winner_id', 'submissions.version', 'submissions.id as submission_id')
 
     winLossRatioQuery.then((rows) => {
       for (const row of rows) {
@@ -137,7 +139,7 @@ function getWinLossRatio (teamName, options) {
             continue
           }
         }
-        if (row.winner_id === row.team_id) {
+        if (row.winner_id === row.submission_id) {
           winLossRatio.wins += 1
         } else {
           winLossRatio.losses += 1
