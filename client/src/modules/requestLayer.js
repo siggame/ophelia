@@ -75,6 +75,23 @@ export default class RequestLayer {
     })
   }
 
+  fetchUsers () {
+    return new Promise((resolve, reject) => {
+      axios.get(process.env.REACT_APP_API_URL + '/users/', {
+        headers: {
+          Authorization: `Bearer ${stores.authStore.token}`
+        }
+      }).then((response) => {
+        if (response.status === 200) {
+          return resolve(response.data.users)
+        }
+        return reject(`Request failed w/ response ${response.status}`)
+      }).catch((err) => {
+        return reject(err)
+      })
+    })
+  }
+
   uploadSubmissions (file, lang) {
     return new Promise((resolve, reject) => {
       if (!stores.authStore.isUserLoggedIn) {
