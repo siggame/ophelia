@@ -1,6 +1,6 @@
 # build environment
 FROM node:latest as builder
-RUN npm install -g -s --no-progress yarn
+RUN curl -o- -L https://yarnpkg.com/install.sh | bash
 RUN mkdir /usr/src/app
 WORKDIR /usr/src/app
 ENV PATH /usr/src/app/node_modules/.bin:$PATH
