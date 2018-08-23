@@ -9,7 +9,7 @@ import ProfileContainer from './containers/ProfileContainer'
 import RegisterContainer from './containers/RegisterContainer'
 import LoginContainer from './containers/LoginContainer'
 import LogoutContainer from './containers/LogoutContainer'
-
+import './main.scss'; // or `.scss` if you chose scss
 @withRouter
 @inject('authStore')
 @observer
