@@ -2,82 +2,82 @@
 
 const express = require('express')
 const router = express.Router()
-const teams = require('../db/init').teams
+const users = require('../db/init').users
 const encrypt = require('../session/auth').encrypt
 const login = require('../session/login').login
 const sanitizer = require('../utils/sanitizer')
 const ELIGIBLE_DEFAULT = require('../vars').ELIGIBLE_DEFAULT
 
-// All paths in this file should start with this
 const path = '/users'
 
 /**
- * Gets a list of all usernames
+ * Gets all users
  * Response body format:
  * {
-*     Success: Boolean,
-*     users: [String]
-* }
+ *    success: boolean,
+ *    names: list
+ * }
  * Response codes:
- * 200 - Successfully retrieved
- * 500 - Something went wrong
+ * 200 - got all users successfully
+ * 500 - something went wrong
  */
-router.get(path + '/', (req, res, next) => {
+
+router.get(path + '/', (req, res) => {
   const response = {
     success: false,
-    users: []
+    names: []
   }
-
-  teams.getAllTeamNames().then((data) => {
+  users.getAllUsernames().then((data) => {
     response.success = true
-    response.users = data
+    response.names = data
     return res.status(200).json(response)
-  }).catch((err) => {
-    return next(err)
   })
 })
 
 /**
- * Creates a user
+ * Creates a new user
  * Request body format:
  * {
-*     username: String,
-*     password: String,
-*     email: String,
-*     name: String
-* }
+ *    name: String,
+ *    email: String,
+ *    password: String,
+ *    contactName: String
+ * }
  * Response body format:
  * {
-*     success: Boolean, - true if success, false otherwise
-*     message: String - error message/success message
-* }
+ *    success: boolean,
+ *    message: String
+ * }
  * Response codes:
- * 201 - Successfully created
- * 400 - User error
+ * 201 - User created successfully
+ * 400 - Bad request
  * 500 - Something went wrong
  */
+
 router.post(path + '/', (req, res, next) => {
   const response = {
     success: false,
     message: ''
   }
+
   const body = req.body
-  // Checking for required values
-  const requiredValues = ['username', 'email', 'password', 'name']
+
+  const requiredValues = ['name', 'email', 'password', 'contactName']
   for (const value of requiredValues) {
     if (typeof body[value] === 'undefined') {
       response.message = 'Required field ' + value + ' is missing or blank'
       return res.status(400).json(response)
     }
   }
-  const username = body.username
+
+  const name = body.name
   const password = body.password
   const email = body.email
-  const name = body.name
+  const contactName = body.contactName
 
-  // sanitizing the inputs
-  if (!sanitizer.isValidUsername(username)) {
-    response.message = 'Team name is already in use.'
+  // sanitize inputs
+  if (!sanitizer.isValidUsername(name)) {
+    response.message = 'Not an acceptable username.'
     return res.status(400).json(response)
   }
   if (!sanitizer.isValidPassword(password)) {
@@ -88,26 +88,27 @@ router.post(path + '/', (req, res, next) => {
     response.message = 'Email is invalid or already in use.'
     return res.status(400).json(response)
   }
+  if (!sanitizer.isValidUsername(name)) {
+    response.message = 'Not an acceptable name.'
+    return res.status(400).json(response)
+  }
   const passInfo = encrypt(body.password)
-  // Change the default eligibility
-  // using !! to make sure it is a boolean
-  const eligibile = !!ELIGIBLE_DEFAULT
-  teams.createTeam(
-    username,
+  const role = 'user'
+  users.createUser(
+    name,
     email,
     passInfo.epass,
     passInfo.salt,
     passInfo.iterations,
-    'user',
-    name,
-    eligibile
+    role,
+    contactName
   ).then(() => {
     response.success = true
     response.message = 'Created user successfully'
     res.status(201).json(response)
   }).catch((err) => {
-    if (err.message === teams.DUPLICATE_NAME_MESSAGE || err.message === teams.DUPLICATE_EMAIL_MESSAGE ||
-      err.message === teams.MISSING_FIELD_MESSAGE) {
+    if (err.message === users.DUPLICATE_NAME_MESSAGE || err.message === users.DUPLICATE_EMAIL_MESSAGE ||
+      err.message === users.MISSING_FIELD_MESSAGE) {
       response.message = err.message
       return res.status(400).json(response)
     }
@@ -118,135 +119,103 @@ router.post(path + '/', (req, res, next) => {
   })
 })
 
-router.get(path + '/:teamName', (req, res, next) => {
+/**
+ * Gets a user by their ID
+ * Response body format:
+ * {
+ *    success: boolean,
+ *    message: String,
+ *    user: User
+ * }
+ * Response codes:
+ * 200 - Retrieved user successfully
+ * 400 - Bad request
+ * 500 - Something went wrong
+ */
+router.get(path + '/:userId', (req, res, next) => {
   const response = {
     success: false,
     message: '',
     user: null
   }
-
-  const teamName = req.params.teamName
-  teams.getTeamByName(teamName).then((data) => {
-    if (typeof data === 'undefined' || data === null) {
+  const userId = req.params.userId
+  users.getUser(userId).then((user) => {
+    if (typeof user === 'undefined' || user === null) {
       response.success = false
-      response.message = 'This team does not exist'
-      return res.status(404).json(response)
+      response.message = 'This user does not exist'
+      return res.status(400).json(response)
     }
     response.success = true
-    response.message = 'Success'
+    response.message = 'User retrieved successfully'
     response.user = {
-      name: data.name,
-      contactName: data.contact_name,
-      contactEmail: data.contact_email,
-      isEligible: data.is_eligible
+      name: user.name,
+      email: user.email,
+      contactName: user.contact_name
     }
-
     return res.status(200).json(response)
-  }, (err) => {
-    return next(err)
   }).catch((err) => {
-    return next(err)
+    next(err)
   })
 })
 
-/**
- * Edits a user
- * Request body format
- * {
- *     oldPassword: String,
- *     editData: {
- *         email: String,
- *         name: String,
- *         password: String
- *     }
- * }
- * Where each of the fields in editData is optional, but at least one must exist
- */
-router.put(path + '/:teamName', (req, res, next) => {
+router.put(path + '/:userId', (req, res, next) => {
   const response = {
     success: false,
     message: ''
   }
-  // These are the fields that can be edited for a user.
-  const editableFields = ['email', 'name', 'password']
-  const teamName = req.params.teamName
-  const jwtTeamName = req.user.username
+  const dataToUpdate = {}
   const body = req.body
-  if (teamName !== jwtTeamName) {
-    response.message = 'forbidden'
-    return res.status(403).json(response)
-  }
-  // If these values aren't here then we can't move forward.
-  const requiredValues = ['oldPassword', 'editData']
-  for (const value of requiredValues) {
-    if (typeof body[value] === 'undefined' || (typeof body[value] === 'string' && body[value] === '')) {
-      response.message = 'Required field ' + value + ' is missing or blank'
-      return res.status(400).json(response)
-    }
-  }
-  const oldPassword = body.oldPassword
-  const editData = body.editData
-
-  // Use the login function to check if they are signed in properly
-  login(teamName, oldPassword).then((user) => {
-    // user determines whether or not the user successfully logged in
-    if (user) {
-      // This will hold all of the data to be edited
-      const teamEditData = {}
-      // Iterate over each of the fields in the request
-      for (const field in editData) {
-        if (editData.hasOwnProperty(field)) {
-          // If the field is not in the array of editable fields
-          // then they must be trying to edit something not allowed
-          if (editableFields.indexOf(field) === -1) {
-            response.message = 'Editable fields include only: ' + editableFields
+  const userId = req.params.userId
+  const updateableValues = ['name', 'contactName', 'password', 'email', 'bio', 'profilePic', 'active']
+  for (const value of updateableValues) {
+    if (typeof body[value] !== 'undefined') {
+      console.log(value)
+      switch (value) {
+        case 'name':
+          if (!sanitizer.isValidUsername(body[value])) {
+            response.message = 'Not a valid username'
             return res.status(400).json(response)
           }
-          switch (field) {
-            case 'password':
-              if (!sanitizer.isValidPassword(editData[field])) {
-                response.message = 'Password does not meet requirements.'
-                return res.status(400).json(response)
-              }
-              // If the field is 'password' then we need to run encrypt to
-              // get the proper information
-              teamEditData[field] = encrypt(editData.password)
-              break
-            case 'email':
-              if (!sanitizer.isValidEmail(editData[field])) {
-                response.message = 'Email is invalid or already in use.'
-                return res.status(400).json(response)
-              }
-              teamEditData[field] = editData[field]
-              break
-            default:
-              teamEditData[field] = editData[field]
+          dataToUpdate.name = body[value]
+          break
+        case 'contactName':
+          if (!sanitizer.isValidUsername(body[value])) {
+            response.message = 'Not a valid username'
+            return res.status(400).json(response)
           }
-        }
+          dataToUpdate.contact_name = body[value]
+          break
+        case 'password':
+          if (!sanitizer.isValidPassword(body[value])) {
+            response.message = 'Not a valid password'
+            return res.status(400).json(response)
+          }
+          const passInfo = encrypt(body[value])
+          dataToUpdate.password = passInfo.epass
+          dataToUpdate.hash_iterations = passInfo.iterations
+          dataToUpdate.salt = passInfo.salt
+          break
+        case 'email':
+          if (!sanitizer.isValidEmail(body[value])) {
+            response.message = 'Not a valid email'
+            return res.status(400).json(response)
+          }
+          dataToUpdate.email = body[value]
+          break
+        case 'bio':
+          dataToUpdate.bio = body[value]
+          break
+        case 'profilePic':
+          break
       }
-      // If the object has no keys then there were no valid keys given
-      if (Object.keys(teamEditData).length === 0) {
-        response.message = 'Editable fields include only: ' + editableFields
-        return res.status(400).json(response)
-      }
-      teams.editTeam(teamName, teamEditData).then(() => {
-        response.success = true
-        response.message = 'Edited user successfully'
-        res.status(200).json(response)
-      }, (err) => {
-        return next(err)
-      }).catch((err) => {
-        return next(err)
-      })
-    } else {
-      response.message = 'unauthorized'
-      response.hasValidCredentials = false
-      return res.status(401).json(response)
     }
-  }, (err) => {
-    return next(err)
+  }
+  users.editUser(userId, dataToUpdate).then(() => {
+    response.success = true
+    response.message = 'User successfully updated'
+    return res.status(200).json(response)
   }).catch((err) => {
-    return next(err)
+    next(err)
   })
 })
 

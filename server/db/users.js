@@ -68,11 +68,11 @@ function getUserByName (name) {
     }
     knex('users').where({
       name: name
-    }).then((team) => {
-      if (team.length > 1) {
+    }).then((user) => {
+      if (user.length > 1) {
         reject(new Error('More than one user with same name'))
       } else {
-        return resolve(team[0])
+        return resolve(user[0])
       }
     }).catch((err) => {
       return reject(err)
@@ -171,7 +171,6 @@ function createUser (
             typeof password === 'undefined' || password === '' ||
             typeof salt === 'undefined' || salt === '' ||
             typeof hashIterations === 'undefined' ||
-            typeof hashIterations !== 'number' ||
             typeof role === 'undefined' || role === '' ||
             typeof contactName === 'undefined' || contactName === '') {
       return reject(new Error('All args. must be defined and not empty'))
