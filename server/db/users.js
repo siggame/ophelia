@@ -5,7 +5,7 @@ const DB_USER_UNIQUE = 'users_name_unique'
 const DB_EMAIL_UNIQUE = 'users_contact_email_unique'
 const DUPLICATE_NAME_MESSAGE = 'Username is already in use.'
 const DUPLICATE_EMAIL_MESSAGE = 'Email is invalid or already in use.'
-const MISSING_FIELD_MESSAGE = 'All args. must be defined and not empty'
+const MISSING_FIELD_MESSAGE = 'All args must be defined and not empty'
 const knex = require('./connect').knex
 
 function getUser (userId) {
