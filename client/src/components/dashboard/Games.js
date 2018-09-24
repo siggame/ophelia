@@ -115,13 +115,18 @@ export default class Games extends React.Component {
 
   render () {
     // Generate a list of all opponents to filter by
-    let opponentOptions = this.state.users.map((user) => {
-      if (user !== this.props.authStore.username) {
-        return (
-          <option key={user} value={user}>{user}</option>
-        )
-      }
-    })
+    let opponentOptions = "Not avaiable"
+    try { 
+      let opponentOptions = this.state.users.map((user) => {
+        if (user !== this.props.authStore.username) {
+          return (
+            <option key={user} value={user}>{user}</option>
+          )
+        }
+      })
+    } catch(err) {
+      console.log("No users to map! And here is your error! ", err)
+    }
     let versionOptions = this.props.submissionStore.submissions.map(submission => <option key={submission.version} value={submission.version}>{submission.version}</option>)
     versionOptions.reverse()
     let paginateSection
