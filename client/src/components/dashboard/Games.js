@@ -117,11 +117,14 @@ export default class Games extends React.Component {
     // Generate a list of all opponents to filter by
     let opponentOptions = "Not avaiable"
     try { 
-      let opponentOptions = this.state.users.map((user) => {
+      opponentOptions = this.state.users.map((user) => {
         if (user !== this.props.authStore.username) {
           return (
             <option key={user} value={user}>{user}</option>
           )
+        }
+        else {
+          return null;
         }
       })
     } catch(err) {
