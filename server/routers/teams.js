@@ -19,14 +19,14 @@ router.get(path + '/', (req, res) => {
   })
 })
 
-router.get(path + '/:teamId', (req, res, next) => {
+router.get(path + '/:teamName', (req, res, next) => {
   const response = {
     success: false,
     message: '',
     team: null
   }
-  const teamId = req.params.teamId
-  teams.getTeam(teamId).then((team) => {
+  const teamName = req.params.teamName
+  teams.getTeamByName(teamName).then((team) => {
     if (typeof team === 'undefined' || team === null) {
       response.message = 'That team does not exist'
       res.status(400).json(response)
@@ -52,7 +52,7 @@ router.post(path + '/', (req, res, next) => {
     message: ''
   }
   const body = req.body
-  const requiredValues = ['name', 'teamCaptainId']
+  const requiredValues = ['name']
   for (const value of requiredValues) {
     if (typeof body[value] === 'undefined') {
       response.message = 'Required field ' + value + ' is missing or blank'
@@ -60,12 +60,12 @@ router.post(path + '/', (req, res, next) => {
     }
   }
   const name = body.name
-  const teamCaptianId = body.teamCaptainId
+  const teamCaptainId = req.user.id
   if (!sanitizer.isValidUsername(name)) {
     response.message = 'Invalid team name'
     res.status(400).json(response)
   }
-  teams.createTeam(name, teamCaptianId).then(() => {
+  teams.createTeam(name, teamCaptainId).then(() => {
     response.success = true
     response.message = 'Created team successfully'
     return res.status(201).json(response)

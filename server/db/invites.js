@@ -1,6 +1,7 @@
 'use strict'
 
 const knex = require('./connect').knex
+const ALREADY_ON_A_TEAM = 'User is already on a team.'
 
 /**
  * Gets an invite by the given invite id
@@ -61,14 +62,21 @@ function getInvitesForUser (userId) {
  */
 function createInvite (teamId, userId) {
   return new Promise((resolve, reject) => {
-    knex('invites').insert({
-      team_id: teamId,
-      user_id: userId,
-      is_completed: false
-    }).then(() => {
-      resolve()
+    knex('teams_users').select().where('user_id', '=', userId).then((data) => {
+      if (data.length > 0) {
+        return reject(new Error(ALREADY_ON_A_TEAM))
+      }
+      knex('invites').insert({
+        team_id: teamId,
+        user_id: userId,
+        is_completed: false
+      }).then(() => {
+        return resolve()
+      }).catch((err) => {
+        return reject(err)
+      })
     }).catch((err) => {
-      reject(err)
+      return reject(err)
     })
   })
 }
@@ -82,28 +90,33 @@ function createInvite (teamId, userId) {
  * @param accepted whether or not the invite was accepted or rejected
  * @returns {Promise}
  */
-function updateInvite (inviteId, teamId, userId, accepted) {
+function updateInvite (teamId, userId, accepted) {
   return new Promise((resolve, reject) => {
-    knex('invites').where({
-      id: inviteId,
-      team_id: teamId
-    }).update({
-      is_completed: true
-    }).then(() => {
-      if (accepted) {
-        knex('teams_users').insert({
-          team_id: teamId,
-          user_id: userId
-        }).then(() => {
-          resolve()
-        }).catch((err) => {
-          reject(err)
-        })
-      } else {
-        resolve()
+    knex('teams_users').select().where('user_id', '=', userId).then((data) => {
+      if (data.length > 0) {
+        return reject(new Error(ALREADY_ON_A_TEAM))
       }
-    }).catch((err) => {
-      reject(err)
+      knex('invites').where({
+        user_id: userId,
+        team_id: teamId
+      }).update({
+        is_completed: true
+      }).then(() => {
+        if (accepted) {
+          knex('teams_users').insert({
+            team_id: teamId,
+            user_id: userId
+          }).then(() => {
+            return resolve()
+          }).catch((err) => {
+            return reject(err)
+          })
+        } else {
+          resolve()
+        }
+      }).catch((err) => {
+        reject(err)
+      })
     })
   })
 }

@@ -158,14 +158,14 @@ router.get(path + '/:userId', (req, res, next) => {
   })
 })
 
-router.put(path + '/:userId', (req, res, next) => {
+router.put(path + '/', (req, res, next) => {
   const response = {
     success: false,
     message: ''
   }
   const dataToUpdate = {}
   const body = req.body
-  const userId = req.params.userId
+  const userId = req.user.id
   const updateableValues = ['name', 'contactName', 'password', 'email', 'bio', 'profilePic', 'active']
   for (const value of updateableValues) {
     if (typeof body[value] !== 'undefined') {

@@ -219,8 +219,25 @@ function sortGames (gameA, gameB) {
   return 0
 }
 
+function insertGame (status, winReason, loseReason, winnerId, logUrl) {
+  return new Promise((resolve, reject) => {
+    knex('games').insert({
+      status: status,
+      win_reason: winReason,
+      lose_reason: loseReason,
+      winner_id: winnerId,
+      log_url: logUrl
+    }).then(() => {
+      return resolve()
+    }).catch((err) => {
+      return reject(err)
+    })
+  })
+}
+
 module.exports = {
   getGamesByTeamName,
   getGameById,
-  countGamesByTeamName
+  countGamesByTeamName,
+  insertGame
 }

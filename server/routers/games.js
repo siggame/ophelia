@@ -131,6 +131,23 @@ router.get(path + '/:gameID', (req, res, next) => {
   })
 })
 
+router.post(path + '/', (req, res, next) => {
+  const status = req.body.status
+  const winReason = req.body.winReason
+  const loseReason = req.body.loseReason
+  const winnerId = req.body.winnerId
+  const logUrl = req.body.logUrl
+  const statuses = ['queued', 'playing', 'finished', 'failed']
+  if (statuses.indexOf(status) === -1) {
+    return res.status(400)
+  }
+  dbGames.insertGame(status, winReason, loseReason, winnerId, logUrl).then(() => {
+    return res.status(204)
+  }).catch((err) => {
+    return next(err)
+  })
+})
+
 function createGroupedArray (arr, chunkSize) {
   const groups = []
   for (let i = 0; i < arr.length; i += chunkSize) {
