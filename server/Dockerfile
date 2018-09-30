@@ -17,7 +17,7 @@ EXPOSE 3001
 # override this with -e NODE_ENV="development"
 ENV NODE_ENV production
 
-RUN npm install -g -s --no-progress yarn
+RUN curl -o- -L https://yarnpkg.com/install.sh | bash
 
 # Copy over the package.json file
 COPY package.json $HOME/ophelia/
