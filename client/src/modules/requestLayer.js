@@ -143,7 +143,7 @@ export default class RequestLayer {
       try {
         return axios.get(`${process.env.REACT_APP_API_URL}/teams`);
       } catch (err) {
-        throw err;3
+        throw err;
       }
     }
 
