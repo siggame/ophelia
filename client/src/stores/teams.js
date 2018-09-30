@@ -9,16 +9,29 @@ class TeamStore {
     this.requestLayer = new RequestLayer()
   }
 
-  @action async loadTeam (teamName) {
+  @action async loadTeam (teamID) {
     try {
-      const response = await this.requestLayer.getTeamByName(teamName)
+      const response = await this.requestLayer.getTeamByName(teamID)
       runInAction(() => {
-        this.team = response.data.user
+        this.team = response.data.team
       })
     } catch (err) {
       console.log(err)
     }
   }
+
+  @action async getAllTeams() {
+    try {
+      const response = await this.requestLayer.getAllTeams();
+      runInAction(() => {
+        this.team = response.data.names
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+
 }
 
 export default new TeamStore()
