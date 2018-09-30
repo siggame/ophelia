@@ -33,6 +33,8 @@ export class GamesList extends React.Component {
 
 @inject('gameStore')
 @inject('authStore')
+//Team store is temp
+@inject('teamStore')
 @inject('submissionStore')
 @observer
 export default class Games extends React.Component {
@@ -161,6 +163,7 @@ export default class Games extends React.Component {
       <div>
         <div className='row' style={{ margin: '0 10px 0 10px', display: 'flex' }} >
           <div className='col-xs-4'><h2 style={{ fontWeight:'bold' }}>Games</h2></div>
+          <button buttonOnClick={this.props.teamStore.loadTeam("9")}>Test</button>
           <div className='col-xs-6' />
           <div className='col-xs-2' style={{padding: '3vh 0 4px 0'}}><ButtonRefresh buttonOnClick={this.handleRefresh} /></div>
         </div>

@@ -108,14 +108,6 @@ export default class RequestLayer {
     }
   }
 
-  async getTeamByName (teamName) {
-    try {
-      return axios.get(`${process.env.REACT_APP_API_URL}/users/${teamName}`)
-    } catch (err) {
-      throw err
-    }
-  }
-
   async updateUserProfile (oldPassword, email, name, password) {
     const { authStore } = stores
     if (!authStore.isUserLoggedIn) {
@@ -134,4 +126,42 @@ export default class RequestLayer {
       throw err
     }
   }
+
+    // Team Section
+
+    // Get single team from the name
+    async getTeamByName (teamName) {
+      try {
+        return axios.get(`${process.env.REACT_APP_API_URL}/teams/${teamName}`);
+      } catch (err) {
+        throw err;
+      }
+    }
+
+    // Get every team
+    async getAllTeams () {
+      try {
+        return axios.get(`${process.env.REACT_APP_API_URL}/teams`);
+      } catch (err) {
+        throw err;3
+      }
+    }
+
+    // Update Team
+    // TODO:
+    async updateTeam(name, teamCaptainId) {
+      const { teamStore } = stores;
+      const { authStore } = stores;
+      if (!authStore.isUserLoggedIn) {
+        throw new Error('Must be logged in to do that!');
+      }
+      try {
+        const editData = {}
+        if (name) {editData.name = name}
+        if (teamCaptainId) {editData.teamCaptainId = teamCaptainId}
+        return axios.put(`${process.env.REACT_APP_API_URL}/teams`)
+      } catch (err) {
+        throw err;
+      }
+    }
 }

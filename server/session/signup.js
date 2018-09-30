@@ -1,5 +1,6 @@
 'use strict'
 
+const vars = require('../vars')
 const validator = require('validator')
 const _ = require('lodash')
 const sha256 = require('js-sha256')
@@ -7,11 +8,11 @@ const sha256 = require('js-sha256')
 const knex = require('knex')({
   client: 'pg',
   connection: {
-    host: 'localhost',
-    port: '5432',
-    user: 'postgres',
-    password: 'siggame',
-    database: 'postgres'
+    host: vars.DB_HOST,
+    port: vars.DB_PORT,
+    user: vars.DB_USER,
+    password: vars.DB_PASS,
+    database: vars.DB_NAME
   }
 })
 const db = require('../db/init')
