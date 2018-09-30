@@ -58,10 +58,10 @@ export function validateSignup (username, name, email, password, confirmPassword
       return reject(errors)
     } else {
       axios.post(process.env.REACT_APP_API_URL + '/users/', {
-        contactName: username,
+        contactName: name,
         password: password,
         email: email,
-        name: name
+        name: username
       }).then((data) => {
         return resolve(data)
       }).catch((err) => {
@@ -89,7 +89,7 @@ export function validateLogin (username, password) {
   return new Promise((resolve, reject) => {
     axios
       .post(process.env.REACT_APP_API_URL + '/login', {
-        contactName: username,
+        name: username,
         password: password
       })
       .then(data => {
