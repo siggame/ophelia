@@ -64,6 +64,7 @@ app.use('/', routers.login.router)
 app.use('/', routers.medium.router)
 app.use('/', routers.admin.router)
 app.use('/', routers.teams.router)
+app.use('/', routers.invites.router)
 
 // Error handler for missing jwt
 app.use(function (err, req, res, next) {

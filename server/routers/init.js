@@ -15,6 +15,7 @@ const login = require('./login')
 const medium = require('./medium')
 const admin = require('./admin')
 const teams = require('./teams')
+const invites = require('./invites')
 
 module.exports = {
   admin,
@@ -23,5 +24,6 @@ module.exports = {
   users,
   login,
   medium,
-  teams
+  teams,
+  invites
 }
