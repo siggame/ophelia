@@ -1,6 +1,6 @@
 'use strict'
 
-const knex = require('knex')
+const knex = require('./connect').knex
 
 /**
  * Gets an invite by the given invite id
@@ -60,7 +60,7 @@ function getInvitesForUser (userId) {
  * @returns {Promise}
  */
 function createInvite (teamId, userId) {
-  return new Promise((resolve, reject) =>{
+  return new Promise((resolve, reject) => {
     knex('invites').insert({
       team_id: teamId,
       user_id: userId,
