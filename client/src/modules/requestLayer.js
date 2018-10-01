@@ -102,7 +102,7 @@ export default class RequestLayer {
 
   async getCurrentUser () {
     try {
-      return axios.get(`${process.env.REACT_APP_API_URL}/users/${stores.authStore.username}`)
+      return axios.get(`${process.env.REACT_APP_API_URL}/users/${stores.authStore.userId}`)
     } catch (err) {
       throw err
     }
