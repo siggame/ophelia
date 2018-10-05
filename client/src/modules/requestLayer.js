@@ -147,6 +147,17 @@ export default class RequestLayer {
       }
     }
 
+    // Get the current team a user is on
+    // Ask about getting an endpoint to see if user is on team. 
+    // If they are return team info else return null or something
+    async getCurretTeam () {
+      try {
+        return axios.get(`${process.env.REACT_APP_API_URL}/teams/members/${stores.authStore.userId}`);
+      } catch (err) {
+        throw err;
+      }
+    }
+
     // Update Team
     // TODO:
     async updateTeam(name, teamCaptainId) {

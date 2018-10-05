@@ -7,6 +7,7 @@ import DownloadButton from '../DownloadButton'
 import UploadButton from '../UploadButton'
 import ButtonRefresh from '../ButtonRefresh'
 import { langs } from '../../vars'
+import TeamCreation from '../teams/TeamCreation'
 
 // TODO: There might be an argument for not having this here - but I'm just not sure. Should do some research into that. - RD
 const langOptions = langs.map(data => <option key={data.slug} value={data.slug}>{data.name}</option>)
@@ -68,6 +69,7 @@ export default class SubmissionInfo extends React.Component {
             </h4>
             {uploadForm}
           </div>
+          <TeamCreation test="test"/>
         </div>
       )
     }

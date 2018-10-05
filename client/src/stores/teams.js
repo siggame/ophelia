@@ -31,7 +31,16 @@ class TeamStore {
     }
   }
 
+  @action async getCurrentTeam() {
+    try {
+      const response = await this.requestLayer.getCurrentTeam();
+      runInAction(() => {
+        this.team = response.data.onTeam;
+      })
+    } catch (err) {
+      throw err;
+    }
+  }
 
 }
-
 export default new TeamStore()
