@@ -17,10 +17,10 @@ export default class TeamBadge extends React.Component {
                 border: '1px solid' + bgColor,
                 borderBottom: '2px solid',
                 borderBottomColor: bgColor,
-                margin: 10,
+                marginTop: 10,
                 marginRight: 0,
                 minWidth: '320px',
-                paddingRight: 10
+                paddingRight: 0
             }}>
                 <div>
                     <div className='row'>

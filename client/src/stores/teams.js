@@ -5,6 +5,11 @@ import RequestLayer from '../modules/requestLayer'
 class TeamStore {
   @observable team = undefined
   @observable teams = []
+  @observable numPages = 5
+  @observable pageSize = 10
+  @observable isLoading = false
+  @observable isStale = false
+  @observable lastUpdated = null
 
   constructor () {
     this.requestLayer = new RequestLayer()

@@ -132,7 +132,7 @@ export default class Teams extends React.Component {
           <div className='col-xs-6' />
           <div className='col-xs-2' style={{padding: '3vh 0 4px 0'}}><ButtonRefresh buttonOnClick={this.handleRefresh} /></div>
         </div>
-        <div className='row' style={{ margin: '0 10px 0 10px', display: 'flex' }} >
+        <div className='row' style={{ margin: '0 0', display: 'flex' }} >
           <select className='col-xs-4 form-control' name='opponent' value={this.state.opponentFilter} onChange={this.handleFilter.bind(this, 'opponent')}>
             <option value=''>Team Name Filter</option>
             {teamOptions}
