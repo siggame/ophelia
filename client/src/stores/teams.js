@@ -6,7 +6,7 @@ class TeamStore {
   @observable team = undefined
   @observable teams = []
   @observable numPages = 5
-  @observable pageSize = 10
+  @observable pageSize = 3
   @observable isLoading = false
   @observable isStale = false
   @observable lastUpdated = null

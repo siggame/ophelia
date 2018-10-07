@@ -165,7 +165,7 @@ export default class RequestLayer {
         }).then((response) => {
           return resolve({
             teams: response.data.names,
-            numPages: response.data.pages
+            numPages: response.data.names.length / pageSize
           })
         }).catch((err) => {
           return reject(err)

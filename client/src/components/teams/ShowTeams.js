@@ -114,7 +114,7 @@ export default class Teams extends React.Component {
                   breakLabel={<a>...</a>}
                   previousLabel='<<'
                   nextLabel='>>'
-                  pageCount={this.props.gameStore.numPages}
+                  pageCount={this.props.teamStore.numPages}
                   pageRangeDisplayed={2}
                   marginPagesDisplayed={1}
                   forcePage={this.state.currentPage - 1}
