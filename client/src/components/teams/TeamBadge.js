@@ -6,8 +6,8 @@ export default class TeamBadge extends React.Component {
     render () {
         let updatedDate = new Date(this.props.updatedAt);
         let updatedTime = distanceInWords(new Date(), updatedDate, { addSuffix: true})
-        let teamName = this.props
-        console.log(JSON.stringify(teamName))
+        let teamName = this.props.name
+        console.log(teamName)
 
         // Colors of tabled
         let bgColor = "#ccc"
@@ -24,13 +24,13 @@ export default class TeamBadge extends React.Component {
             }}>
                 <div>
                     <div className='row'>
-                        <div className='col-xs-4 col-sm-4 text-center' style={{ height: '100%' }}>
+                        <div className='text-center' style={{ height: '100%' }}>
                             <div className='row'>
                                 <div style={{ paddingTop: '10px', fontSize: 16 }}>
                                     Team Name:
                                 </div>
                                 <div className='col-xs-12 text-center' style={{ height: '80%' }}>
-                                    <div className='ellipsis' style={{ marginTop: '9%', marginLeft: '20px', fontSize: 18, fontWeight: 'bold'}} >{}
+                                    <div style={{ fontSize: 18, fontWeight: 'bold'}} >{teamName}
                                 </div>
                             </div>
                         </div>

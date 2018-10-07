@@ -20,9 +20,9 @@ export class TeamsList extends React.Component {
                 )
             } else {
                 teamsList = teams.map((data) => {
-                    console.log(data)
-                    console.log(...data)
-                    return <TeamBadge {...data} key={data} />
+                    let testdata = JSON.stringify(data)
+                    console.log(testdata)
+                    return <TeamBadge name={data} key={data} />
                 })
             }
         }
@@ -136,11 +136,6 @@ export default class Teams extends React.Component {
           <select className='col-xs-4 form-control' name='opponent' value={this.state.opponentFilter} onChange={this.handleFilter.bind(this, 'opponent')}>
             <option value=''>Team Name Filter</option>
             {teamOptions}
-          </select>
-          <select className='col-xs-4 form-control' value={this.state.statusFilter} name='status' onChange={this.handleFilter.bind(this, 'status')}>
-            <option value=''>Status Filter</option>
-            <option value='win'>Win</option>
-            <option value='loss'>Loss</option>
           </select>
         </div>
         <TeamsList teams={this.state.teams} />
