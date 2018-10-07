@@ -136,25 +136,32 @@ router.get(path + '/:userId', (req, res, next) => {
   const response = {
     success: false,
     message: '',
-    user: null
+    user: null,
   }
   const userId = req.params.userId
-  users.getUser(userId).then((user) => {
-    if (typeof user === 'undefined' || user === null) {
-      response.success = false
-      response.message = 'This user does not exist'
-      return res.status(400).json(response)
-    }
-    response.success = true
-    response.message = 'User retrieved successfully'
-    response.user = {
-      name: user.name,
-      email: user.email,
-      contactName: user.contact_name
-    }
-    return res.status(200).json(response)
-  }).catch((err) => {
-    next(err)
+  users.getUsersTeam(userId).then((data) => {
+    users.getUser(userId).then((user) => {
+      if (typeof user === 'undefined' || user === null) {
+        response.success = false
+        response.message = 'This user does not exist'
+        return res.status(400).json(response)
+      }
+      response.success = true
+      response.message = 'User retrieved successfully'
+      response.user = {
+        name: user.name,
+        email: user.email,
+        contactName: user.contact_name
+      }
+      if (typeof data !== 'undefined') {
+        response.user.teamName = data
+      }
+      return res.status(200).json(response)
+    }).catch((err) => {
+      next(err)
+    }).catch((err) => {
+      next(err)
+    })
   })
 })
 
@@ -169,7 +176,6 @@ router.put(path + '/', (req, res, next) => {
   const updateableValues = ['name', 'contactName', 'password', 'email', 'bio', 'profilePic', 'active']
   for (const value of updateableValues) {
     if (typeof body[value] !== 'undefined') {
-      console.log(value)
       switch (value) {
         case 'name':
           if (!sanitizer.isValidUsername(body[value])) {

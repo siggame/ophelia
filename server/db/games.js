@@ -228,7 +228,7 @@ function insertGame (status, winReason, loseReason, winnerId, logUrl) {
       winner_id: winnerId,
       log_url: logUrl
     }).then(() => {
-      return resolve()
+      return resolve(null)
     }).catch((err) => {
       return reject(err)
     })
