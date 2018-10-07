@@ -20,6 +20,23 @@ function getUser (userId) {
   })
 }
 
+function getUsersTeam (userId) {
+  return new Promise((resolve, reject) => {
+    knex('teams_users')
+      .join('teams', 'teams_users.team_id', '=', 'teams.id')
+      .where({
+        user_id: userId
+      }).then((row) => {
+        if (row.length <= 0) {
+          resolve(null)
+        }
+        resolve(row[0].name)
+      }).catch((err) => {
+        reject(err)
+      })
+  })
+}
+
 function isUserAdmin (userId) {
   return new Promise((resolve, reject) => {
     getUser(userId).then((user) => {
@@ -204,6 +221,7 @@ function createUser (
 
 module.exports = {
   createUser,
+  getUsersTeam,
   getUser,
   getAllUsers,
   isUserAdmin,

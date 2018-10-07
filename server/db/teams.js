@@ -23,6 +23,9 @@ function getTeamByName (teamName) {
     knex('teams').where({
       name: teamName
     }).then((res) => {
+      if (res.length <= 0) {
+        resolve(null)
+      }
       resolve(res[0])
     }).catch((err) => {
       reject(err)

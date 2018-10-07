@@ -3,6 +3,7 @@
 const express = require('express')
 const router = express.Router()
 const dbGames = require('../db/init').games
+const dbUsers = require('../db/init').users
 const sanitizer = require('../utils/sanitizer')
 // All paths in this file should start with this
 const path = '/games'
@@ -80,27 +81,31 @@ router.get(path + '/', (req, res, next) => {
     }
   }
   // This is the signed in user, retrieved from the jwt
-  const teamName = req.user.username
+  const userId = req.user.userId
   // The specific page requested
   const page = req.query.page
   // How many games should be in each page
   const pageSize = req.query.pageSize
-  dbGames.getGamesByTeamName(teamName, page, pageSize, options).then((games) => {
-    const paginatedGames = createGroupedArray(games, pageSize)
-    if (paginatedGames.length === 0) {
-      return res.status(200).json(response)
-    } else if (page > paginatedGames.length) {
-      // response.message = 'Incorrect page number'
-      // return res.status(400).json(response)
-    }
-    dbGames.countGamesByTeamName(teamName, options).then((count) => {
-      response.success = true
-      response.message = 'Games successfully retrieved'
-      response.pages = Math.ceil(count / pageSize)
-      // page - 1 because the array is indexed at 0
-      // response.games = paginatedGames[page - 1]
-      response.games = games
-      return res.status(200).json(response)
+  dbUsers.getUsersTeam(userId).then((teamName) => {
+    dbGames.getGamesByTeamName(teamName, page, pageSize, options).then((games) => {
+      const paginatedGames = createGroupedArray(games, pageSize)
+      if (paginatedGames.length === 0) {
+        return res.status(200).json(response)
+      } else if (page > paginatedGames.length) {
+        // response.message = 'Incorrect page number'
+        // return res.status(400).json(response)
+      }
+      dbGames.countGamesByTeamName(teamName, options).then((count) => {
+        response.success = true
+        response.message = 'Games successfully retrieved'
+        response.pages = Math.ceil(count / pageSize)
+        // page - 1 because the array is indexed at 0
+        // response.games = paginatedGames[page - 1]
+        response.games = games
+        return res.status(200).json(response)
+      }).catch((err) => {
+        return next(err)
+      })
     }).catch((err) => {
       return next(err)
     })
@@ -132,6 +137,10 @@ router.get(path + '/:gameID', (req, res, next) => {
 })
 
 router.post(path + '/', (req, res, next) => {
+  const response = {
+    success: false,
+    message: ''
+  }
   const status = req.body.status
   const winReason = req.body.winReason
   const loseReason = req.body.loseReason
@@ -142,7 +151,9 @@ router.post(path + '/', (req, res, next) => {
     return res.status(400)
   }
   dbGames.insertGame(status, winReason, loseReason, winnerId, logUrl).then(() => {
-    return res.status(204)
+    response.success = true
+    response.message = 'Game recorded'
+    return res.status(200).json(response)
   }).catch((err) => {
     return next(err)
   })

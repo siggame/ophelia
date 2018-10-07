@@ -44,12 +44,22 @@ router.get(path + '/users/:userId', (req, res) => {
 
 /**
  * Invite user to a team
+ * {
+ *   teamName: team1
+ *   userId : 1
+ * }
  */
-router.post(path + '/teams/:teamId/:userId', (req, res) => {
-  const userId = req.params.userId
-  const teamId = req.params.teamId
-  invites.createInvite(teamId, userId).then(() => {
-    return res.status(204)
+router.post(path + '/', (req, res) => {
+  const response = {
+    success: false,
+    message: ''
+  }
+  const userId = req.body.userId
+  const teamName = req.body.teamName
+  invites.createInvite(teamName, userId).then(() => {
+    response.success = true
+    response.message = 'Successfully invited user to team'
+    return res.status(200).json(response)
   }).catch(() => {
     return res.status(500)
   })

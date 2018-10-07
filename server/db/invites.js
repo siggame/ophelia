@@ -1,6 +1,7 @@
 'use strict'
 
 const knex = require('./connect').knex
+const dbTeams = require('./teams')
 const ALREADY_ON_A_TEAM = 'User is already on a team.'
 
 /**
@@ -60,18 +61,22 @@ function getInvitesForUser (userId) {
  * @param userId user id that the invite is for
  * @returns {Promise}
  */
-function createInvite (teamId, userId) {
+function createInvite (teamName, userId) {
   return new Promise((resolve, reject) => {
     knex('teams_users').select().where('user_id', '=', userId).then((data) => {
       if (data.length > 0) {
         return reject(new Error(ALREADY_ON_A_TEAM))
       }
-      knex('invites').insert({
-        team_id: teamId,
-        user_id: userId,
-        is_completed: false
-      }).then(() => {
-        return resolve()
+      dbTeams.getTeamByName(teamName).then((team) => {
+        knex('invites').insert({
+          team_id: team.id,
+          user_id: userId,
+          is_completed: false
+        }).then(() => {
+          return resolve()
+        }).catch((err) => {
+          return reject(err)
+        })
       }).catch((err) => {
         return reject(err)
       })
