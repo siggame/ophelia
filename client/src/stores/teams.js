@@ -1,8 +1,8 @@
-import { observable, action, runInAction } from 'mobx'
+import { observable, action, runInAction, reaction } from 'mobx'
 import RequestLayer from '../modules/requestLayer'
 
 // TODO: Create cache of teams
-class TeamStore {
+export class TeamStore {
   @observable team = undefined
   @observable teams = []
   @observable numPages = 5
@@ -13,6 +13,17 @@ class TeamStore {
 
   constructor () {
     this.requestLayer = new RequestLayer()
+    this.loadAllTeams = this.loadAllTeams.bind(this)
+    this.makeDataStale = this.makeDataStale.bind(this)
+
+    reaction(
+      () => this.isStale,
+      () => {
+        if(this.isStale) {
+          this.loadAllTeams()
+        }
+      }
+    )
   }
 
   @action async loadTeam (teamID) {
@@ -24,6 +35,10 @@ class TeamStore {
     } catch (err) {
       console.log(err)
     }
+  }
+
+  @action makeDataStale() {
+    this.isStale = true
   }
 
   @action async getAllTeams() {
@@ -54,11 +69,13 @@ class TeamStore {
       this.teams = []
       this.numPages = data.numPages
       data.teams.forEach((json) => { 
+        console.log(json)
         this.teams.push(json)
       })
       this.isLoading = false
       this.isStale = false
       this.lastUpdated = new Date()
+      console.log(this.teams)
     })).catch((err) => {
       console.log("Error Loading Teams", err.message)
     })

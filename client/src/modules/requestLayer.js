@@ -165,7 +165,7 @@ export default class RequestLayer {
         }).then((response) => {
           return resolve({
             teams: response.data.names,
-            numPages: response.data.names.length / pageSize
+            numPages: response.data.pages
           })
         }).catch((err) => {
           return reject(err)
@@ -176,7 +176,7 @@ export default class RequestLayer {
     // Get the current team a user is on
     // Ask about getting an endpoint to see if user is on team. 
     // If they are return team info else return null or something
-    async getCurretTeam () {
+    async getCurrentTeam () {
       try {
         return axios.get(`${process.env.REACT_APP_API_URL}/teams/members/${stores.authStore.userId}`);
       } catch (err) {
@@ -201,4 +201,35 @@ export default class RequestLayer {
         throw err;
       }
     }
+
+
+    // Section for Invites
+
+    async fetchInvites() {
+      const { authStore } = stores;
+      if(!authStore.isUserLoggedIn) {
+        throw new Error('Must be logged in to do that!')
+      }
+      try {
+        return axios.get(`${process.env.REACT_APP_API_URL}/invites/user/${stores.authStore.userId}`)
+      } catch (err) {
+        throw err;
+      }
+    }
+
+    async sendInvite(teamName, userName) {
+      const { authStore } = stores;
+      if(!authStore.isUserLoggedIn) {
+        throw new Error('Must be logged in to do that!')
+      }
+
+      try{
+        const inviteData = { 
+          teamName: teamName,
+      } 
+      } catch(err) {
+        throw err;
+      }
+    }
+
 }

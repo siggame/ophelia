@@ -1,4 +1,4 @@
-import { inject } from 'mobx-react'
+import { inject, observer } from 'mobx-react'
 import React from 'react'
 import TeamBadge from './TeamBadge'
 import axios from 'axios'
@@ -9,7 +9,7 @@ export class TeamsList extends React.Component {
     
     render(){
         let teams = this.props.teams;
-        console.log(teams)
+        // console.log(teams)
         let teamsList;
         if(teams) {
             if(teams.length === 0) {
@@ -20,8 +20,7 @@ export class TeamsList extends React.Component {
                 )
             } else {
                 teamsList = teams.map((data) => {
-                    let testdata = JSON.stringify(data)
-                    console.log(testdata)
+                    console.log(data)
                     return <TeamBadge name={data} key={data} />
                 })
             }
@@ -35,6 +34,7 @@ export class TeamsList extends React.Component {
 }
 
 @inject('teamStore')
+@observer
 export default class Teams extends React.Component {
     constructor(props) {
         super(props) 
@@ -49,9 +49,11 @@ export default class Teams extends React.Component {
     }
 
     componentWillMount() {
+        // Temp workaround until teams load on page load
+        this.props.teamStore.loadAllTeams()
         axios.get(process.env.REACT_APP_API_URL + '/teams').then((result) => {
             this.setState({
-              teams: result.data.names
+              team: result.data.names
             })
           }).catch((err) => {
             console.log('Errored while trying to get users - ', err.message)
@@ -91,7 +93,7 @@ export default class Teams extends React.Component {
     render() {
         let teamOptions = "Not avaiable"
         try {
-            teamOptions = this.state.teams.map((team) => {
+            teamOptions = this.state.team.map((team) => {
                 return (
                     <option key={team} value={team}>{team}</option>
                 )
@@ -138,7 +140,7 @@ export default class Teams extends React.Component {
             {teamOptions}
           </select>
         </div>
-        <TeamsList teams={this.state.teams} />
+        <TeamsList teams={this.props.teamStore.teams} />
         {paginateSection}
       </div>
       )
