@@ -2,10 +2,12 @@
 
 const validator = require('validator')
 
-const usernameRegex = /^[a-zA-Z0-9.-_]+$/
+const usernameRegex = /^[a-zA-Z0-9.-_']+$/
 const passwordRegex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9!@#$%^&*]*$/
 // changed the regex as below was not working
 // const emailRegex = /^[a-zA-Z0-9_+&*-]+(?:\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]$/
+
+const teamRegex = /[a-zA-Z0-9$-_.+!*'(),]+$/
 
 const emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
 
@@ -46,6 +48,15 @@ function isValidUsername (username) {
 }
 
 /**
+ * Function to check if a team name is valid
+ * @param teamName Team name to check
+ * @returns {boolean}
+ */
+function isValidTeamName (teamName) {
+  return !!(checkLength(teamName, usernameMinLength, usernameMaxLength) && validator.matches(teamName, teamRegex))
+}
+
+/**
  * Function to check if a password is valid
  * @param password Password to check
  * @returns {boolean}
@@ -69,5 +80,6 @@ module.exports = {
   isValidUsername,
   isValidPassword,
   isValidLogin,
-  checkLength
+  checkLength,
+  isValidTeamName
 }

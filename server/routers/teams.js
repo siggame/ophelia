@@ -61,7 +61,7 @@ router.post(path + '/', (req, res, next) => {
   }
   const name = body.name
   const teamCaptainId = req.user.id
-  if (!sanitizer.isValidUsername(name)) {
+  if (!sanitizer.isValidTeamName(name)) {
     response.message = 'Invalid team name'
     res.status(400).json(response)
   }
