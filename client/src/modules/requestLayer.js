@@ -147,6 +147,32 @@ export default class RequestLayer {
       }
     }
 
+    // Grabs all team names based on pagination and filter 
+    fetchTeams(pageNum, pageSize, filter = {}) {
+      return new Promise((resolve, reject) => {
+        if(!stores.authStore.isUserLoggedIn) {
+          return reject(new Error('User must be logged in to fetch teams'))
+        }
+        let params = {};
+        if (filter.names) params.names = filter.names
+        params.page = pageNum;
+        params.pageSize = pageSize;
+        axios.get(process.env.REACT_APP_API_URL + '/teams', {
+          headers: {
+            Authorization: `Bearer ${stores.authStore.token}`
+          },
+          params: params
+        }).then((response) => {
+          return resolve({
+            teams: response.data.names,
+            numPages: response.data.pages
+          })
+        }).catch((err) => {
+          return reject(err)
+        })
+      })
+    }
+
     // Get the current team a user is on
     // Ask about getting an endpoint to see if user is on team. 
     // If they are return team info else return null or something
