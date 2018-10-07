@@ -5,33 +5,37 @@ Information about the web server's REST API
 
 `GET /users/`
 
-Gets all users
-Response body format:
-{
-   success: boolean,
-   names: list
-}
-Response codes:
-200 - got all users successfully
-500 - something went wrong
+Returns a list of all the users.
 
+`GET /users/:userId`
+
+Returns a user with specified userId.
 
 `POST /users/`
 
-Creates a new user
+Creates a new user.
+
 Request body format:
+```
 {
    name: String,
    email: String,
    password: String,
    contactName: String
 }
-Response body format:
+```
+
+`PUT /users/`
+
+Updates the current users information. Can only be called if the user has a JWT.
+Request body format:
+```
 {
-   success: boolean,
-   message: String
+    name: String,
+    email: String,
+    password: String,
+    contactName: String,
+    bio: String,
 }
-Response codes:
-201 - User created successfully
-400 - Bad request
-500 - Something went wrong
+```
+
