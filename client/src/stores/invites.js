@@ -70,6 +70,8 @@ import RequestLayer from '../modules/requestLayer'
             })
           })
       }
+
+      //TODO: Need logic to accept invite
  }
 
  export default new InvitesStore()
