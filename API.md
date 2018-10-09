@@ -81,7 +81,7 @@ Request Body Format:
 
 Returns a list of invites for the specified team.
 
-`GET /invites/user/:userId`
+`GET /invites/users/:userId`
 
 Returns a list of invites for the specified user.
 
