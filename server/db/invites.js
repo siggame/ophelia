@@ -86,39 +86,36 @@ function createInvite (teamName, userId) {
   })
 }
 
-/**
- * todo; this is probably a bad function, might need to change
- * Update an invite for a team and user
- * @param inviteId id of invite to update
- * @param teamId team id the invite belongs to
- * @param userId user id the invite belongs to
- * @param accepted whether or not the invite was accepted or rejected
- * @returns {Promise}
- */
-function updateInvite (teamId, userId, accepted) {
+function updateInvite (inviteId, accepted) {
   return new Promise((resolve, reject) => {
-    knex('teams_users').select().where('user_id', '=', userId).then((data) => {
-      if (data.length > 0) {
-        return reject(new Error(ALREADY_ON_A_TEAM))
-      }
-      knex('invites').where({
-        user_id: userId,
-        team_id: teamId
-      }).update({
-        is_completed: true
-      }).then(() => {
-        if (accepted) {
-          knex('teams_users').insert({
-            team_id: teamId,
-            user_id: userId
-          }).then(() => {
-            return resolve()
-          }).catch((err) => {
-            return reject(err)
-          })
-        } else {
-          resolve()
+    knex('invites').select().where('id', '=', inviteId).then((invite) => {
+      const userId = invite[0].user_id
+      const teamId = invite[0].team_id
+      knex('teams_users').select().where('user_id', '=', userId).then((data) => {
+        if (data.length > 0) {
+          return reject(new Error(ALREADY_ON_A_TEAM))
         }
+        knex('invites').where({
+          user_id: userId,
+          team_id: teamId
+        }).update({
+          is_completed: true
+        }).then(() => {
+          if (accepted) {
+            knex('teams_users').insert({
+              team_id: teamId,
+              user_id: userId
+            }).then(() => {
+              return resolve()
+            }).catch((err) => {
+              return reject(err)
+            })
+          } else {
+            resolve()
+          }
+        }).catch((err) => {
+          reject(err)
+        })
       }).catch((err) => {
         reject(err)
       })

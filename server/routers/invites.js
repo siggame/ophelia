@@ -45,7 +45,7 @@ router.get(path + '/users/:userId', (req, res) => {
 /**
  * Invite user to a team
  * {
- *   teamName: team1
+ *   teamName: String
  *   userId : 1
  * }
  */
@@ -60,6 +60,29 @@ router.post(path + '/', (req, res) => {
     response.success = true
     response.message = 'Successfully invited user to team'
     return res.status(200).json(response)
+  }).catch(() => {
+    return res.status(500)
+  })
+})
+
+/**
+ * {
+ *   inviteId: num,
+ *   accepted: boolean
+ * }
+ */
+
+router.put(path + '/', (req, res) => {
+  const response = {
+    success: false,
+    message: ''
+  }
+  const inviteId = req.body.inviteId
+  const accepted = req.body.accepted
+  invites.updateInvite(inviteId, accepted).then(() => {
+    response.success = true
+    response.message = 'Successfully ' + (accepted === true ? 'accepted invite' : 'declined invite')
+    res.status(200).json(response)
   }).catch(() => {
     return res.status(500)
   })
