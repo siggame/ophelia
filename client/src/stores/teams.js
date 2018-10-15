@@ -69,7 +69,6 @@ export class TeamStore {
       this.teams = []
       this.numPages = data.numPages
       data.teams.forEach((json) => { 
-        console.log(json)
         this.teams.push(json)
       })
       this.isLoading = false

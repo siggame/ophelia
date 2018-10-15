@@ -40,7 +40,7 @@ import RequestLayer from '../modules/requestLayer'
           this.isLoading = true;
           this.requestlayer.fetchInvites().then(action('loadInvites-callback', (data) => {
               this.invites = []
-              data.invites.forEach((json) => {
+              data.data.invites.forEach((json) => {
                   this.invites.push(json)
               })
               this.isLoading = false;

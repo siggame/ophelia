@@ -211,7 +211,8 @@ export default class RequestLayer {
         throw new Error('Must be logged in to do that!')
       }
       try {
-        return axios.get(`${process.env.REACT_APP_API_URL}/invites/user/${stores.authStore.userId}`)
+        console.log(stores.authStore.userId);
+        return axios.get(`${process.env.REACT_APP_API_URL}/invites/users/${stores.authStore.userId}`)
       } catch (err) {
         throw err;
       }
