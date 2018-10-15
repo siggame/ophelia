@@ -34,6 +34,34 @@ router.get(path + '/:teamName', (req, res, next) => {
     response.success = true
     response.message = 'Team retrieved successfully'
     response.team = {
+      id: team.id,
+      name: team.name,
+      eligible: team.is_eligible,
+      paid: team.is_paid,
+      closed: team.is_closed,
+      captainId: team.team_captain_id
+    }
+    return res.status(200).json(response)
+  }).catch((err) => {
+    next(err)
+  })
+})
+
+router.get(path + '/id/:teamId', (req, res, next) => {
+  const response = {
+    success: false,
+    team: null
+  }
+  const teamId = req.params.teamId
+  teams.getTeam(teamId).then((team) => {
+    if (typeof team === 'undefined' || team === null) {
+      response.message = 'That team does not exist'
+      res.status(400).json(response)
+    }
+    response.success = true
+    response.message = 'Team retrieved successfully'
+    response.team = {
+      id: team.id,
       name: team.name,
       eligible: team.is_eligible,
       paid: team.is_paid,
