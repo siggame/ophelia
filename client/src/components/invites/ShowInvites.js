@@ -1,11 +1,27 @@
 import { inject, observer } from 'mobx-react'
 import React from 'react'
-import axios from 'axios'
-import ButtonRefresh from '../ButtonRefresh'
-import ReactPaginate from 'react-paginate'
+import ReactTable from "react-table";
+
+@inject('teamStore')
 export class InvitesList extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.handleAccept = this.handleAccept.bind(this);
+        this.handleDecline = this.handleDecline.bind(this);
+    }
+
+    handleAccept(id) {
+        console.log("ACCEPTED")
+    }
+
+    handleDecline(id) {
+        console.log("Declined!")
+    }
+
     render() {
         let invites = this.props.invites;  
+        console.log(invites)
         var inviteName = {
             invite: []
         }
@@ -13,39 +29,32 @@ export class InvitesList extends React.Component {
             Header: "Team Name",
             accessor: 'name'
         }, {
-            Header: "Accept",
-            accessor: 'id'
+            Header: "Action",
+            accessor: 'id',
+            Cell: props => <div>
+                <button className="accept" onClick={() => this.handleAccept(props.id)}>Accept</button>
+                <button className="decline">Decline</button>
+            </div>
         }]
 
         invites.map((data) => {
-            inviteName.invite.push({
-                "id": data.id
-            })
+            var delayInMilliseconds = 1000;
+            var teamName = this.props.teamStore.getName(data.team_id)
+                inviteName.invite.push({
+                    "id": data.id,
+                    "name": 'test'
+                })
         })
-
-        console.log(inviteName.invite)
-        // if(invites) {
-        //     if(invites.length === 0 || invites === "undefined") {
-        //         invitesList = (
-        //             <div className='text-center' style={{ paddingTop: '5vh', height: '130px', minWidth: '320px' }} >
-        //                 You have no pending invites!
-        //             </div>
-        //         )
-        //     } else {
-        //         // invitesList = invites.map((data) => {
-        //         //     return <InvitesBadge invite={data} key={data} />
-        //         // })
-        //     }
-        // }
         return (
             <div>
-                <h1>test</h1>
+                <ReactTable data={inviteName.invite} columns={columns} defaultPageSize={3}/>
             </div>
         )
     }
 }
 
 @inject('invitesStore')
+@inject('teamStore')
 @observer
 export default class Invites extends React.Component {
     constructor(props) {
@@ -58,6 +67,7 @@ export default class Invites extends React.Component {
 
     componentDidMount() {
         this.props.invitesStore.loadInvites();
+        console.log(this.props.invitesStore.data)
     }
 
     // handleInviteAccept(id) {
@@ -68,7 +78,7 @@ export default class Invites extends React.Component {
         return(
                 <div className='row'>
                     <h2 style={{ fontWeight:'bold' }}>Invites</h2>
-                    <InvitesList invites={this.props.invitesStore.invites} />
+                    <InvitesList invites={this.props.invitesStore.invites} teams={this.props.teamStore.teamSortId}/>
                 </div>
         )
     }

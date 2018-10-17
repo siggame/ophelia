@@ -43,6 +43,7 @@ import RequestLayer from '../modules/requestLayer'
               data.data.invites.forEach((json) => {
                   this.invites.push(json)
               })
+              console.log(this.invites)
               this.isLoading = false;
               this.isStale = false;
               this.lastUpdated = new Date()

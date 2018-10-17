@@ -38,6 +38,7 @@ export default class Teams extends React.Component {
       return(
         <div className='row'>
             <h2 style={{ fontWeight:'bold' }}>Teams</h2>
+            {console.log(this.props.teamStore.teams)}
             <TeamsList teams={this.props.teamStore.teams} />
         </div>
       )

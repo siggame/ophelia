@@ -138,6 +138,15 @@ export default class RequestLayer {
       }
     }
 
+    async getTeamName(teamId) {
+        axios.get(`${process.env.REACT_APP_API_URL}/teams/id/${teamId}`).then(response => {
+          console.log(response.data.team.name)
+          return response.data.team.name
+        }).catch(err => {
+          console.log(err)
+        })
+    }
+
     // Get every team
     async getAllTeams () {
       try {

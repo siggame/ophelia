@@ -34,8 +34,8 @@ export default class SendInvite extends React.Component {
 
     handleSubmit(event) {
         this.setState({ loading: true })
-        // TODO: Create username validation and then send the request 
-
+        // TODO: Create username validation and then send the request  
+        console.log(this.state.username)
         event.preventDefault();
     }
 

@@ -10,6 +10,7 @@ export class TeamStore {
   @observable isLoading = false
   @observable isStale = false
   @observable lastUpdated = null
+  @observable teamSortId = []
 
   constructor () {
     this.requestLayer = new RequestLayer()
@@ -39,6 +40,17 @@ export class TeamStore {
 
   @action makeDataStale() {
     this.isStale = true
+  }
+
+  @action async getName(teamId) {
+    try {
+      const response = this.requestLayer.getTeamName(teamId);
+      runInAction(() => {
+        this.teamSortId.push(response);
+      })
+    } catch(err) {
+      console.log(err)
+    }
   }
 
   @action async getAllTeams() {
@@ -74,7 +86,6 @@ export class TeamStore {
       this.isLoading = false
       this.isStale = false
       this.lastUpdated = new Date()
-      console.log(this.teams)
     })).catch((err) => {
       console.log("Error Loading Teams", err.message)
     })
