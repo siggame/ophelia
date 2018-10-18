@@ -1,16 +1,21 @@
 import React from 'react'
 import { Loader } from 'react-overlay-loader'
 import _ from 'lodash'
+import { inject, observer } from 'mobx-react'
+import { validateInvite } from '../../modules/invites'
 
 
 import 'react-overlay-loader/styles.css'
+import Redirect from 'react-router/Redirect';
 
+@inject('authStore')
+@inject('invitesStore')
 export default class SendInvite extends React.Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            username: '',
+            userToInvite: '',
             formErrors: {},
             formSubmitted: false,
             hasErrors: true,
@@ -25,23 +30,36 @@ export default class SendInvite extends React.Component {
     handleChange(event) {
         const target = event.target;
         const value = target.value;
-        const name = target.name
+        const userToInvite = target.name
 
         this.setState({
-            [name]: value
+            [userToInvite]: value
         })
     }
 
     handleSubmit(event) {
+        console.log("clicked!")
         this.setState({ loading: true })
-        // TODO: Create username validation and then send the request  
-        console.log(this.state.username)
+        this.props.invitesStore.sendInvite(this.props.authStore.user.teamName, this.state.userToInvite).then(() => {
+            this.setState({
+                formSubmitted: true,
+                hasErrors: false,
+                inviteSent: this.state.userToInvite
+            })
+        }).catch((err) => {
+            this.setState({
+                formSubmitted: true,
+                formErrors: err,
+                loading: false
+            })
+        })
         event.preventDefault();
     }
 
     render() {
         let userError;
         let teamError;
+        const username = this.state.inviteSent
 
         if(this.state.formSubmitted) {
             if(this.state.hasErrors) {
@@ -63,9 +81,17 @@ export default class SendInvite extends React.Component {
                 })
             } else {
                 return (
-                    <div>
-                        {/* TODO: Have a message saying invite sent */}
-                    </div>
+                    <div className='col-md-6'>
+                    <h3>Invite User To Your Team</h3>
+                    <form>
+                        <h4>Invite to {username} sent!</h4>
+                        <div className='form-group'>
+                            <label htmlFor='username'>User Name</label>
+                            <input type='text' className='form-control' name='userToInvite' placeholder='User Name' value={this.state.username} onChange={this.handleChange} />
+                        </div>
+                        <button type='submit' onClick={this.handleSubmit} className='btn btn-default btn-block btn-lg' style={{marginTop: 32}}>Send</button>
+                    </form>
+                </div>
                 )
             }
         }
@@ -78,7 +104,7 @@ export default class SendInvite extends React.Component {
                     {teamError}
                     <div className='form-group'>
                         <label htmlFor='username'>User Name</label>
-                        <input type='text' className='form-control' name='username' placeholder='User Name' value={this.state.username} onChange={this.handleChange} />
+                        <input type='text' className='form-control' name='userToInvite' placeholder='User Name' value={this.state.username} onChange={this.handleChange} />
                     </div>
                     <button type='submit' onClick={this.handleSubmit} className='btn btn-default btn-block btn-lg' style={{marginTop: 32}}>Send</button>
                 </form>

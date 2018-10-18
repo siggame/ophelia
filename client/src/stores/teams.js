@@ -44,9 +44,11 @@ export class TeamStore {
 
   @action async getName(teamId) {
     try {
-      const response = this.requestLayer.getTeamName(teamId);
+      const response = await this.requestLayer.getTeamName(teamId);
       runInAction(() => {
-        this.teamSortId.push(response);
+        var item = response.data.team.name
+        console.log(item)
+        return response.data.team;
       })
     } catch(err) {
       console.log(err)

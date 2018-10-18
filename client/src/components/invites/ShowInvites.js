@@ -1,27 +1,23 @@
 import { inject, observer } from 'mobx-react'
 import React from 'react'
 import ReactTable from "react-table";
+import axios from 'axios';
 
 @inject('teamStore')
+@inject('invitesStore')
 export class InvitesList extends React.Component {
     constructor(props) {
         super(props);
 
-        this.handleAccept = this.handleAccept.bind(this);
-        this.handleDecline = this.handleDecline.bind(this);
+        this.handleInviteAction = this.handleInviteAction.bind(this);
     }
 
-    handleAccept(id) {
-        console.log("ACCEPTED")
-    }
-
-    handleDecline(id) {
-        console.log("Declined!")
+    handleInviteAction(id, status) {
+        this.props.invitesStore.inviteAction(id, status)
     }
 
     render() {
-        let invites = this.props.invites;  
-        console.log(invites)
+        let invites = this.props.invites; 
         var inviteName = {
             invite: []
         }
@@ -32,22 +28,28 @@ export class InvitesList extends React.Component {
             Header: "Action",
             accessor: 'id',
             Cell: props => <div>
-                <button className="accept" onClick={() => this.handleAccept(props.id)}>Accept</button>
-                <button className="decline">Decline</button>
+                <button className="accept" onClick={() => this.handleInviteAction(props.value, true)}>Accept</button>
+                <button className="decline" onClick={() => this.handleInviteAction(props.value, false)}>Decline</button>
             </div>
         }]
 
         invites.map((data) => {
-            var delayInMilliseconds = 1000;
-            var teamName = this.props.teamStore.getName(data.team_id)
+            this.props.teamStore.getName(data.team_id).then(response => {
+
+                if(!data.is_completed)
                 inviteName.invite.push({
                     "id": data.id,
-                    "name": 'test'
+                    "name": response
                 })
+                console.log("THIS IS THE RESPONSE: ")
+                console.log(response)
+                console.log(inviteName.invite)
+            })
+            console.log("test")
         })
         return (
             <div>
-                <ReactTable data={inviteName.invite} columns={columns} defaultPageSize={3}/>
+                {inviteName.invite.length > 0 ? <ReactTable data={inviteName.invite} columns={columns} defaultPageSize={3}/> : <h3>No Pending Invites!</h3>}
             </div>
         )
     }

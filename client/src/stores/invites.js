@@ -63,7 +63,7 @@ import RequestLayer from '../modules/requestLayer'
             this.requestlayer.sendInvite(teamName, userName).then((response) => {
                 this.isLoading = false;
                 this.makeDataStale()
-                return resolve()
+                return resolve(response)
             }).catch((err) => {
                 this.isLoading = false;
                 this.makeDataStale()
@@ -72,7 +72,21 @@ import RequestLayer from '../modules/requestLayer'
           })
       }
 
-      //TODO: Need logic to accept invite
+      @action async inviteAction(inviteId, accepted) {
+        return new Promise((resolve, reject) => {
+            this.inviteError = ''
+            this.isLoading = true;
+            this.requestlayer.inviteAction(inviteId, accepted).then((response) => {
+                this.isLoading = false;
+                this.makeDataStale()
+                return resolve(response)
+            }).catch((err) => {
+                this.isLoading = false;
+                this.makeDataStale();
+                this.inviteError = 'Failed to accept/reject invite!'
+            })
+        })
+      }
  }
 
  export default new InvitesStore()

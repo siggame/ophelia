@@ -132,19 +132,18 @@ export default class RequestLayer {
     // Get single team from the name
     async getTeamByName (teamName) {
       try {
-        return axios.get(`${process.env.REACT_APP_API_URL}/teams/${teamName}`);
+        axios.get(`${process.env.REACT_APP_API_URL}/teams/${teamName}`);
       } catch (err) {
         throw err;
       }
     }
 
     async getTeamName(teamId) {
-        axios.get(`${process.env.REACT_APP_API_URL}/teams/id/${teamId}`).then(response => {
-          console.log(response.data.team.name)
-          return response.data.team.name
-        }).catch(err => {
-          console.log(err)
-        })
+      try {
+        return axios.get(`${process.env.REACT_APP_API_URL}/teams/id/${teamId}`)
+      } catch (err) {
+        throw err;
+      }
     }
 
     // Get every team
@@ -227,17 +226,28 @@ export default class RequestLayer {
       }
     }
 
-    async sendInvite(teamName, userName) {
+    async sendInvite(teamName, userId) {
       const { authStore } = stores;
+      console.log(teamName)
+      console.log(userId)
       if(!authStore.isUserLoggedIn) {
         throw new Error('Must be logged in to do that!')
       }
-
-      try{
-        const inviteData = { 
-          teamName: teamName,
-      } 
+      try {
+        return axios.post(`${process.env.REACT_APP_API_URL}/invites/`, {
+          userId, teamName
+        })
       } catch(err) {
+        throw err;
+      }
+    }
+
+    async inviteAction(inviteId, accepted) {
+      try {
+        return axios.put(`${process.env.REACT_APP_API_URL}/invites/`, {
+          inviteId, accepted
+        })
+      } catch (err) {
         throw err;
       }
     }
