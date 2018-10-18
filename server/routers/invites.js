@@ -46,7 +46,7 @@ router.get(path + '/users/:userId', (req, res) => {
  * Invite user to a team
  * {
  *   teamName: String
- *   userId : 1
+ *   username : String
  * }
  */
 router.post(path + '/', (req, res) => {
@@ -54,14 +54,18 @@ router.post(path + '/', (req, res) => {
     success: false,
     message: ''
   }
-  const userId = req.body.userId
+  const username = req.body.username
   const teamName = req.body.teamName
-  invites.createInvite(teamName, userId).then(() => {
+  invites.createInvite(teamName, username).then(() => {
     response.success = true
     response.message = 'Successfully invited user to team'
     return res.status(200).json(response)
-  }).catch(() => {
-    return res.status(500)
+  }).catch((err) => {
+    if (err.message === invites.ALREADY_ON_A_TEAM) {
+      response.message = err.message
+      return res.status(400).json(response)
+    }
+    return res.status(500).json(response)
   })
 })
 
@@ -83,8 +87,12 @@ router.put(path + '/', (req, res) => {
     response.success = true
     response.message = 'Successfully ' + (accepted === true ? 'accepted invite' : 'declined invite')
     res.status(200).json(response)
-  }).catch(() => {
-    return res.status(500)
+  }).catch((err) => {
+    if (err.message === invites.ALREADY_ON_A_TEAM) {
+      response.message = err.message
+      return res.status(400).json(response)
+    }
+    return res.status(500).json(response)
   })
 })
 

@@ -20,6 +20,18 @@ function getUser (userId) {
   })
 }
 
+function getUserByName (username) {
+  return new Promise((resolve, reject) => {
+    knex('users').where({
+      name: username
+    }).then((res) => {
+      resolve(res[0])
+    }).catch((err) => {
+      reject(err)
+    })
+  })
+}
+
 function getUsersTeam (userId) {
   return new Promise((resolve, reject) => {
     knex('teams_users')
@@ -72,25 +84,6 @@ function getAllUsers () {
       'id', 'name', 'contact_email', 'contact_name', 'active', 'role'
     ).then((data) => {
       return resolve(data)
-    }).catch((err) => {
-      return reject(err)
-    })
-  })
-}
-
-function getUserByName (name) {
-  return new Promise((resolve, reject) => {
-    if (arguments.length !== getUserByName.length) {
-      return reject(new Error('All arguments required'))
-    }
-    knex('users').where({
-      name: name
-    }).then((user) => {
-      if (user.length > 1) {
-        reject(new Error('More than one user with same name'))
-      } else {
-        return resolve(user[0])
-      }
     }).catch((err) => {
       return reject(err)
     })
