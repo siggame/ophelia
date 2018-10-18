@@ -54,9 +54,9 @@ router.post(path + '/', (req, res) => {
     success: false,
     message: ''
   }
-  const userId = req.body.userId
+  const username = req.body.username
   const teamName = req.body.teamName
-  invites.createInvite(teamName, userId).then(() => {
+  invites.createInvite(teamName, username).then(() => {
     response.success = true
     response.message = 'Successfully invited user to team'
     return res.status(200).json(response)
