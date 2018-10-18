@@ -2,6 +2,7 @@
 
 const knex = require('./connect').knex
 const dbTeams = require('./teams')
+const dbUsers = require('./users')
 const ALREADY_ON_A_TEAM = 'User is already on a team.'
 
 /**
@@ -61,27 +62,30 @@ function getInvitesForUser (userId) {
  * @param userId user id that the invite is for
  * @returns {Promise}
  */
-function createInvite (teamName, userId) {
+function createInvite (teamName, username) {
   return new Promise((resolve, reject) => {
-    knex('teams_users').select().where('user_id', '=', userId).then((data) => {
-      if (data.length > 0) {
-        return reject(new Error(ALREADY_ON_A_TEAM))
-      }
-      dbTeams.getTeamByName(teamName).then((team) => {
-        knex('invites').insert({
-          team_id: team.id,
-          user_id: userId,
-          is_completed: false
-        }).then(() => {
-          return resolve()
+    dbUsers.getUserByName(username).then((user) => {
+      const userId = user.id
+      knex('teams_users').select().where('user_id', '=', userId).then((data) => {
+        if (data.length > 0) {
+          return reject(new Error(ALREADY_ON_A_TEAM))
+        }
+        dbTeams.getTeamByName(teamName).then((team) => {
+          knex('invites').insert({
+            team_id: team.id,
+            user_id: userId,
+            is_completed: false
+          }).then(() => {
+            return resolve()
+          }).catch((err) => {
+            return reject(err)
+          })
         }).catch((err) => {
           return reject(err)
         })
       }).catch((err) => {
         return reject(err)
       })
-    }).catch((err) => {
-      return reject(err)
     })
   })
 }
@@ -89,18 +93,22 @@ function createInvite (teamName, userId) {
 function updateInvite (inviteId, accepted) {
   return new Promise((resolve, reject) => {
     knex('invites').select().where('id', '=', inviteId).then((invite) => {
+      // using the invite id we get the user_id and team_id of the invite
       const userId = invite[0].user_id
       const teamId = invite[0].team_id
       knex('teams_users').select().where('user_id', '=', userId).then((data) => {
+        // check if the user is already on a team
         if (data.length > 0) {
           return reject(new Error(ALREADY_ON_A_TEAM))
         }
+        // if not we update the invite to be completed
         knex('invites').where({
           user_id: userId,
           team_id: teamId
         }).update({
           is_completed: true
         }).then(() => {
+          // if the invite was accepted then update the teams_users table with the new user on the team
           if (accepted) {
             knex('teams_users').insert({
               team_id: teamId,
@@ -124,9 +132,10 @@ function updateInvite (inviteId, accepted) {
 }
 
 module.exports = {
-  getInviteById: getInviteById,
-  getInvitesForTeam: getInvitesForTeam,
-  getInvitesForUser: getInvitesForUser,
-  createInvite: createInvite,
-  updateInvite: updateInvite
+  getInviteById,
+  getInvitesForTeam,
+  getInvitesForUser,
+  createInvite,
+  updateInvite,
+  ALREADY_ON_A_TEAM
 }
