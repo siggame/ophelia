@@ -19,7 +19,8 @@ export default class SendInvite extends React.Component {
             formErrors: {},
             formSubmitted: false,
             hasErrors: true,
-            loading: false
+            loading: false,
+            errorMessage: ''
         }
 
     this.handleChange = this.handleChange.bind(this);
@@ -38,9 +39,8 @@ export default class SendInvite extends React.Component {
     }
 
     handleSubmit(event) {
-        console.log("clicked!")
         this.setState({ loading: true })
-        this.props.invitesStore.sendInvite(this.props.authStore.user.teamName, this.state.userToInvite).then(() => {
+        validateInvite(this.props.authStore.user.teamName, this.state.userToInvite).then(() => {
             this.setState({
                 formSubmitted: true,
                 hasErrors: false,
@@ -50,35 +50,22 @@ export default class SendInvite extends React.Component {
             this.setState({
                 formSubmitted: true,
                 formErrors: err,
-                loading: false
+                loading: false,
+                errorMessage: err
             })
         })
         event.preventDefault();
     }
 
     render() {
-        let userError;
         let teamError;
         const username = this.state.inviteSent
 
         if(this.state.formSubmitted) {
             if(this.state.hasErrors) {
-                _.each(this.state.formErrors, (value, key) => {
-                    switch(key) {
-                        case 'user':
-                            userError = (
-                                <span style={{ color: 'red', marginLeft: 10 }}>{value[0]}</span>
-                            )
-                            break;
-                        case 'team': 
-                                teamError = (
-                                    <span style={{ color: 'red', marginLeft: 10 }}>{value[0]}</span>
-                                )
-                            break;
-                        default: 
-                            break;
-                    }
-                })
+                teamError = (
+                    <span style={{ color: 'red', marginLeft: 10 }}>{this.state.errorMessage}</span>
+                )
             } else {
                 return (
                     <div className='col-md-6'>
@@ -100,7 +87,6 @@ export default class SendInvite extends React.Component {
             <div className='col-md-6'>
                 <h3>Invite User To Your Team</h3>
                 <form>
-                    {userError}
                     {teamError}
                     <div className='form-group'>
                         <label htmlFor='username'>User Name</label>

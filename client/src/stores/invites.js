@@ -56,22 +56,6 @@ import RequestLayer from '../modules/requestLayer'
           this.isStale = true
       }
 
-      @action sendInvite(teamName, userName) {
-          return new Promise((resolve, reject) => {
-            this.inviteError = ''
-            this.isLoading = true;
-            this.requestlayer.sendInvite(teamName, userName).then((response) => {
-                this.isLoading = false;
-                this.makeDataStale()
-                return resolve(response)
-            }).catch((err) => {
-                this.isLoading = false;
-                this.makeDataStale()
-                this.inviteError = 'Failed to send invite!'
-            })
-          })
-      }
-
       @action async inviteAction(inviteId, accepted) {
         return new Promise((resolve, reject) => {
             this.inviteError = ''

@@ -43,16 +43,23 @@ export class TeamStore {
   }
 
   @action async getName(teamId) {
-    try {
-      const response = await this.requestLayer.getTeamName(teamId);
-      runInAction(() => {
-        var item = response.data.team.name
-        console.log(item)
-        return response.data.team;
+    return new Promise((resolve, reject) => {
+      this.requestLayer.getTeamName(teamId).then((response) => {
+        return resolve(response.data.team.name)
+      }).catch((err) => {
+        return err
       })
-    } catch(err) {
-      console.log(err)
-    }
+    })
+    // try {
+    //   const response = await this.requestLayer.getTeamName(teamId);
+    //   runInAction(() => {
+    //     var item = response.data.team.name
+    //     console.log(item)
+    //     return item
+    //   })
+    // } catch(err) {
+    //   console.log(err)
+    // }
   }
 
   @action async getAllTeams() {

@@ -3,12 +3,16 @@ import React from 'react'
 import ReactTable from "react-table";
 import axios from 'axios';
 
-@inject('teamStore')
 @inject('invitesStore')
-export class InvitesList extends React.Component {
+@inject('teamStore')
+@inject('authStore')
+@observer
+export default class Invites extends React.Component {
     constructor(props) {
-        super(props);
-
+        super(props)
+        this.state = {
+            invites: ''
+        }
         this.handleInviteAction = this.handleInviteAction.bind(this);
     }
 
@@ -16,11 +20,32 @@ export class InvitesList extends React.Component {
         this.props.invitesStore.inviteAction(id, status)
     }
 
-    render() {
-        let invites = this.props.invites; 
+    componentDidMount() {
         var inviteName = {
             invite: []
         }
+        axios.get(`${process.env.REACT_APP_API_URL}/invites/users/${this.props.authStore.userId}`).then((response) => {
+            console.log(response.data.invites)
+            response.data.invites.map((data) => {
+                this.props.teamStore.getName(data.team_id).then(response => {
+                    console.log(response)
+                    console.log("IN HERE")
+                    if(!data.is_completed)
+                    inviteName.invite.push({
+                        "id": data.id,
+                        "name": response
+                    })
+                    console.log(inviteName.invite)
+                    this.setState({
+                        invites: inviteName.invite
+                    })
+                    console.log(this.state.invites)
+                })
+            })
+        })
+    }
+
+    render() {
         let columns = [{
             Header: "Team Name",
             accessor: 'name'
@@ -32,55 +57,11 @@ export class InvitesList extends React.Component {
                 <button className="decline" onClick={() => this.handleInviteAction(props.value, false)}>Decline</button>
             </div>
         }]
-
-        invites.map((data) => {
-            this.props.teamStore.getName(data.team_id).then(response => {
-
-                if(!data.is_completed)
-                inviteName.invite.push({
-                    "id": data.id,
-                    "name": response
-                })
-                console.log("THIS IS THE RESPONSE: ")
-                console.log(response)
-                console.log(inviteName.invite)
-            })
-            console.log("test")
-        })
-        return (
-            <div>
-                {inviteName.invite.length > 0 ? <ReactTable data={inviteName.invite} columns={columns} defaultPageSize={3}/> : <h3>No Pending Invites!</h3>}
-            </div>
-        )
-    }
-}
-
-@inject('invitesStore')
-@inject('teamStore')
-@observer
-export default class Invites extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            invites: []
-        }
-        // this.handleInviteAccept.bind(this);
-    }
-
-    componentDidMount() {
-        this.props.invitesStore.loadInvites();
-        console.log(this.props.invitesStore.data)
-    }
-
-    // handleInviteAccept(id) {
-    //     this.props.invitesStore.
-    // }
-
-    render() {
         return(
                 <div className='row'>
+                    {console.log(this.state.invites)}
                     <h2 style={{ fontWeight:'bold' }}>Invites</h2>
-                    <InvitesList invites={this.props.invitesStore.invites} teams={this.props.teamStore.teamSortId}/>
+                    {this.state.invites ? <ReactTable data={this.state.invites} columns={columns} defaultPageSize={3}/> : <h3>No invites found!</h3> }
                 </div>
         )
     }

@@ -1,5 +1,4 @@
 import axios from 'axios'
-
 import stores from '../stores'
 import { history } from '../index'
 
@@ -138,12 +137,19 @@ export default class RequestLayer {
       }
     }
 
-    async getTeamName(teamId) {
-      try {
-        return axios.get(`${process.env.REACT_APP_API_URL}/teams/id/${teamId}`)
-      } catch (err) {
-        throw err;
-      }
+    getTeamName(teamId) {
+      return new Promise((resolve, reject) => {
+        axios.get(`${process.env.REACT_APP_API_URL}/teams/id/${teamId}`).then((result) => {
+          return resolve(result)
+        }).catch((err) => {
+          return reject(err)
+        })
+      })
+      // try {
+      //   return axios.get(`${process.env.REACT_APP_API_URL}/teams/id/${teamId}`)
+      // } catch (err) {
+      //   throw err;
+      // }
     }
 
     // Get every team
@@ -222,22 +228,6 @@ export default class RequestLayer {
         console.log(stores.authStore.userId);
         return axios.get(`${process.env.REACT_APP_API_URL}/invites/users/${stores.authStore.userId}`)
       } catch (err) {
-        throw err;
-      }
-    }
-
-    async sendInvite(teamName, userId) {
-      const { authStore } = stores;
-      console.log(teamName)
-      console.log(userId)
-      if(!authStore.isUserLoggedIn) {
-        throw new Error('Must be logged in to do that!')
-      }
-      try {
-        return axios.post(`${process.env.REACT_APP_API_URL}/invites/`, {
-          userId, teamName
-        })
-      } catch(err) {
         throw err;
       }
     }
