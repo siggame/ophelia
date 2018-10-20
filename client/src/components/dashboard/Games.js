@@ -35,7 +35,6 @@ export class GamesList extends React.Component {
 @inject('gameStore')
 @inject('authStore')
 //Team store is temp
-@inject('teamStore')
 @inject('submissionStore')
 @observer
 export default class Games extends React.Component {

@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "start": "node ./server/bin/www",
-    "debug": "concurrently \"yarn run server-debug\" \"cd client && yarn start\" \"yarn run selenium\"",
+    "debug": "concurrently \"yarn run server-debug\" \"cd client && yarn start\"",
     "test": "./node_modules/.bin/nightwatch",
     "server-debug": "cd server && nodemon ./bin/www",
-    "setup": "yarn install && yarn run setup:client  && yarn run setup:server && yarn run selenium_install",
+    "setup": "yarn install && yarn run setup:client  && yarn run setup:server",
     "setup:client": "cd client && yarn install && cd ..",
     "setup:server": "cd server && yarn install && cd ..",
     "clean": "yarn run clean:client && yarn run clean:server && yarn run clean:misc",
