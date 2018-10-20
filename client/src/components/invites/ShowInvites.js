@@ -25,21 +25,16 @@ export default class Invites extends React.Component {
             invite: []
         }
         axios.get(`${process.env.REACT_APP_API_URL}/invites/users/${this.props.authStore.userId}`).then((response) => {
-            console.log(response.data.invites)
             response.data.invites.map((data) => {
                 this.props.teamStore.getName(data.team_id).then(response => {
-                    console.log(response)
-                    console.log("IN HERE")
                     if(!data.is_completed)
                     inviteName.invite.push({
                         "id": data.id,
                         "name": response
                     })
-                    console.log(inviteName.invite)
                     this.setState({
                         invites: inviteName.invite
                     })
-                    console.log(this.state.invites)
                 })
             })
         })
@@ -59,7 +54,6 @@ export default class Invites extends React.Component {
         }]
         return(
                 <div className='row'>
-                    {console.log(this.state.invites)}
                     <h2 style={{ fontWeight:'bold' }}>Invites</h2>
                     {this.state.invites ? <ReactTable data={this.state.invites} columns={columns} defaultPageSize={3}/> : <h3>No invites found!</h3> }
                 </div>
