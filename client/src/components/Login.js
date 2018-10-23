@@ -76,7 +76,7 @@ export default class Login extends React.Component {
           <h3>Log In</h3>
           <form>
             <div className='form-group'>
-              <label htmlFor='username'>Team Name</label>
+              <label htmlFor='username'>User Name</label>
               {formError}
               <input type='text' className='form-control' name='username' placeholder='Team Name' value={this.state.username} onChange={this.handleChange} />
             </div>

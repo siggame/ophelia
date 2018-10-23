@@ -10,6 +10,7 @@ import RegisterContainer from './containers/RegisterContainer'
 import LoginContainer from './containers/LoginContainer'
 import LogoutContainer from './containers/LogoutContainer'
 import TeamCreation from './components/teams/TeamCreation'
+import TeamsContainer from './containers/TeamsContainer'
 import './styles/main.scss';
 @withRouter
 @inject('authStore')
@@ -35,6 +36,7 @@ export default class App extends React.Component {
             <Route exact path='/login' component={LoginContainer} />
             <Route exact path='/logout' component={LogoutContainer} />
             <Route exact path='/create-team' component={TeamCreation} />
+            <Route exact path='/teams' component={TeamsContainer} />
           </Switch>
         </main>
 

@@ -1,5 +1,4 @@
 import axios from 'axios'
-
 import stores from '../stores'
 import { history } from '../index'
 
@@ -132,10 +131,25 @@ export default class RequestLayer {
     // Get single team from the name
     async getTeamByName (teamName) {
       try {
-        return axios.get(`${process.env.REACT_APP_API_URL}/teams/${teamName}`);
+        axios.get(`${process.env.REACT_APP_API_URL}/teams/${teamName}`);
       } catch (err) {
         throw err;
       }
+    }
+
+    getTeamName(teamId) {
+      return new Promise((resolve, reject) => {
+        axios.get(`${process.env.REACT_APP_API_URL}/teams/id/${teamId}`).then((result) => {
+          return resolve(result)
+        }).catch((err) => {
+          return reject(err)
+        })
+      })
+      // try {
+      //   return axios.get(`${process.env.REACT_APP_API_URL}/teams/id/${teamId}`)
+      // } catch (err) {
+      //   throw err;
+      // }
     }
 
     // Get every team
@@ -176,7 +190,7 @@ export default class RequestLayer {
     // Get the current team a user is on
     // Ask about getting an endpoint to see if user is on team. 
     // If they are return team info else return null or something
-    async getCurretTeam () {
+    async getCurrentTeam () {
       try {
         return axios.get(`${process.env.REACT_APP_API_URL}/teams/members/${stores.authStore.userId}`);
       } catch (err) {
@@ -201,4 +215,31 @@ export default class RequestLayer {
         throw err;
       }
     }
+
+
+    // Section for Invites
+
+    async fetchInvites() {
+      const { authStore } = stores;
+      if(!authStore.isUserLoggedIn) {
+        throw new Error('Must be logged in to do that!')
+      }
+      try {
+        console.log(stores.authStore.userId);
+        return axios.get(`${process.env.REACT_APP_API_URL}/invites/users/${stores.authStore.userId}`)
+      } catch (err) {
+        throw err;
+      }
+    }
+
+    async inviteAction(inviteId, accepted) {
+      try {
+        return axios.put(`${process.env.REACT_APP_API_URL}/invites/`, {
+          inviteId, accepted
+        })
+      } catch (err) {
+        throw err;
+      }
+    }
+
 }
