@@ -67,9 +67,11 @@ function createInvite (teamName, username) {
     dbUsers.getUserByName(username).then((user) => {
       const userId = user.id
       knex('teams_users').select().where('user_id', '=', userId).then((data) => {
+        // check if user is on a team
         if (data.length > 0) {
           return reject(new Error(ALREADY_ON_A_TEAM))
         }
+        // if not make an invite
         dbTeams.getTeamByName(teamName).then((team) => {
           knex('invites').insert({
             team_id: team.id,
@@ -99,7 +101,15 @@ function updateInvite (inviteId, accepted) {
       knex('teams_users').select().where('user_id', '=', userId).then((data) => {
         // check if the user is already on a team
         if (data.length > 0) {
-          return reject(new Error(ALREADY_ON_A_TEAM))
+          // set the status of the invite to completed
+          knex('invites').where({
+            user_id: userId,
+            team_id: teamId
+          }).update({
+            is_completed: true
+          }).then(() => {
+            return reject(new Error(ALREADY_ON_A_TEAM))
+          })
         }
         // if not we update the invite to be completed
         knex('invites').where({
