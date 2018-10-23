@@ -20,7 +20,6 @@ export function validateInvite(teamName, username) {
 
         let errors = validate(formData, constraints);
         if(errors) {
-            console.log(errors)
             if(errors.teamName){
                 return reject("You must be on a team to invite someone!")
             }
@@ -32,7 +31,7 @@ export function validateInvite(teamName, username) {
                 return resolve(data)
             }).catch((err) => {
                 let errorMessage = err.response.data.message
-                return errorMessage;
+                return reject(errorMessage);
             })
         }
     })
