@@ -17,16 +17,12 @@ export default class NavBar extends React.Component {
       rightSection = (
         <ul className='nav navbar-nav navbar-right'>
           <li><Link to='/logout'>Log Out</Link></li>
-          <li><Link className='login-button' to='/dashboard'>Dashboard</Link></li>
-          <li><Link to={`/profile/${this.props.authStore.username}`}>Profile</Link></li>
-          <li><Link to='/teams'>Teams</Link></li>
-          <li><Link to='/create-team'>Create Team</Link></li>
         </ul>
       )
     }
 
     return (
-      <nav className='navbar navbar-default navbar-fixed-top'>
+      <nav className='navbar navbar-default mainnavbar'>
         <div className='container'>
           <div className='navbar-header'>
             <button type='button' className='navbar-toggle collapsed' data-toggle='collapse' data-target='#navbar' aria-expanded='false' aria-controls='navbar'>
