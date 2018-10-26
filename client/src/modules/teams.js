@@ -1,7 +1,5 @@
 import axios from 'axios'
 import validate from 'validate.js'
-import { resolve } from 'url';
-import { inject, observer } from 'mobx-react'
 
 export function validateTeamCreation(teamname, id) {
     return new Promise((resolve, reject) => {

@@ -85,7 +85,7 @@ export default class TeamCreation extends Component {
                 </form>
                 </div>
                 <LoadingOverlay>
-                    <div className="col-md-6"><ShowTeams /></div>
+                    <div className="col-md-6 col-md-offset-3"><ShowTeams /></div>
                     <Loader loading={this.props.teamStore.isLoading} />
                 </LoadingOverlay>
             </div>
