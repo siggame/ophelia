@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { inject } from 'mobx-react';
-import { Loader } from 'react-overlay-loader';
 import { Redirect } from 'react-router-dom';
 import { validateTeamCreation } from '../../modules/teams';
+import { LoadingOverlay, Loader } from 'react-overlay-loader'
+import ShowTeams from './ShowTeams';
 
 import 'react-overlay-loader/styles.css';
 
 @inject('authStore')
+@inject('teamStore')
 export default class TeamCreation extends Component {
     constructor(props) {
         super(props)
@@ -72,9 +74,9 @@ export default class TeamCreation extends Component {
         return(
             <div>
                 <div className='col-md-4 col-md-offset-4'>
-                <h3>Create Team</h3>
-                <form>
-                    {formError}
+                    <h3>Create Team</h3>
+                    <form>
+                        {formError}
                     <div className="form-group">
                         <label htmlFor="teamname">Team Name</label>
                         <input type="text" className="form-control" name="teamname" placeholder="Team Name" value={this.state.teamname} onChange={this.handleChange} />
@@ -82,7 +84,10 @@ export default class TeamCreation extends Component {
                     <button type='submit' onClick={this.handleSubmit} className='btn btn-default btn-block btn-lg' style={{marginTop: 32}}>Create Team</button>
                 </form>
                 </div>
-                
+                <LoadingOverlay>
+                    <div className="col-md-6"><ShowTeams /></div>
+                    <Loader loading={this.props.teamStore.isLoading} />
+                </LoadingOverlay>
             </div>
         )
     }

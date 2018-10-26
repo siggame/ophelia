@@ -13,7 +13,7 @@ export default class SecondNavBar extends React.Component {
         <ul className='nav navbar-nav'>
           <li><Link className='login-button' to='/dashboard'>Dashboard</Link></li>
           <li><Link to={`/profile/${this.props.authStore.username}`}>Profile</Link></li>
-          <li><Link to='/teams'>Teams</Link></li>
+          <li><Link to='/teams'>Invites</Link></li>
           <li><Link to='/create-team'>Create Team</Link></li>
         </ul>
       )
