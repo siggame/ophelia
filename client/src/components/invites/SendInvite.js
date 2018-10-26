@@ -66,7 +66,7 @@ export default class SendInvite extends React.Component {
                 )
             } else {
                 return (
-                    <div className='col-md-6'>
+                    <div>
                     <h3>Invite User To Your Team</h3>
                     <form>
                         <h4>Invite to {username} sent!</h4>

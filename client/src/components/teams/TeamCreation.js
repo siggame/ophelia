@@ -43,6 +43,7 @@ export default class TeamCreation extends Component {
                 hasErrors: false
             })
         }).catch((err) => {
+            console.log(err)
             this.setState({
                 formSubmitted: true,
                 formError: err,
@@ -85,7 +86,7 @@ export default class TeamCreation extends Component {
                 </form>
                 </div>
                 <LoadingOverlay>
-                    <div className="col-md-6 col-md-offset-3"><ShowTeams /></div>
+                    <div className="col-md-8 col-md-offset-2"><ShowTeams /></div>
                     <Loader loading={this.props.teamStore.isLoading} />
                 </LoadingOverlay>
             </div>
