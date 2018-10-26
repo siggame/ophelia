@@ -26,8 +26,12 @@ export function validateTeamCreation(teamname, id) {
                 if(typeof err.response.data.message === 'undefined') {
                     var regex = /(<pre>Error:).+?(?=<br>)/
                     var message = err.response.data
-                    var found = message.match(regex)
-                    errorMessage = found[0]
+                    try {
+                        var found = message.match(regex)
+                        errorMessage = found[0]
+                    } catch(err) {
+                        console.log(err, "\nDefaulting to something went wrong message!")
+                    }
                 }
                 if(errorMessage === 'Team name is already in use.') {
                     return reject({

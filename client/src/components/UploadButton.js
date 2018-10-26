@@ -43,7 +43,7 @@ export default class UploadButton extends React.Component {
             accept: '.zip,.tar,.tar.gz'
           }}
         >
-          <div style={this.props.style} className='btn btn-primary'>
+          <div style={this.props.style} className='btn btn-primary custom-upload-button'>
             Upload AI
           </div>
         </UploadField>
