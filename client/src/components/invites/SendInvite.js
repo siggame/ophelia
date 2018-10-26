@@ -44,7 +44,7 @@ export default class SendInvite extends React.Component {
             this.setState({
                 formSubmitted: true,
                 hasErrors: false,
-                inviteSent: this.state.userToInvite
+                inviteSent: this.state.userToInvite,
             })
         }).catch((err) => {
             this.setState({
