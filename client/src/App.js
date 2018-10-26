@@ -3,6 +3,7 @@ import React from 'react'
 import { Route, Switch, withRouter } from 'react-router-dom'
 
 import NavBar from './components/NavBar'
+import SecondNavBar from './components/secondaryNavbar'
 import LandingPageContainer from './containers/LandingPageContainer'
 import DashboardContainer from './containers/DashboardContainer'
 import ProfileContainer from './containers/ProfileContainer'
@@ -27,6 +28,7 @@ export default class App extends React.Component {
     return (
       <div>
         <NavBar />
+        <SecondNavBar />
         <main className='container-fluid'>
           <Switch>
             <Route exact path='/' component={LandingPageContainer} />

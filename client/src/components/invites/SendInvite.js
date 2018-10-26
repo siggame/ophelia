@@ -1,12 +1,10 @@
 import React from 'react'
 import { Loader } from 'react-overlay-loader'
-import _ from 'lodash'
-import { inject, observer } from 'mobx-react'
+import { inject} from 'mobx-react'
 import { validateInvite } from '../../modules/invites'
 
 
 import 'react-overlay-loader/styles.css'
-import Redirect from 'react-router/Redirect';
 
 @inject('authStore')
 @inject('invitesStore')
@@ -68,7 +66,7 @@ export default class SendInvite extends React.Component {
                 )
             } else {
                 return (
-                    <div className='col-md-6'>
+                    <div>
                     <h3>Invite User To Your Team</h3>
                     <form>
                         <h4>Invite to {username} sent!</h4>
@@ -84,7 +82,7 @@ export default class SendInvite extends React.Component {
         }
 
         return (
-            <div className='col-md-6'>
+            <div>
                 <h3>Invite User To Your Team</h3>
                 <form>
                     {teamError}

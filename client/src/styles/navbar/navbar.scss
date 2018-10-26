@@ -1,0 +1,39 @@
+.mainnavbar {
+    background-color: $black;
+    margin-bottom: 0;
+    border: none;
+    .navbar-brand {
+        color: $lightgreen;
+    }
+    .nav {
+        li {
+            a {
+                color: $lightgreen;
+                &:focus, &:hover {
+                    background-color: $darkgreen;
+                }
+            }
+        }
+    }
+}
+
+.second-navbar {
+    background-color: $lightgreen;
+    border: none;
+    .container {
+        display: flex;
+        justify-content: center;
+        // Need to get VERY specific to change color for some reason
+        ul {
+            li {
+                a {
+                    color: $black; 
+                    &:focus, &:hover {
+                        background-color: $darkgreen;
+                    }
+                }
+            }
+        }
+    }
+
+}
