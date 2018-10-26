@@ -7,7 +7,11 @@ const validator = require('validator')
 const arenaSubmissionHost = require('../vars').ARENA_HOST
 const submissionsEndpoint = require('../vars').SUBMISSIONS_ENDPOINT
 const languages = require('../vars').LANGUAGES
-const request = require('request')
+const dbUsers = require('../db/init').users
+
+// TCP Sockets
+const net = require('net')
+
 // Acceptable mimetypes: application/zip application/octet-stream application/zip-compressed
 // application/x-zip-compressed multipart/x-zip
 const fileMimeTypeRegex = /(application\/(x-)?(zip|gzip|tar))/
@@ -78,7 +82,6 @@ router.post(path + '/', (req, res, next) => {
   const file = req.files.file
   // These are various components of the file we need
   const fileData = file.data
-  const filename = file.name
   const mimeType = file.mimetype
   const truncated = file.truncated
 
@@ -86,7 +89,7 @@ router.post(path + '/', (req, res, next) => {
   const lang = req.query.lang
 
   // This is the db ID of the user, stored in their JWT
-  const userID = req.user.id
+  const userId = req.user.id
   if (truncated) {
     // Check to make sure that the file size isn't too large
     response.message = 'File size is too large'
@@ -97,25 +100,18 @@ router.post(path + '/', (req, res, next) => {
     return res.status(415).json(response)
   } else {
     // send file to arena submission end point here
-    const options = {
-      url: arenaSubmissionHost + submissionsEndpoint + '/' + lang + '/' + userID,
-      method: 'POST'
-    }
-    const arenaRequest = request(options, function (err, arenaRes) {
-      if (err) {
-        return next(new Error('Error sending submission to arena: ' + arenaRes))
-      } else if (arenaRes.statusCode >= 400) {
-        return next(new Error('Error sending submission to arena: ' + arenaRes))
-      } else {
-        response.message = 'File successfully uploaded'
-        response.success = true
-        return res.status(200).json(response)
-      }
-    })
-    const form = arenaRequest.form()
-    form.append('submission', fileData, {
-      filename: filename,
-      contentType: mimeType
+    dbUsers.getUsersTeam(userId).then((teamName) => {
+      submissions.getSubmissionVersion(teamName).then((version) => {
+        // submitting the next version
+        const nextVersion = version + 1
+        const newFileName = teamName + '_' + nextVersion + '_' + lang
+        sendZipFile(fileData, newFileName)
+        submissions.submitSubmission(teamName, nextVersion).then(() => {
+          response.success = true
+          response.message = 'Successfully submitted code'
+          return res.status(200).json(response)
+        })
+      })
     })
   }
 })
@@ -140,5 +136,69 @@ router.get(path + '/:submissionID', (req, res, next) => {
     return next(err)
   })
 })
+
+router.put(path + '/', (req, res, next) => {
+  const response = {
+    success: false,
+    message: ''
+  }
+  const teamName = req.body.teamName
+  const status = req.body.status
+  submissions.updateSubmission(teamName, status).then(() => {
+    response.success = true
+    response.message = 'Successfully updated status'
+    return res.status(200).json(response)
+  }).catch((err) => {
+    next(err)
+  })
+})
+
+function sendZipFile (zipBytes, fileName) { // Function definition
+  const ARENA_HOST_IP = '192.168.0.13' // I will give you this the day of the competition
+  const ARENA_HOST_PORT = 21 // This should stay the same
+  const WEB_SERVER_ZIP_FILE_IP = '127.0.0.1' // This will not normally be the same as ARENA_HOST_IP - it will be where the web server is sending the zip file from. Your IP.
+  const WEB_SERVER_ZIP_FILE_PORT = 300 // Can be anything but I have mine set to 300 right now.
+
+  const server = net.createServer() // You are creating a server on port 300 to send me the zip file.
+
+  server.on('connection', function (sock) {
+    // When I connect just send me the file and then immediately destory the connection.
+    console.log('Server listening on ' + server.address().address + ':' + server.address().port)
+    console.log('CONNECTED: ' + sock.remoteAddress + ':' + sock.remotePort)
+    // other stuff is the same from here
+    sock.write(zipBytes)
+    sock.destroy()
+  })
+
+  const client = new net.Socket()
+  client.connect(ARENA_HOST_PORT, ARENA_HOST_IP, async function () { // Connect to Arena
+    console.log('CONNECTED TO: ' + ARENA_HOST_IP + ':' + ARENA_HOST_PORT)
+  })
+  // Add a 'data' event handler for the client socket
+  // data is what the server sent to this socket
+  client.on('data', function (data) { // When I send you data write it to the console and send me an appropriate response.
+    console.log('DATA: ' + data)
+    if (data.includes('Service Ready')) {
+      client.write('USER Guest\n') // Username
+    } else if (data.includes('need password')) {
+      client.write('PASS \n') // Password is nothing right now
+    } else if (data.includes('logged in')) {
+      client.write('EPRT |1|127.0.0.1|300|\n') // Tells me how you will send file.
+      server.listen(WEB_SERVER_ZIP_FILE_PORT, WEB_SERVER_ZIP_FILE_IP) // Start listening for me to connect.
+    } else if (data.includes('Connection Established')) {
+      client.write('TYPE I\n') // Tell me its a stream of bytes
+    } else if (data.includes('Type set')) {
+      client.write('STOR ' + fileName + '\n') // Tell me the file name.
+    } else if (data.includes('Closing data')) { // When this is sent I have successfully received file.
+      server.close() // Close connection.
+      client.write('QUIT 221')
+      client.destroy() // Close the client socket completely
+    }
+  })
+  // Add a 'close' event handler for the client socket
+  client.on('close', function () {
+    console.log('Connection closed')
+  })
+}
 
 module.exports = {router}

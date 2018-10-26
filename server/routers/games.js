@@ -81,7 +81,7 @@ router.get(path + '/', (req, res, next) => {
     }
   }
   // This is the signed in user, retrieved from the jwt
-  const userId = req.user.userId
+  const userId = req.user.id
   // The specific page requested
   const page = req.query.page
   // How many games should be in each page

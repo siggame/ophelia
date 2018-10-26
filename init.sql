@@ -44,7 +44,7 @@ comment on column "teams_users"."team_id" is 'The team that the user is on';
 
 create table "submissions" (
     "id" serial primary key,
-    "team_id" integer,
+    "team_id" integer not null,
     "version" integer not null,
     "status" text check ("status" in ('queued', 'building', 'finished', 'failed')) not null,
     "submission_url" varchar(255),
