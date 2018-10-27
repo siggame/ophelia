@@ -4,9 +4,7 @@ const express = require('express')
 const router = express.Router()
 const users = require('../db/init').users
 const encrypt = require('../session/auth').encrypt
-const login = require('../session/login').login
 const sanitizer = require('../utils/sanitizer')
-const ELIGIBLE_DEFAULT = require('../vars').ELIGIBLE_DEFAULT
 
 const path = '/users'
 
@@ -136,7 +134,7 @@ router.get(path + '/:userId', (req, res, next) => {
   const response = {
     success: false,
     message: '',
-    user: null,
+    user: null
   }
   const userId = req.params.userId
   users.getUsersTeam(userId).then((data) => {
