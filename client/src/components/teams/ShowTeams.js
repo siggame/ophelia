@@ -18,6 +18,7 @@ export class TeamsList extends React.Component {
             teamName.team.push({
                 "name" : data
             })
+            return teamName.team
         })
         return (
             <ReactTable data={teamName.team} columns={columns} defaultPageSize={10} />
@@ -37,7 +38,7 @@ export default class Teams extends React.Component {
     render() {
       return(
         <div className='row'>
-            <h2 style={{ fontWeight:'bold' }}>Teams</h2>
+            <h2 style={{ fontWeight:'bold', textAlign: "center" }}>Teams</h2>
             <TeamsList teams={this.props.teamStore.teams} />
         </div>
       )

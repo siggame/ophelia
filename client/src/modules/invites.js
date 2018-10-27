@@ -1,7 +1,5 @@
 import axios from 'axios'
 import validate from 'validate.js'
-import { rejects } from 'assert';
-import { constants } from 'zlib';
 
 export function validateInvite(teamName, username) {
     return new Promise((resolve, reject) => {

@@ -56,9 +56,9 @@ export default class Games extends React.Component {
 
   componentWillMount () {
     // Grab a list of all users that aren't this one.
-    axios.get(process.env.REACT_APP_API_URL + '/users').then((result) => {
+    axios.get(process.env.REACT_APP_API_URL + '/teams').then((result) => {
       this.setState({
-        users: result.data.users
+        users: result.data.names
       })
     }).catch((err) => {
       console.log('Errored while trying to get users - ', err.message)

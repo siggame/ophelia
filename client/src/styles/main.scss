@@ -1,14 +1,19 @@
+// Add all style imports here
+@import "./variables/colors";
+@import "./navbar/navbar.scss";
+@import "./invites/invites.scss";
+@import "./mixins//global";
+@import "./dashboard/dashboard.scss";
+
+// End of style imports
+
+
 body {
-    padding-top: 10vh;
     height: auto;
 }
 
 h1 {
     padding-bottom: 4vh;
-}
-
-.login-button {
-    background-color: #3c763d;
 }
 
 .jumbotron {

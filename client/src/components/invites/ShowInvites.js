@@ -20,9 +20,7 @@ export default class Invites extends React.Component {
         let array = [...this.state.invites];
         let index;
         this.props.invitesStore.inviteAction(id, status)
-        console.log(this.state.invites)
-        index = this.state.invites.findIndex(x => x.id == id)
-        console.log(index);
+        index = this.state.invites.findIndex(x => x.id === id)
         array.splice(index, 1);
         this.setState({
             invites: array
@@ -45,8 +43,11 @@ export default class Invites extends React.Component {
                     this.setState({
                         invites: inviteName.invite
                     })
+                    return inviteName.invite
                 })
+                return null;
             })
+            return null;
         })
     }
 
@@ -64,7 +65,7 @@ export default class Invites extends React.Component {
         }]
         return(
                 <div className='row'>
-                    <h2 style={{ fontWeight:'bold' }}>Invites</h2>
+                    <h2 style={{ fontWeight:'bold', textAlign: "center" }}>Pending Invites</h2>
                     {this.state.invites.length ? <ReactTable data={this.state.invites} columns={columns} defaultPageSize={3}/> : <h3>No invites found!</h3> }
                 </div>
         )

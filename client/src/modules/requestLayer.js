@@ -201,7 +201,6 @@ export default class RequestLayer {
     // Update Team
     // TODO:
     async updateTeam(name, teamCaptainId) {
-      const { teamStore } = stores;
       const { authStore } = stores;
       if (!authStore.isUserLoggedIn) {
         throw new Error('Must be logged in to do that!');
