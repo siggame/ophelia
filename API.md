@@ -105,11 +105,18 @@ Record a game in the database. Winner id is the id of the submission that won.
 
 Request Body Format:
 ```
-{
-    status: String in ['queued', 'playing', 'finished', 'failed']
-    winReason: String,
-    loseReason: String,
-    winnerId: Int,
-    logUrl: String
-}
+ {
+   status: String in ['queued', 'playing', 'finished', 'failed'],
+   winReason: String,
+   loseReason: String,
+   logUrl: String,
+   winner: {
+     teamName: String,
+     version: Num
+   },
+   loser: {
+     teamName String,
+     version: Num
+   }
+ }
 ```

@@ -136,21 +136,40 @@ router.get(path + '/:gameID', (req, res, next) => {
   })
 })
 
+/**
+ * {
+ *   status: String in ['queued', 'playing', 'finished', 'failed'],
+ *   winReason: String,
+ *   loseReason: String,
+ *   logUrl: String,
+ *   winner: {
+ *     teamName: String,
+ *     version: Num
+ *   },
+ *   loser: {
+ *     teamName String,
+ *     version: Num
+ *   }
+ * }
+ */
 router.post(path + '/', (req, res, next) => {
   const response = {
     success: false,
     message: ''
   }
+  const winner = req.body.winner
+  const loser = req.body.loser
   const status = req.body.status
-  const winReason = req.body.winReason
-  const loseReason = req.body.loseReason
-  const winnerId = req.body.winnerId
-  const logUrl = req.body.logUrl
+  const optional = {
+    winReason: req.body.winReason,
+    loseReason: req.body.loseReason,
+    logUrl: req.body.logUrl
+  }
   const statuses = ['queued', 'playing', 'finished', 'failed']
   if (statuses.indexOf(status) === -1) {
     return res.status(400)
   }
-  dbGames.insertGame(status, winReason, loseReason, winnerId, logUrl).then(() => {
+  dbGames.insertGame(winner, loser, status, optional).then(() => {
     response.success = true
     response.message = 'Game recorded'
     return res.status(200).json(response)

@@ -3,6 +3,7 @@
 const knex = require('./connect').knex
 const host = require('../vars').SERVER_HOST
 const logEndpoint = require('../vars').LOG_ENDPOINT
+const dbTeams = require('./teams')
 /**
  * Queries for all relevant games for a specified team name. Only retrieves
  * games for the highest submission version
@@ -145,7 +146,6 @@ function countGamesByTeamName (teamName, options) {
         this.on('teams.id', '=', 'submissions.team_id')
         // Checks the 'options' parameter for the result field
         if (typeof options.result !== 'undefined') {
-          console.log(options)
           // If it is win then we need to check if the submission id is equal to
           // the winner id on the game
           if (options.result === 'win') {
@@ -219,16 +219,59 @@ function sortGames (gameA, gameB) {
   return 0
 }
 
-function insertGame (status, winReason, loseReason, winnerId, logUrl) {
+function insertGame (winner, loser, status, optional) {
   return new Promise((resolve, reject) => {
-    knex('games').insert({
-      status: status,
-      win_reason: winReason,
-      lose_reason: loseReason,
-      winner_id: winnerId,
-      log_url: logUrl
-    }).then(() => {
-      return resolve(null)
+    // insert the game into the database as a row
+    // For games_submissions table we need the id of the submission of the team
+    // and the id of the game
+    // These next queries are to get the id of the submission the team is using in the game
+    // First we get the team using their name
+    dbTeams.getTeamByName(winner.teamName).then((winningTeam) => {
+      dbTeams.getTeamByName(loser.teamName).then((losingTeam) => {
+        // get the submission used for this game from each team
+        knex('submissions').where({
+          team_id: winningTeam.id,
+          version: winner.version
+        }).then((winningTeamSubmission) => {
+          knex('games')
+          // return the id of the game being inserted
+            .returning('id')
+            .insert({
+              status: status,
+              win_reason: typeof optional.winReason === 'undefined' ? null : optional.winReason,
+              lose_reason: typeof optional.loseReason === 'undefined' ? null : optional.loseReason,
+              winner_id: winningTeamSubmission[0].id,
+              log_url: typeof optional.logUrl === 'undefined' ? null : optional.logUrl
+            }).then((gameId) => {
+              knex('submissions').where({
+                team_id: losingTeam.id,
+                version: loser.version
+              }).then((losingTeamSubmission) => {
+                // update the games_submissions linking table with the information from both the winning and losing team
+                knex('games_submissions')
+                  .insert(
+                    [{
+                      submission_id: winningTeamSubmission[0].id,
+                      game_id: gameId[0]
+                    },
+                    {
+                      submission_id: losingTeamSubmission[0].id,
+                      game_id: gameId[0]
+                    }]).then(() => {
+                    resolve(null)
+                  })
+              }).catch((err) => {
+                return reject(err)
+              })
+            }).catch((err) => {
+              return reject(err)
+            })
+        }).catch((err) => {
+          return reject(err)
+        })
+      }).catch((err) => {
+        return reject(err)
+      })
     }).catch((err) => {
       return reject(err)
     })

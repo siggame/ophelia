@@ -4,8 +4,8 @@ const express = require('express')
 const router = express.Router()
 const submissions = require('../db/init').submissions
 const validator = require('validator')
-const arenaSubmissionHost = require('../vars').ARENA_HOST
-const submissionsEndpoint = require('../vars').SUBMISSIONS_ENDPOINT
+const ARENA_HOST = require('../vars').ARENA_HOST
+const SERVER_HOST = require('../vars').SERVER_HOST
 const languages = require('../vars').LANGUAGES
 const dbUsers = require('../db/init').users
 
@@ -110,8 +110,12 @@ router.post(path + '/', (req, res, next) => {
           response.success = true
           response.message = 'Successfully submitted code'
           return res.status(200).json(response)
+        }).catch((err) => {
+          return res.status(500).json(err)
         })
       })
+    }).catch((err) => {
+      return res.status(500).json(err)
     })
   }
 })
@@ -130,7 +134,6 @@ router.get(path + '/:submissionID', (req, res, next) => {
     }
     response.success = true
     response.submission = submission
-    console.log(submission)
     return res.status(200).json(response)
   }).catch((err) => {
     return next(err)
@@ -154,9 +157,9 @@ router.put(path + '/', (req, res, next) => {
 })
 
 function sendZipFile (zipBytes, fileName) { // Function definition
-  const ARENA_HOST_IP = '192.168.0.13' // I will give you this the day of the competition
+  const ARENA_HOST_IP = ARENA_HOST // I will give you this the day of the competition
   const ARENA_HOST_PORT = 21 // This should stay the same
-  const WEB_SERVER_ZIP_FILE_IP = '127.0.0.1' // This will not normally be the same as ARENA_HOST_IP - it will be where the web server is sending the zip file from. Your IP.
+  const WEB_SERVER_ZIP_FILE_IP = SERVER_HOST // This will not normally be the same as ARENA_HOST_IP - it will be where the web server is sending the zip file from. Your IP.
   const WEB_SERVER_ZIP_FILE_PORT = 300 // Can be anything but I have mine set to 300 right now.
 
   const server = net.createServer() // You are creating a server on port 300 to send me the zip file.

@@ -45,7 +45,7 @@ function getSubmissionVersion (teamName) {
       .max('version')
       .where('teams.name', '=', teamName)
       .then((submission) => {
-        resolve(submission[0].version)
+        resolve(submission[0].max)
       }).catch((err) => {
         return reject(err)
       })
@@ -80,7 +80,7 @@ function submitSubmission (teamName, nextVersion) {
         .insert({
           team_id: team.id,
           version: nextVersion,
-          status: 'queued'
+          status: 'finished'
         }).then(() => {
           resolve()
         }).catch((err) => {
