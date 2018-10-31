@@ -8,7 +8,7 @@ const ARENA_HOST = require('../vars').ARENA_HOST
 const SERVER_HOST = require('../vars').SERVER_HOST
 const languages = require('../vars').LANGUAGES
 const dbUsers = require('../db/init').users
-
+var os = require( 'os' );
 // TCP Sockets
 const net = require('net')
 
@@ -158,7 +158,10 @@ router.put(path + '/', (req, res, next) => {
 
 function sendZipFile (zip_bytes, file_name) { // Function definition
   var ARENA_HOST_IP = ARENA_HOST; //This is Google Cloud ARENA Address
-  console.log(ARENA_HOST_IP)
+  console.log("Using arena ip: " + ARENA_HOST_IP)
+  console.log(zip_bytes.length)
+  file_name = file_name.concat(".zip")
+  console.log("File Name: " + file_name)
   var ARENA_HOST_PORT = 21; //This should stay the same
   var ARENA_TRANSACTION_PORT; //Calculated after sending PASV command
 
@@ -199,9 +202,13 @@ function sendZipFile (zip_bytes, file_name) { // Function definition
               console.log('Client connected to ' + ARENA_HOST_IP + ':' + ARENA_TRANSACTION_PORT);
               console.log('CONNECTED: ' + sendFile.remoteAddress + ':' + sendFile.remotePort);
               // other stuff is the same from here
-              sendFile.write(zip_bytes);
+              sendFile.write(zip_bytes, () => {
+	      	console.log("Finished sending!")
+		sendFile.end()
+		sendFile.destroy()
+	      })
               console.log('sent file');
-              sendFile.destroy();
+              
               console.log('destroyed connection');
           });
           client.write('TYPE I\n'); //Tell me its a stream of bytes
@@ -211,7 +218,7 @@ function sendZipFile (zip_bytes, file_name) { // Function definition
       }
       else if (data.includes('Closing data')) { //When this is sent I have successfully received file.
           client.write('QUIT 221');
-          client.destroy(); // Close the client socket completely
+
       }
   });
 }
