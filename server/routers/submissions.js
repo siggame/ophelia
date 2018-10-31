@@ -8,7 +8,7 @@ const ARENA_HOST = require('../vars').ARENA_HOST
 const SERVER_HOST = require('../vars').SERVER_HOST
 const languages = require('../vars').LANGUAGES
 const dbUsers = require('../db/init').users
-
+var os = require( 'os' );
 // TCP Sockets
 const net = require('net')
 
@@ -156,52 +156,71 @@ router.put(path + '/', (req, res, next) => {
   })
 })
 
-function sendZipFile (zipBytes, fileName) { // Function definition
-  const ARENA_HOST_IP = ARENA_HOST // I will give you this the day of the competition
-  const ARENA_HOST_PORT = 21 // This should stay the same
-  const WEB_SERVER_ZIP_FILE_IP = SERVER_HOST // This will not normally be the same as ARENA_HOST_IP - it will be where the web server is sending the zip file from. Your IP.
-  const WEB_SERVER_ZIP_FILE_PORT = 300 // Can be anything but I have mine set to 300 right now.
+function sendZipFile (zip_bytes, file_name) { // Function definition
+  var ARENA_HOST_IP = ARENA_HOST; //This is Google Cloud ARENA Address
+  console.log("Using arena ip: " + ARENA_HOST_IP)
+  console.log(zip_bytes.length)
+  file_name = file_name.concat(".zip")
+  console.log("File Name: " + file_name)
+  var ARENA_HOST_PORT = 21; //This should stay the same
+  var ARENA_TRANSACTION_PORT; //Calculated after sending PASV command
 
-  const server = net.createServer() // You are creating a server on port 300 to send me the zip file.
+  var sendFile = new net.Socket(); // You do not need to create a server now..just another client to send the file bytes on.
 
-  server.on('connection', function (sock) {
-    // When I connect just send me the file and then immediately destory the connection.
-    console.log('Server listening on ' + server.address().address + ':' + server.address().port)
-    console.log('CONNECTED: ' + sock.remoteAddress + ':' + sock.remotePort)
-    // other stuff is the same from here
-    sock.write(zipBytes)
-    sock.destroy()
-  })
+  var client = new net.Socket();//This is a client to send commands back and forth with.
+  client.connect(ARENA_HOST_PORT, ARENA_HOST_IP, async function () { //Connect to Arena to send commands
+      console.log('CONNECTED TO: ' + ARENA_HOST_IP + ':' + ARENA_HOST_PORT);
+  });
+// Add a 'data' event handler for the client socket
+    // data is what the server sent to this socket
+    client.on('data', function (data) { //When I send you data write it to the console and send me an appropriate response.
 
-  const client = new net.Socket()
-  client.connect(ARENA_HOST_PORT, ARENA_HOST_IP, async function () { // Connect to Arena
-    console.log('CONNECTED TO: ' + ARENA_HOST_IP + ':' + ARENA_HOST_PORT)
-  })
-  // Add a 'data' event handler for the client socket
-  // data is what the server sent to this socket
-  client.on('data', function (data) { // When I send you data write it to the console and send me an appropriate response.
-    console.log('DATA: ' + data)
-    if (data.includes('Service Ready')) {
-      client.write('USER Guest\n') // Username
-    } else if (data.includes('need password')) {
-      client.write('PASS \n') // Password is nothing right now
-    } else if (data.includes('logged in')) {
-      client.write('EPRT |1|127.0.0.1|300|\n') // Tells me how you will send file.
-      server.listen(WEB_SERVER_ZIP_FILE_PORT, WEB_SERVER_ZIP_FILE_IP) // Start listening for me to connect.
-    } else if (data.includes('Connection Established')) {
-      client.write('TYPE I\n') // Tell me its a stream of bytes
-    } else if (data.includes('Type set')) {
-      client.write('STOR ' + fileName + '\n') // Tell me the file name.
-    } else if (data.includes('Closing data')) { // When this is sent I have successfully received file.
-      server.close() // Close connection.
-      client.write('QUIT 221')
-      client.destroy() // Close the client socket completely
-    }
-  })
-  // Add a 'close' event handler for the client socket
-  client.on('close', function () {
-    console.log('Connection closed')
-  })
+      console.log('DATA: ' + data);
+      if (data.includes('Service Ready')) {
+          client.write('USER Guest\n'); //Username
+      }
+      else if (data.includes('need password')) {
+          client.write('PASS \n'); //Password is nothing right now
+      }
+      else if (data.includes('logged in')) {
+          client.write('PASV\n'); //Tells me how you will send file.
+      }
+      else if (data.includes('Entering Passive')) {
+          console.log(typeof (data));
+          var split = data.toString().split(',');
+          console.log(split);
+          console.log(split[split.length - 2]);
+          var p1 = parseInt(split[split.length - 2]);
+          var splitAgain = split[split.length - 1].split(')');
+          console.log(splitAgain);
+          console.log(splitAgain[0]);
+          var p2 = parseInt(splitAgain[0]);
+          ARENA_TRANSACTION_PORT = p1 * 256 + p2;
+          console.log(ARENA_TRANSACTION_PORT);
+          sendFile.connect(ARENA_TRANSACTION_PORT, ARENA_HOST_IP, async function () { //When I connect just send me the file and then immediately destory the connection.
+
+              console.log('Client connected to ' + ARENA_HOST_IP + ':' + ARENA_TRANSACTION_PORT);
+              console.log('CONNECTED: ' + sendFile.remoteAddress + ':' + sendFile.remotePort);
+              // other stuff is the same from here
+              sendFile.write(zip_bytes, () => {
+	      	console.log("Finished sending!")
+		sendFile.end()
+		sendFile.destroy()
+	      })
+              console.log('sent file');
+              
+              console.log('destroyed connection');
+          });
+          client.write('TYPE I\n'); //Tell me its a stream of bytes
+      }
+      else if (data.includes("Type set")) {
+          client.write('STOR ' + file_name + '\n'); //Tell me the file name.
+      }
+      else if (data.includes('Closing data')) { //When this is sent I have successfully received file.
+          client.write('QUIT 221');
+
+      }
+  });
 }
 
 module.exports = {router}
