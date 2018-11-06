@@ -81,8 +81,10 @@ export default class GameBadge extends Component {
       )
     }
     let vizLink = (noButtonVector)
+    var re = new RegExp('(storage\/).*')
+    var logUrl = re.exec(this.props.logUrl)
     if (this.props.logUrl !== null) {
-      let visUrl = 'http://vis.siggame.io?log=' + this.props.logUrl
+      let visUrl = 'http://vis.siggame.io?log=' + logUrl[0]
       vizLink = (
         <a href={visUrl} onMouseEnter={this.toggleHover} onMouseLeave={this.toggleHover} target='_blank'>
           {playButtonVector}
