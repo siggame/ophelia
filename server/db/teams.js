@@ -85,11 +85,45 @@ function createTeam (name, teamCaptainId) {
   })
 }
 
+function removeUserFromTeam (userId) {
+  return new Promise((resolve, reject) => {
+    knex('teams_users')
+      .where('user_id', userId)
+      .del().then(() => {
+        return resolve()
+      }).catch((err) => {
+        return reject(err)
+      })
+  })
+}
+
+function deleteTeam (teamName) {
+  return new Promise((resolve, reject) => {
+    getTeamByName(teamName).then((team) => {
+      knex('teams_users')
+        .where('team_id', team.id)
+        .del().then(() => {
+          knex('teams')
+            .where('id', team.id)
+            .del().then(() => {
+              return resolve()
+            }).catch((err) => {
+              return reject(err)
+            })
+        }).catch((err) => {
+          return reject(err)
+        })
+    })
+  })
+}
+
 module.exports = {
   getTeam,
   getTeamByName,
   getAllTeamNames,
   createTeam,
+  removeUserFromTeam,
+  deleteTeam,
   ALREADY_ON_A_TEAM,
   DUPLICATE_NAME_MESSAGE,
   NO_SUCH_USER

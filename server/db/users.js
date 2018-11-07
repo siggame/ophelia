@@ -60,6 +60,19 @@ function isUserAdmin (userId) {
   })
 }
 
+function isUserTeamCaptain (userId) {
+  return new Promise((resolve, reject) => {
+    knex('teams').select().where('team_captain_id', '=', userId).then((data) => {
+      if (data.size() > 0) {
+        return resolve(true)
+      }
+      return resolve(false)
+    }).catch((err) => {
+      reject(err)
+    })
+  })
+}
+
 /**
  * getAllUsernames - grabs all current teams from the database
  * @returns {Promise} - returns an array of strings if successful that contains all usernames in the database.
@@ -218,6 +231,7 @@ module.exports = {
   getUser,
   getAllUsers,
   isUserAdmin,
+  isUserTeamCaptain,
   getUserByName,
   editUser,
   getAllUsernames,

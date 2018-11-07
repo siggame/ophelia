@@ -3,6 +3,7 @@
 const express = require('express')
 const router = express.Router()
 const teams = require('../db/init').teams
+const users = require('../db/init').users
 const sanitizer = require('../utils/sanitizer')
 
 const path = '/teams'
@@ -105,6 +106,48 @@ router.post(path + '/', (req, res, next) => {
     throw err
   }).catch((err) => {
     return next(err)
+  })
+})
+
+router.delete(path + '/:userId', (req, res, next) => {
+  const response = {
+    success: false,
+    message: ''
+  }
+  const urlUserId = req.params.userId
+  const userId = req.user.id
+  users.isUserTeamCaptain(userId).then((result) => {
+    if (result === true) {
+      if (userId !== urlUserId) {
+        teams.removeUserFromTeam(urlUserId).then(() => {
+          response.success = true
+          response.message = 'Successfully removed user from team'
+          return res.status(200).json(response)
+        }).catch((err) => {
+          next(err)
+        })
+      } else if (userId === urlUserId) {
+        // Put disbanding team here if userId and urlUserId are equal?
+        users.getUsersTeam(userId).then((teamName) => {
+          teams.deleteTeam(teamName)
+          response.message = 'Successfully deleted team ' + teamName
+          return res.status(200).json(response)
+        })
+      }
+    } else if (result === false) {
+      if (userId !== urlUserId) {
+        response.message = 'You do not have permissions to remove users from this team'
+        return res.status(400).json(response)
+      } else if (userId === urlUserId) {
+        teams.removeUserFromTeam(urlUserId).then(() => {
+          response.success = true
+          response.message = 'Successfully left the team'
+          return res.status(200).json(response)
+        }).catch((err) => {
+          next(err)
+        })
+      }
+    }
   })
 })
 
