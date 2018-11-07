@@ -38,7 +38,6 @@ export default class RequestLayer {
       if (filter.result) params.result = filter.result
       params.page = pageNum
       params.pageSize = pageSize
-      console.log('params', params)
       axios.get(process.env.REACT_APP_API_URL + '/games', {
         headers: {
           Authorization: `Bearer ${stores.authStore.token}`
@@ -145,11 +144,6 @@ export default class RequestLayer {
           return reject(err)
         })
       })
-      // try {
-      //   return axios.get(`${process.env.REACT_APP_API_URL}/teams/id/${teamId}`)
-      // } catch (err) {
-      //   throw err;
-      // }
     }
 
     // Get every team

@@ -106,8 +106,9 @@ export default class TeamCreation extends Component {
                 </div>
                 :
                 <div className='col-md-4 col-md-offset-4'>
-                    <h3>Team Management</h3>
+                    <h2 style={{ fontWeight:'bold', textAlign: "center" }}>Team Management</h2>
                     <div className="team-management">
+                        <span>Leave Current Team</span>
                         <button onClick={this.handleLeaveOwnTeam}>Leave Team</button>
                     </div>
                 </div>
