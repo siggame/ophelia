@@ -161,6 +161,14 @@ export default class RequestLayer {
       }
     }
 
+    removeSelfFromTeam() {
+      try {
+        return axios.delete(`${process.env.REACT_APP_API_URL}/teams/${stores.authStore.userId}`)
+      } catch(err) {
+        throw (err)
+      }
+    }
+
     // Grabs all team names based on pagination and filter 
     fetchTeams(pageNum, pageSize, filter = {}) {
       return new Promise((resolve, reject) => {
@@ -224,7 +232,6 @@ export default class RequestLayer {
         throw new Error('Must be logged in to do that!')
       }
       try {
-        console.log(stores.authStore.userId);
         return axios.get(`${process.env.REACT_APP_API_URL}/invites/users/${stores.authStore.userId}`)
       } catch (err) {
         throw err;

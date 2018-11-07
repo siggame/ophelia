@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { inject } from 'mobx-react';
 import { Redirect } from 'react-router-dom';
 import { validateTeamCreation } from '../../modules/teams';
-import { LoadingOverlay, Loader } from 'react-overlay-loader'
+import { LoadingOverlay, Loader } from 'react-overlay-loader';
 import ShowTeams from './ShowTeams';
+import axios from 'axios';
 
 import 'react-overlay-loader/styles.css';
 
@@ -17,11 +18,22 @@ export default class TeamCreation extends Component {
             hasErrors: true,
             loading: false,
             teamname: '',
-            errorMessage: ''
+            errorMessage: '',
+            userTeamName: ''
         }
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleLeaveOwnTeam = this.handleLeaveOwnTeam.bind(this);
+    }
+
+    componentDidMount() {
+        // Work around because I couldn't call this.props.authStore.user.teamName
+        axios.get(`${process.env.REACT_APP_API_URL}/users/${this.props.authStore.userId}`).then((response) => {
+            this.setState({
+                userTeamName: response.data.user.teamName
+            }) 
+        })
     }
 
     handleChange(event) {
@@ -31,6 +43,13 @@ export default class TeamCreation extends Component {
 
         this.setState({
             [name]: value
+        })
+    }
+
+    handleLeaveOwnTeam() {
+        this.props.teamStore.removeSelfFromTeam()
+        this.setState({
+            userTeamName: null
         })
     }
 
@@ -55,7 +74,6 @@ export default class TeamCreation extends Component {
 
     render(){
         let formError;
-
         if(this.state.formSubmitted) {
             if (this.state.hasErrors) {
                 formError = (
@@ -74,6 +92,7 @@ export default class TeamCreation extends Component {
 
         return(
             <div>
+                {this.state.userTeamName === null ? 
                 <div className='col-md-4 col-md-offset-4'>
                     <h3>Create Team</h3>
                     <form>
@@ -85,6 +104,14 @@ export default class TeamCreation extends Component {
                     <button type='submit' onClick={this.handleSubmit} className='btn btn-default btn-block btn-lg' style={{marginTop: 32}}>Create Team</button>
                 </form>
                 </div>
+                :
+                <div className='col-md-4 col-md-offset-4'>
+                    <h3>Team Management</h3>
+                    <div className="team-management">
+                        <button onClick={this.handleLeaveOwnTeam}>Leave Team</button>
+                    </div>
+                </div>
+                }
                 <LoadingOverlay>
                     <div className="col-md-8 col-md-offset-2"><ShowTeams /></div>
                     <Loader loading={this.props.teamStore.isLoading} />

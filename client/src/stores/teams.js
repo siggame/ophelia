@@ -84,6 +84,17 @@ export class TeamStore {
     }
   }
 
+  @action async removeSelfFromTeam() {
+
+    try { 
+      const response = await this.requestLayer.removeSelfFromTeam();
+      console.log(response)
+      return response
+    } catch (err) {
+      throw err;
+    }
+  }
+
   @action loadAllTeams(pageNum = 1, filter = {}){
     this.isLoading = true
     this.requestLayer.fetchTeams(pageNum, this.pageSize, filter).then(action('loadTeams-callback', (data) => {

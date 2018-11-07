@@ -63,7 +63,7 @@ function isUserAdmin (userId) {
 function isUserTeamCaptain (userId) {
   return new Promise((resolve, reject) => {
     knex('teams').select().where('team_captain_id', '=', userId).then((data) => {
-      if (data.size() > 0) {
+      if (data.length > 0) {
         return resolve(true)
       }
       return resolve(false)

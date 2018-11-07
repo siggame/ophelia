@@ -8,7 +8,6 @@ import ButtonRefresh from '../ButtonRefresh'
 export class GamesList extends React.Component {
   render () {
     let games = this.props.games
-    console.log(games.length)
     let gamesList
     if (games) {
       if (games.length === 0) {
