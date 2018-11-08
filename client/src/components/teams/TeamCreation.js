@@ -19,7 +19,8 @@ export default class TeamCreation extends Component {
             loading: false,
             teamname: '',
             errorMessage: '',
-            userTeamName: ''
+            userTeamName: '',
+            statratio: ''
         }
 
         this.handleChange = this.handleChange.bind(this);
@@ -32,8 +33,9 @@ export default class TeamCreation extends Component {
         axios.get(`${process.env.REACT_APP_API_URL}/users/${this.props.authStore.userId}`).then((response) => {
             this.setState({
                 userTeamName: response.data.user.teamName
-            }) 
+            })
         })
+
     }
 
     handleChange(event) {
@@ -105,13 +107,13 @@ export default class TeamCreation extends Component {
                 </form>
                 </div>
                 :
-                <div className='col-md-4 col-md-offset-4'>
-                    <h2 style={{ fontWeight:'bold', textAlign: "center" }}>Team Management</h2>
-                    <div className="team-management">
-                        <span>Leave Current Team</span>
-                        <button onClick={this.handleLeaveOwnTeam}>Leave Team</button>
+                    <div className='col-md-4 col-md-offset-4'>
+                        <h2 style={{ fontWeight:'bold', textAlign: "center" }}>Team Management</h2>
+                        <div className="team-management">
+                            <span>Leave Current Team</span>
+                            <button onClick={this.handleLeaveOwnTeam}>Leave Team</button>
+                        </div>
                     </div>
-                </div>
                 }
                 <LoadingOverlay>
                     <div className="col-md-8 col-md-offset-2"><ShowTeams /></div>
