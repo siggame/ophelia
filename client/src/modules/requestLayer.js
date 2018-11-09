@@ -173,8 +173,9 @@ export default class RequestLayer {
 
     removeSelfFromTeam() {
       try {
-        return axios.delete(`${process.env.REACT_APP_API_URL}/teams/${stores.authStore.userId}`)
+        return axios.delete(`${process.env.REACT_APP_API_URL}/teams/${stores.authStore.username}`)
       } catch(err) {
+        console.log(err)
         throw (err)
       }
     }

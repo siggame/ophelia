@@ -12,6 +12,7 @@ export class TeamStore {
   @observable isStale = false
   @observable lastUpdated = null
   @observable teamSortId = []
+  @observable kickError = ''
 
   constructor () {
     this.requestLayer = new RequestLayer()
@@ -87,12 +88,17 @@ export class TeamStore {
   }
 
   @action async kickUser(name) {
-    try {
-      const response = await this.requestLayer.kickUser(name)
-      return response
-    } catch(err) {
-      throw err
-    }
+    return new Promise((resolve, reject) => {
+      this.kickError = ''
+      this.requestLayer.kickUser(name).then((response) => {
+        this.makeDataStale()
+        return resolve(response)
+      }).catch((err) => {
+        this.makeDataStale();
+        this.kickError = 'Failed to remove user from team! Are you a captain?'
+        return(this.kickError)
+      })
+    })
   }
 
   @action async getCurrentTeam() {
@@ -110,7 +116,6 @@ export class TeamStore {
 
     try { 
       const response = await this.requestLayer.removeSelfFromTeam();
-      console.log(response)
       return response
     } catch (err) {
       throw err;
