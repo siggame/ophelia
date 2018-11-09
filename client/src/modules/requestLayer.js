@@ -38,7 +38,6 @@ export default class RequestLayer {
       if (filter.result) params.result = filter.result
       params.page = pageNum
       params.pageSize = pageSize
-      console.log('params', params)
       axios.get(process.env.REACT_APP_API_URL + '/games', {
         headers: {
           Authorization: `Bearer ${stores.authStore.token}`
@@ -145,11 +144,6 @@ export default class RequestLayer {
           return reject(err)
         })
       })
-      // try {
-      //   return axios.get(`${process.env.REACT_APP_API_URL}/teams/id/${teamId}`)
-      // } catch (err) {
-      //   throw err;
-      // }
     }
 
     // Get every team
@@ -158,6 +152,14 @@ export default class RequestLayer {
         return axios.get(`${process.env.REACT_APP_API_URL}/teams`);
       } catch (err) {
         throw err;
+      }
+    }
+
+    removeSelfFromTeam() {
+      try {
+        return axios.delete(`${process.env.REACT_APP_API_URL}/teams/${stores.authStore.userId}`)
+      } catch(err) {
+        throw (err)
       }
     }
 
@@ -224,7 +226,6 @@ export default class RequestLayer {
         throw new Error('Must be logged in to do that!')
       }
       try {
-        console.log(stores.authStore.userId);
         return axios.get(`${process.env.REACT_APP_API_URL}/invites/users/${stores.authStore.userId}`)
       } catch (err) {
         throw err;
@@ -237,6 +238,20 @@ export default class RequestLayer {
           inviteId, accepted
         })
       } catch (err) {
+        throw err;
+      }
+    }
+
+    // Stats Section
+
+    async fetchWinLoss(teamName) {
+      const { authStore } = stores;
+      if(!authStore.isUserLoggedIn) {
+        throw new Error('Must be logged in to do that!')
+      }
+      try {
+        return axios.get(`${process.env.REACT_APP_API_URL}/stats/${teamName}`)
+      } catch(err) {
         throw err;
       }
     }

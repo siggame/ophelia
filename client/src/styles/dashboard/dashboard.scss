@@ -3,3 +3,16 @@
     color: $black;
     border: none;
 }
+
+.team-management {
+    display: flex;
+    flex-direction: column;
+    &:first-child {
+        align-self: center;
+    }
+    button{
+        background-color: $lightgreen;
+        color: $black;
+        border: none;
+    }
+}

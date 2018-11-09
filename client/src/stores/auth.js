@@ -52,7 +52,6 @@ export class AuthStore {
       return null
     }
   }
-
   /**
    * @description Decode token and validate user's authentication
    * @return {boolean} True if user has a valid token. Otherwise, false
