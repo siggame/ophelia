@@ -117,6 +117,18 @@ function deleteTeam (teamName) {
   })
 }
 
+function editTeam (teamName, data) {
+  return new Promise((resolve, reject) => {
+    knex('teams')
+      .where('teams.name', teamName)
+      .update(data).then(() => {
+        return resolve()
+      }).catch((err) => {
+        return reject(err)
+      })
+  })
+}
+
 module.exports = {
   getTeam,
   getTeamByName,
@@ -124,6 +136,7 @@ module.exports = {
   createTeam,
   removeUserFromTeam,
   deleteTeam,
+  editTeam,
   ALREADY_ON_A_TEAM,
   DUPLICATE_NAME_MESSAGE,
   NO_SUCH_USER

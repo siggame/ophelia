@@ -152,7 +152,6 @@ router.delete(path + '/:username', (req, res, next) => {
       }
     })
   })
-
 })
 
 module.exports = {router}

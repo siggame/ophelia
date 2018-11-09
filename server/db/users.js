@@ -13,9 +13,9 @@ function getUser (userId) {
     knex('users').where({
       id: userId
     }).then((res) => {
-      resolve(res[0])
+      return resolve(res[0])
     }).catch((err) => {
-      reject(err)
+      return reject(err)
     })
   })
 }
@@ -57,6 +57,20 @@ function isUserAdmin (userId) {
       }
       return resolve(false)
     }).catch((err) => { return reject(err) })
+  })
+}
+
+function editRole (username, role) {
+  return new Promise((resolve, reject) => {
+    knex('users')
+      .where('users.name', username)
+      .update({
+        role: role
+      }).then(() => {
+        return resolve()
+      }).catch((err) => {
+        return reject(err)
+      })
   })
 }
 
@@ -254,6 +268,7 @@ module.exports = {
   editUser,
   getAllUsernames,
   getTeammates,
+  editRole,
   DUPLICATE_EMAIL_MESSAGE,
   DUPLICATE_NAME_MESSAGE,
   MISSING_FIELD_MESSAGE

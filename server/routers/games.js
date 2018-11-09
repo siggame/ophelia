@@ -157,24 +157,32 @@ router.post(path + '/', (req, res, next) => {
     success: false,
     message: ''
   }
-  const winner = req.body.winner
-  const loser = req.body.loser
-  const status = req.body.status
-  const optional = {
-    winReason: req.body.winReason,
-    loseReason: req.body.loseReason,
-    logUrl: req.body.logUrl
-  }
-  const statuses = ['queued', 'playing', 'finished', 'failed']
-  if (statuses.indexOf(status) === -1) {
-    return res.status(400)
-  }
-  dbGames.insertGame(winner, loser, status, optional).then(() => {
-    response.success = true
-    response.message = 'Game recorded'
-    return res.status(200).json(response)
-  }).catch((err) => {
-    return next(err)
+  const userId = req.user.id
+  dbUsers.isUserAdmin(userId).then((isAdmin) => {
+    if (!isAdmin) {
+      response.message = 'You are not an admin'
+      return res.status(403).json(response)
+    } else {
+      const winner = req.body.winner
+      const loser = req.body.loser
+      const status = req.body.status
+      const optional = {
+        winReason: req.body.winReason,
+        loseReason: req.body.loseReason,
+        logUrl: req.body.logUrl
+      }
+      const statuses = ['queued', 'playing', 'finished', 'failed']
+      if (statuses.indexOf(status) === -1) {
+        return res.status(400)
+      }
+      dbGames.insertGame(winner, loser, status, optional).then(() => {
+        response.success = true
+        response.message = 'Game recorded'
+        return res.status(200).json(response)
+      }).catch((err) => {
+        return next(err)
+      })
+    }
   })
 })
 
