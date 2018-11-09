@@ -5,6 +5,7 @@ import RequestLayer from '../modules/requestLayer'
 export class TeamStore {
   @observable team = undefined
   @observable teams = []
+  @observable teammates = []
   @observable numPages = 5
   @observable pageSize = 3
   @observable isLoading = false
@@ -70,6 +71,27 @@ export class TeamStore {
       })
     } catch (err) {
       console.log(err)
+    }
+  }
+
+
+  @action async getAllTeamMates() {
+    try {
+      const response = await this.requestLayer.getAllTeamMates();
+      runInAction(() => {
+        this.teammates = response.data.teammates
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  @action async kickUser(name) {
+    try {
+      const response = await this.requestLayer.kickUser(name)
+      return response
+    } catch(err) {
+      throw err
     }
   }
 

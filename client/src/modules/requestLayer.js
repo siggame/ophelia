@@ -155,6 +155,22 @@ export default class RequestLayer {
       }
     }
 
+    async getAllTeamMates () {
+      try {
+        return axios.get(`${process.env.REACT_APP_API_URL}/users/team`);
+      } catch (err) {
+        throw err;
+      }
+    }
+
+    async kickUser(name) {
+      try {
+        return axios.delete(`${process.env.REACT_APP_API_URL}/teams/${name}`)
+      } catch (err) {
+        throw err;
+      }
+    }
+
     removeSelfFromTeam() {
       try {
         return axios.delete(`${process.env.REACT_APP_API_URL}/teams/${stores.authStore.userId}`)

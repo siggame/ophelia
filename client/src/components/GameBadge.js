@@ -81,11 +81,8 @@ export default class GameBadge extends Component {
       )
     }
     let vizLink = (noButtonVector)
-    var re = new RegExp('(storage\/).*')
-    var logUrl = re.exec(this.props.logUrl)
-    // Use let logUrl = this.props.logUrl.match(/storage\/(.*)/)[1] // if we don't need the storage part (and remove index part below)
-    if (this.props.logUrl !== null) {
-      let visUrl = 'http://vis.siggame.io?log=' + logUrl[0]
+    if (this.props.logUrl !== null && this.props.logUrl !== undefined) {
+      let visUrl = 'http://vis.siggame.io?log=' + this.props.logUrl
       vizLink = (
         <a href={visUrl} onMouseEnter={this.toggleHover} onMouseLeave={this.toggleHover} target='_blank'>
           {playButtonVector}

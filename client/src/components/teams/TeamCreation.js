@@ -1,15 +1,74 @@
 import React, { Component } from 'react';
-import { inject } from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 import { Redirect } from 'react-router-dom';
 import { validateTeamCreation } from '../../modules/teams';
 import { LoadingOverlay, Loader } from 'react-overlay-loader';
 import ShowTeams from './ShowTeams';
 import axios from 'axios';
+import ReactTable from "react-table";
+
 
 import 'react-overlay-loader/styles.css';
 
 @inject('authStore')
 @inject('teamStore')
+@observer
+export class UserLists extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            mates: ''
+        }
+        this.handleClick = this.handleClick.bind(this)
+    }
+
+    handleClick(name) {
+        let array = [...this.state.mates]
+        let index
+        console.log(name)
+        this.props.teamStore.kickUser(name)
+        // index = this.state.mates.findIndex(x => x.name === name)
+        // array.splice(index, 1);
+        // this.setState({
+        //     mates: array
+        // })
+    }
+
+    render() {
+        let mates = this.props.mates
+        var teamMates = {
+            mate: []
+        }
+        let columns = [{
+            Header: 'User Name',
+            accessor: 'mates'
+        }, {
+            Header: 'Manage Members',
+            accessor: 'manage',
+            Cell: props => <button onClick={() => this.handleClick(props.value)}>Kick</button>
+        }
+        ]
+        mates.map((data) => {
+            teamMates.mate.push({
+                "mates": data,
+                "manage": data
+            })
+            // this.setState({
+            //     mates: teamMates.mate
+            // })
+            return teamMates.mate
+        })
+
+        return(
+            <div>
+                {teamMates.mate ? <ReactTable data={teamMates.mate} columns={columns} defaultPageSize={5} /> : <h3>No teammates found!</h3>}
+            </div>
+        )
+    }
+}
+@inject('authStore')
+@inject('teamStore')
+@observer
 export default class TeamCreation extends Component {
     constructor(props) {
         super(props)
@@ -35,7 +94,7 @@ export default class TeamCreation extends Component {
                 userTeamName: response.data.user.teamName
             })
         })
-
+        this.props.teamStore.getAllTeamMates()
     }
 
     handleChange(event) {
@@ -112,6 +171,8 @@ export default class TeamCreation extends Component {
                         <div className="team-management">
                             <span>Leave Current Team</span>
                             <button onClick={this.handleLeaveOwnTeam}>Leave Team</button>
+                            <span>Team Members</span>
+                            <UserLists mates={this.props.teamStore.teammates} />
                         </div>
                     </div>
                 }
