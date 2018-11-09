@@ -96,7 +96,7 @@ export class TeamStore {
       }).catch((err) => {
         this.makeDataStale();
         this.kickError = 'Failed to remove user from team! Are you a captain?'
-        return(this.kickError)
+        return reject(err)
       })
     })
   }

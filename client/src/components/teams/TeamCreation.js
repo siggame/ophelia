@@ -9,7 +9,6 @@ import ReactTable from "react-table";
 
 
 import 'react-overlay-loader/styles.css';
-import { array } from 'yup';
 
 @inject('authStore')
 @inject('teamStore')
@@ -21,7 +20,8 @@ export class UserLists extends React.Component {
             mates: '',
             kickSubmitted: '',
             hasErrors: '',
-            errorMessage: ''
+            errorMessage: '',
+            userRemoved: ''
         }
         this.handleClick = this.handleClick.bind(this)
     }
@@ -30,13 +30,16 @@ export class UserLists extends React.Component {
         this.props.teamStore.kickUser(name).then(() => {
             this.setState({
                 formSubmitted: true,
-                hasErrors: false
+                hasErrors: false,
+                userRemoved: name,
+                kickSubmitted: true
             })
         }).catch((err) => {
-            console.log(err)
-            this.state({
+            this.setState({
                 formSubmitted: true,
                 formError: err,
+                hasErrors: true,
+                kickSubmitted: true,
                 errorMessage: 'Failed to kick user! Are you a team captain?'
             })
         })
@@ -61,9 +64,6 @@ export class UserLists extends React.Component {
                 "mates": data,
                 "manage": data
             })
-            // this.setState({
-            //     mates: teamMates.mate
-            // })
             return teamMates.mate
         })
 
@@ -74,7 +74,10 @@ export class UserLists extends React.Component {
                     <span style={{ color: 'red', marginLeft: 10 }}>{this.state.errorMessage}</span>
                 )
             } else {
-                {teamMates.mate ? <ReactTable data={teamMates.mate} columns={columns} defaultPageSize={5} /> : <h3>No teammates found!</h3>}
+                <div>
+                    {kickError}
+                    <ReactTable data={teamMates.mate} columns={columns} defaultPageSize={5} />
+                </div>
             }
         }
 
@@ -169,8 +172,6 @@ export default class TeamCreation extends Component {
                 )
             }
         }
-
-
 
         return(
             <div>
