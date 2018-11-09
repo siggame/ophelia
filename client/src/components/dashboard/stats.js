@@ -12,12 +12,8 @@ export default class Stats extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        console.log("PREVIOUS PROP" + this.state.previousProp)
-        console.log("CURRENT PROP" + this.props.userInfo)
         if(this.props.userInfo !== undefined && this.state.previousProp) {
-            console.log("Inside first if")
             if(this.props.userInfo !== null) {
-                console.log("Before axios get")
                 axios.get(`${process.env.REACT_APP_API_URL}/stats/${this.props.userInfo.teamName}`).then((response) => {
                     if(response.data.stats[0] !== undefined){
                         let stats = response.data.stats[0].stats
@@ -30,7 +26,6 @@ export default class Stats extends React.Component {
                     })
                     }
                 })
-                console.log("Got in here") 
                 this.setState({
                     previousProp: false
                 })
@@ -51,8 +46,6 @@ export default class Stats extends React.Component {
             accessor: d => d.stats.losses
         }]
 
-        console.log(this.props.userInfo !== undefined ? this.props.userInfo.teamName : "Undefined")
-        console.log(this.state.statratio)
         return (
             <div>
                 <h2 style={{ fontWeight:'bold' }}>Team Stats</h2>
