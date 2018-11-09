@@ -67,17 +67,16 @@ export class UserLists extends React.Component {
             return teamMates.mate
         })
 
-        let kickError;
+        let kickError = null;
         if(this.state.kickSubmitted) {
             if(this.state.hasErrors) {
                 kickError = (
                     <span style={{ color: 'red', marginLeft: 10 }}>{this.state.errorMessage}</span>
                 )
             } else {
-                <div>
-                    {kickError}
-                    <ReactTable data={teamMates.mate} columns={columns} defaultPageSize={5} />
-                </div>
+                kickError = (
+                    <span style={{ color: 'green', marginLeft: 10 }}>User removed successfully! </span>
+                )
             }
         }
 
