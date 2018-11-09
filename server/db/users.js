@@ -225,6 +225,24 @@ function createUser (
   })
 }
 
+function getTeammates (userId) {
+  return new Promise((resolve, reject) => {
+    getUsersTeam(userId).then((teamName) => {
+      knex('users')
+        .select('users.name as username')
+        .join('teams_users', 'users.id', 'teams_users.user_id')
+        .join('teams', 'teams_users.team_id', 'teams.id')
+        .where('teams.name', teamName).then((data) => {
+          const usernames = []
+          data.forEach((data) => usernames.push(data.username))
+          return resolve(usernames)
+        }).catch((err) => {
+          return reject(err)
+        })
+    })
+  })
+}
+
 module.exports = {
   createUser,
   getUsersTeam,
@@ -235,6 +253,7 @@ module.exports = {
   getUserByName,
   editUser,
   getAllUsernames,
+  getTeammates,
   DUPLICATE_EMAIL_MESSAGE,
   DUPLICATE_NAME_MESSAGE,
   MISSING_FIELD_MESSAGE

@@ -18,21 +18,23 @@ const fileMimeTypeRegex = /(application\/(x-)?(zip|gzip|tar))/
 const path = '/submissions'
 
 router.get(path + '/', (req, res, next) => {
-  const user = req.user.username
+  const userId = req.user.id
   const response = {
     success: false,
     message: '',
     submissions: null
   }
-  submissions.getSubmissionsByTeamName(user).then((result) => {
-    response.success = true
-    response.message = 'Data successfully retrieved'
-    response.submissions = result
-    return res.status(200).json(response)
-  }, (err) => {
-    return next(err)
-  }).catch((err) => {
-    return next(err)
+  dbUsers.getUsersTeam(userId).then((teamName) => {
+    submissions.getSubmissionsByTeamName(teamName).then((result) => {
+      response.success = true
+      response.message = 'Data successfully retrieved'
+      response.submissions = result
+      return res.status(200).json(response)
+    }, (err) => {
+      return next(err)
+    }).catch((err) => {
+      return next(err)
+    })
   })
 })
 
@@ -209,6 +211,10 @@ function sendZipFile (zipBytes, fileName) { // Function definition
     } else if (data.includes('Closing data')) { // When this is sent I have successfully received file.
       client.write('QUIT 221')
     }
+  })
+
+  client.on('error', function (err) {
+    console.log(err)
   })
 }
 

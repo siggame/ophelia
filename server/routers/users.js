@@ -32,6 +32,21 @@ router.get(path + '/', (req, res) => {
   })
 })
 
+router.get(path + '/teams', (req, res, next) => {
+  const response = {
+    success: false,
+    teammates: []
+  }
+  const userId = req.user.id
+  users.getTeammates(userId).then((teammates) => {
+    response.success = true
+    response.teammates = teammates
+    res.status(200).json(response)
+  }).catch((err) => {
+    next(err)
+  })
+})
+
 /**
  * Creates a new user
  * Request body format:
