@@ -32,7 +32,7 @@ router.get(path + '/', (req, res) => {
   })
 })
 
-router.get(path + '/teams', (req, res, next) => {
+router.get(path + '/team', (req, res, next) => {
   const response = {
     success: false,
     teammates: []

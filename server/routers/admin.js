@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const teams = require('../db/init').teams
+const users = require('../db/init').users
 
 // All paths in this file should start with this
 const path = '/admin'
@@ -23,13 +23,13 @@ router.get(path + '/users', (req, res, next) => {
     users: []
   }
   const userId = req.user.id
-  teams.isUserAdmin(userId).then((result) => {
+  users.isUserAdmin(userId).then((result) => {
     if (!result) {
       // The user is not an admin, they are not allowed to access this endpoint
       response.message = 'forbidden'
       return res.status(403).json(response)
     } else {
-      teams.getAllTeams().then((data) => {
+      users.getAllUsers().then((data) => {
         response.success = true
         response.users = data
         return res.status(200).json(response)
@@ -62,7 +62,7 @@ router.put(path + '/users/:teamName', (req, res, next) => {
   const teamName = req.params.teamName
   const userId = req.user.id
   const body = req.body
-  teams.isUserAdmin(userId)
+  users.isUserAdmin(userId)
   // If these values aren't here then we can't move forward.
   const requiredValues = ['editData']
   for (const value of requiredValues) {
@@ -73,7 +73,7 @@ router.put(path + '/users/:teamName', (req, res, next) => {
   }
   const editData = body.editData
 
-  teams.isUserAdmin(userId).then((result) => {
+  users.isUserAdmin(userId).then((result) => {
     // result contains whether or not the user is an admin
     if (!result) {
       // The user is not an admin, they are not allowed to access this endpoint
@@ -107,15 +107,6 @@ router.put(path + '/users/:teamName', (req, res, next) => {
         response.message = 'Editable fields include only: ' + editableFields
         return res.status(400).json(response)
       }
-      teams.editTeam(teamName, teamEditData).then(() => {
-        response.success = true
-        response.message = 'Edited user successfully'
-        res.status(200).json(response)
-      }, (err) => {
-        next(err)
-      }).catch((err) => {
-        next(err)
-      })
     }
   }, (err) => {
     next(err)
