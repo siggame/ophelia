@@ -19,13 +19,14 @@ export default class Invites extends React.Component {
     handleInviteAction(id, status) {
         let array = [...this.state.invites];
         let index;
-        this.props.invitesStore.inviteAction(id, status)
+        this.props.invitesStore.inviteAction(id, status).then(() => {
+            this.props.authStore.getCurrentUser()
+        })
         index = this.state.invites.findIndex(x => x.id === id)
         array.splice(index, 1);
         this.setState({
             invites: array
         })
-
     }
 
     componentDidMount() {

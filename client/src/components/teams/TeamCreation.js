@@ -9,6 +9,7 @@ import ReactTable from "react-table";
 
 
 import 'react-overlay-loader/styles.css';
+import { array } from 'yup';
 
 @inject('authStore')
 @inject('teamStore')
@@ -17,21 +18,28 @@ export class UserLists extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            mates: ''
+            mates: '',
+            kickSubmitted: '',
+            hasErrors: '',
+            errorMessage: ''
         }
         this.handleClick = this.handleClick.bind(this)
     }
 
     handleClick(name) {
-        let array = [...this.state.mates]
-        let index
-        console.log(name)
-        this.props.teamStore.kickUser(name)
-        // index = this.state.mates.findIndex(x => x.name === name)
-        // array.splice(index, 1);
-        // this.setState({
-        //     mates: array
-        // })
+        this.props.teamStore.kickUser(name).then(() => {
+            this.setState({
+                formSubmitted: true,
+                hasErrors: false
+            })
+        }).catch((err) => {
+            console.log(err)
+            this.state({
+                formSubmitted: true,
+                formError: err,
+                errorMessage: 'Failed to kick user! Are you a team captain?'
+            })
+        })
     }
 
     render() {
@@ -59,8 +67,20 @@ export class UserLists extends React.Component {
             return teamMates.mate
         })
 
+        let kickError;
+        if(this.state.kickSubmitted) {
+            if(this.state.hasErrors) {
+                kickError = (
+                    <span style={{ color: 'red', marginLeft: 10 }}>{this.state.errorMessage}</span>
+                )
+            } else {
+                {teamMates.mate ? <ReactTable data={teamMates.mate} columns={columns} defaultPageSize={5} /> : <h3>No teammates found!</h3>}
+            }
+        }
+
         return(
             <div>
+                {kickError}
                 {teamMates.mate ? <ReactTable data={teamMates.mate} columns={columns} defaultPageSize={5} /> : <h3>No teammates found!</h3>}
             </div>
         )
@@ -122,6 +142,7 @@ export default class TeamCreation extends Component {
                 formSubmitted: true,
                 hasErrors: false
             })
+            this.props.authStore.getCurrentUser()
         }).catch((err) => {
             console.log(err)
             this.setState({
