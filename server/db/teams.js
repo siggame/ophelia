@@ -103,15 +103,23 @@ function deleteTeam (teamName) {
       knex('teams_users')
         .where('team_id', team.id)
         .del().then(() => {
-          knex('teams')
-            .where('id', team.id)
-            .del().then(() => {
-              return resolve()
+          knex('invites')
+            .where('team_id', team.id)
+            .update({
+              is_completed: true
+            }).then(() => {
+              knex('teams')
+                .where('id', team.id)
+                .update({
+                  team_captain_id: null
+                }).then(() => {
+                  return resolve()
+                }).catch((err) => {
+                  return reject(err)
+                })
             }).catch((err) => {
               return reject(err)
             })
-        }).catch((err) => {
-          return reject(err)
         })
     })
   })
