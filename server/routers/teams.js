@@ -92,7 +92,7 @@ router.post(path + '/', (req, res, next) => {
   const teamCaptainId = req.user.id
   if (!sanitizer.isValidTeamName(name)) {
     response.message = 'Invalid team name'
-    res.status(400).json(response)
+    return res.status(400).json(response)
   }
   teams.createTeam(name, teamCaptainId).then(() => {
     response.success = true
