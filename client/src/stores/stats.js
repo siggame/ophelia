@@ -1,5 +1,3 @@
-import { action, observable, reaction } from 'mobx'
-import RequestLayer from '../modules/requestLayer'
 
 export class statStore{
     // This will return the number of wins and losses (should it be a percent?)
