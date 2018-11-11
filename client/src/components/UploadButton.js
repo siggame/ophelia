@@ -37,7 +37,7 @@ export default class UploadButton extends React.Component {
   render () {
     return (
       <span>
-        <UploadField
+        {/* <UploadField
           onFiles={files => this.uploadFile(files[0])}
           uploadProps={{
             accept: '.zip,.tar,.tar.gz'
@@ -46,7 +46,8 @@ export default class UploadButton extends React.Component {
           <div style={this.props.style} className='btn btn-primary custom-upload-button'>
             Upload AI
           </div>
-        </UploadField>
+        </UploadField> */}
+        <h4>Submissions have been closed!</h4>
       </span>
     )
   }
