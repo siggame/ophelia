@@ -55,70 +55,70 @@ router.get(path + '/', (req, res, next) => {
  * 400 - User error
  * 500 - Something went wrong
  */
-// router.post(path + '/', (req, res, next) => {
-//   const response = {
-//     success: false,
-//     message: ''
-//   }
-//   // Make sure there is a file uploaded
-//   if (!req.files) {
-//     response.message = 'No file were uploaded'
-//     return res.status(400).json(response)
-//   }
-//   // Check for the existence of required parameters, and make sure that
-//   // they are passed as positive numbers
-//   const requiredValues = ['lang']
-//   for (const value of requiredValues) {
-//     let param = req.query[value]
-//     if (typeof param === 'undefined') {
-//       response.message = 'Required field ' + value + ' is missing or blank'
-//       return res.status(400).json(response)
-//     } else if (value === 'lang' && !languages.includes(param)) {
-//       response.message = value + ' must be one of: ' + languages
-//       return res.status(400).json(response)
-//     }
-//   }
-//   // This is the file sent by the user
-//   const file = req.files.file
-//   // These are various components of the file we need
-//   const fileData = file.data
-//   const mimeType = file.mimetype
-//   const truncated = file.truncated
+router.post(path + '/', (req, res, next) => {
+  const response = {
+    success: false,
+    message: ''
+  }
+  // Make sure there is a file uploaded
+  if (!req.files) {
+    response.message = 'No file were uploaded'
+    return res.status(400).json(response)
+  }
+  // Check for the existence of required parameters, and make sure that
+  // they are passed as positive numbers
+  const requiredValues = ['lang']
+  for (const value of requiredValues) {
+    let param = req.query[value]
+    if (typeof param === 'undefined') {
+      response.message = 'Required field ' + value + ' is missing or blank'
+      return res.status(400).json(response)
+    } else if (value === 'lang' && !languages.includes(param)) {
+      response.message = value + ' must be one of: ' + languages
+      return res.status(400).json(response)
+    }
+  }
+  // This is the file sent by the user
+  const file = req.files.file
+  // These are various components of the file we need
+  const fileData = file.data
+  const mimeType = file.mimetype
+  const truncated = file.truncated
 
-//   // This is the language that the user is submitting their code as
-//   const lang = req.query.lang
+  // This is the language that the user is submitting their code as
+  const lang = req.query.lang
 
-//   // This is the db ID of the user, stored in their JWT
-//   const userId = req.user.id
-//   if (truncated) {
-//     // Check to make sure that the file size isn't too large
-//     response.message = 'File size is too large'
-//     return res.status(400).json(response)
-//   } else if (!validator.matches(mimeType, fileMimeTypeRegex)) {
-//     // Here the file must have the incorrect MIME type
-//     response.message = 'Not an acceptable file type. Must be a compressed (zip, tar, tar.gz) file'
-//     return res.status(415).json(response)
-//   } else {
-//     // send file to arena submission end point here
-//     dbUsers.getUsersTeam(userId).then((teamName) => {
-//       submissions.getSubmissionVersion(teamName).then((version) => {
-//         // submitting the next version
-//         const nextVersion = version + 1
-//         const newFileName = teamName + '_' + nextVersion + '_' + lang
-//         sendZipFile(fileData, newFileName)
-//         submissions.submitSubmission(teamName, nextVersion).then(() => {
-//           response.success = true
-//           response.message = 'Successfully submitted code'
-//           return res.status(200).json(response)
-//         }).catch((err) => {
-//           return res.status(500).json(err)
-//         })
-//       })
-//     }).catch((err) => {
-//       return res.status(500).json(err)
-//     })
-//   }
-// })
+  // This is the db ID of the user, stored in their JWT
+  const userId = req.user.id
+  if (truncated) {
+    // Check to make sure that the file size isn't too large
+    response.message = 'File size is too large'
+    return res.status(400).json(response)
+  } else if (!validator.matches(mimeType, fileMimeTypeRegex)) {
+    // Here the file must have the incorrect MIME type
+    response.message = 'Not an acceptable file type. Must be a compressed (zip, tar, tar.gz) file'
+    return res.status(415).json(response)
+  } else {
+    // send file to arena submission end point here
+    dbUsers.getUsersTeam(userId).then((teamName) => {
+      submissions.getSubmissionVersion(teamName).then((version) => {
+        // submitting the next version
+        const nextVersion = version + 1
+        const newFileName = teamName + '_' + nextVersion + '_' + lang
+        sendZipFile(fileData, newFileName)
+        submissions.submitSubmission(teamName, nextVersion).then(() => {
+          response.success = true
+          response.message = 'Successfully submitted code'
+          return res.status(200).json(response)
+        }).catch((err) => {
+          return res.status(500).json(err)
+        })
+      })
+    }).catch((err) => {
+      return res.status(500).json(err)
+    })
+  }
+})
 
 router.get(path + '/:submissionID', (req, res, next) => {
   const submissionID = req.params.submissionID
