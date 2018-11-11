@@ -16,13 +16,21 @@ export default class Stats extends React.Component {
             if(this.props.userInfo !== null) {
                 axios.get(`${process.env.REACT_APP_API_URL}/stats/${this.props.userInfo.teamName}`).then((response) => {
                     if(response.data.stats[0] !== undefined){
+                        let wincount = 0
+                        let losscount = 0
+                        response.data.stats.forEach(function(e) {
+                            wincount += e.stats.wins
+                            losscount += e.stats.losses
+                        })
                         let stats = response.data.stats[0].stats
                         let numgames = response.data.stats[0].stats.wins + response.data.stats[0].stats.losses
-                        stats['percentwins'] = stats.wins/numgames * 100
-                        stats['percentlosses'] = stats.losses/numgames * 100
+                        stats['percentwins'] = wincount/numgames * 100
+                        stats['percentlosses'] = losscount/numgames * 100
                         this.setState({
                             statratio: stats,
-                            teamstats: response.data.stats
+                            teamstats: response.data.stats,
+                            winCount: wincount,
+                            lossCount: losscount
                     })
                     }
                 })
@@ -53,11 +61,11 @@ export default class Stats extends React.Component {
                 <div>
                 <div className="team-win-loss">
                 <ul>
-                    <li><h2>{this.state.statratio.wins}</h2></li>
+                    <li><h2>{this.state.statratio.winCount}</h2></li>
                     <li><h2>Wins</h2></li>
                 </ul>
                 <ul>
-                    <li><h2>{this.state.statratio.losses}</h2></li>
+                    <li><h2>{this.state.statratio.lossCount}</h2></li>
                     <li><h2>Losses</h2></li>
                 </ul>
                 </div>

@@ -114,10 +114,10 @@ function getGamesByTeamName (teamName, page, pageSize, options) {
         // This will let us contact the correct endpoint to actually retrieve
         // the log url from the arena
         if (game.log_url !== null) {
-          game.log_url = host + logEndpoint + game.log_url
+          game.log_url = game.log_url
         }
         if (game.client_log_url !== null) {
-          game.client_log_url = host + logEndpoint + game.client_log_url
+          game.client_log_url = game.client_log_url
         }
         delete game.winner_id
         delete game.team_id
