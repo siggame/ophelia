@@ -12,7 +12,9 @@ import LoginContainer from './containers/LoginContainer'
 import LogoutContainer from './containers/LogoutContainer'
 import TeamCreation from './components/teams/TeamCreation'
 import TeamsContainer from './containers/TeamsContainer'
+import LeaderboardContainer from './containers/LeaderboardContainer'
 import './styles/main.scss';
+
 @withRouter
 @inject('authStore')
 @observer
@@ -28,7 +30,6 @@ export default class App extends React.Component {
     return (
       <div>
         <NavBar />
-        <SecondNavBar />
         <main className='container-fluid'>
           <Switch>
             <Route exact path='/' component={LandingPageContainer} />
@@ -39,6 +40,7 @@ export default class App extends React.Component {
             <Route exact path='/logout' component={LogoutContainer} />
             <Route exact path='/create-team' component={TeamCreation} />
             <Route exact path='/teams' component={TeamsContainer} />
+            <Route exact path='/leaderboard' component={LeaderboardContainer} />
           </Switch>
         </main>
 

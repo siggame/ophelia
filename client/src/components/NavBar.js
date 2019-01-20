@@ -16,6 +16,9 @@ export default class NavBar extends React.Component {
       // If the user is logged in, they should have different buttons over on the right side.
       rightSection = (
         <ul className='nav navbar-nav navbar-right'>
+          <li><Link to={`/profile/${this.props.authStore.username}`}>Profile</Link></li>
+          <li><Link to='/teams'>Invites</Link></li>
+          <li><Link to='/create-team'>Teams</Link></li>
           <li><Link to='/logout'>Log Out</Link></li>
         </ul>
       )
@@ -35,6 +38,8 @@ export default class NavBar extends React.Component {
           </div>
           <div id='navbar' className='collapse navbar-collapse'>
             <ul className='nav navbar-nav navbar-left'>
+              <li><Link className='dashboard' to='/dashboard'>Dashboard</Link></li>
+              <li><Link className='leaderboard' to='/leaderboard'>Leaderboard</Link></li>
               <li><a href={process.env.REACT_APP_DOCS_URL}>Docs</a></li>
               <li><a href={process.env.REACT_APP_GIT_URL}>GitLab</a></li>
             </ul>

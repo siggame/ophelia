@@ -37,6 +37,52 @@ router.get(path + '/', (req, res) => {
 })
 
 /**
+ * Gets all the teams and how many wins each team has
+ * Responds with body of the form:
+ * {
+ *    success: false,
+ *    message: '',
+ *    leaderboard:[]
+ * }
+ * Response codes:
+ * 200 Successfully return stats
+ * 500 Server error
+ */
+router.get(path + '/leaderboard', (req, res) => {
+  const response = {
+    success: false,
+    message: '',
+    leaderboard: []
+  }
+  dbStats.getTeamWinCounts().then((wins) => {
+    dbStats.getTeamLossCounts().then((losses) => {
+      if (wins.length !== losses.length) {
+        response.message = 'Wins and losses lengths are different for leaderboard'
+        return res.status(500).json(response)
+      }
+      let ldb = wins.map((e, i) => {
+        return {
+          teamName: e['teamName'],
+          wins: Number(e['winCount']),
+          losses: Number(losses[i]['lossCount']),
+          ratio: Number(e['winCount']) / (Number(e['winCount']) + Number(losses[i]['lossCount']))
+        }
+      })
+      response.success = true
+      response.message = 'Successfully retrieved leaderboard'
+      response.leaderboard = ldb
+      return res.status(200).json(response)
+    }).catch((err) => {
+      response.message = 'An Error occured: ' + err.message
+      return res.status(500).json(response)
+    })
+  }).catch((err) => {
+    response.message = 'An Error occured: ' + err.message
+    return res.status(500).json(response)
+  })
+})
+
+/**
  * Gets teams wins vs each other opponent (optionally by version)
  * Optional URL Parameters:
  *  version: The version of submission that played

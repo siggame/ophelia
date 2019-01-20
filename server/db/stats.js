@@ -29,6 +29,33 @@ function getTeamWinCounts () {
   })
 }
 
+function getTeamLossCounts () {
+  return new Promise((resolve, reject) => {
+    const lossCounts = []
+    const statsQuery = knex('games')
+      .join('games_submissions', 'games_submissions.game_id', '=', 'games.id')
+      .join('submissions', function () {
+        this.on('submissions.id', '=', 'games_submissions.submission_id')
+          .andOn('games.winner_id', '!=', 'games_submissions.submission_id')
+      })
+      .join('teams', 'teams.id', '=', 'submissions.team_id')
+      .select('teams.name')
+      .count('games.winner_id').as('count')
+      .groupBy('teams.name')
+    statsQuery.then((rows) => {
+      rows.forEach((row) => {
+        lossCounts.push({
+          teamName: row.name,
+          lossCount: row.count
+        })
+      })
+      return resolve(lossCounts)
+    }).catch((err) => {
+      return reject(err)
+    })
+  })
+}
+
 function getTeamsWins (teamName, options) {
   return new Promise((resolve, reject) => {
     if (teamName === null || typeof teamName === 'undefined') {
@@ -156,6 +183,7 @@ function getWinLossRatio (teamName, options) {
 
 module.exports = {
   getTeamWinCounts,
+  getTeamLossCounts,
   getTeamsWins,
   getWinLossRatio
 }

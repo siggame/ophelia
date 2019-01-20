@@ -1,12 +1,40 @@
+import { observable, action, runInAction, reaction } from 'mobx'
+import RequestLayer from '../modules/requestLayer'
 
 export class statStore{
-    // This will return the number of wins and losses (should it be a percent?)
-    // Just need to pass a teamname into the function
-    // @action async getWinLoss(teamname) {
-    //     try {
-            
-    //     }
-    // }
+  @observable leaderboard = []
+  @observable isStale = false
+
+  constructor () {
+    this.requestLayer = new RequestLayer()
+    this.loadLeaderboard = this.loadLeaderboard.bind(this)
+    this.makeDataStale = this.makeDataStale.bind(this)
+
+    reaction(
+      () => this.isStale,
+      () => {
+        if(this.isStale) {
+          this.loadLeaderboard()
+        }
+      }
+    )
+  }
+
+  @action makeDataStale() {
+    this.isStale = true
+  }
+
+  @action async loadLeaderboard () {
+    try {
+      const response = await this.requestLayer.fetchLeaderboard()
+      runInAction(() => {
+        console.log(response.data.leaderboard)
+        this.leaderboard = response.data.leaderboard
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
 }
 
 export default new statStore()

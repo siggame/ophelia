@@ -262,14 +262,22 @@ export default class RequestLayer {
     // Stats Section
 
     async fetchWinLoss(teamName) {
-      const { authStore } = stores;
-      if(!authStore.isUserLoggedIn) {
+      const {authStore} = stores;
+      if (!authStore.isUserLoggedIn) {
         throw new Error('Must be logged in to do that!')
       }
       try {
         return axios.get(`${process.env.REACT_APP_API_URL}/stats/${teamName}`)
-      } catch(err) {
+      } catch (err) {
         throw err;
+      }
+    }
+
+    async fetchLeaderboard() {
+      try {
+        return axios.get(`${process.env.REACT_APP_API_URL}/stats/leaderboard`)
+      } catch (err) {
+        throw err
       }
     }
 
