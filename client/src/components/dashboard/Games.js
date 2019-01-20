@@ -33,6 +33,7 @@ export class GamesList extends React.Component {
 
 @inject('gameStore')
 @inject('authStore')
+//Team store is temp
 @inject('submissionStore')
 @observer
 export default class Games extends React.Component {
@@ -54,9 +55,9 @@ export default class Games extends React.Component {
 
   componentWillMount () {
     // Grab a list of all users that aren't this one.
-    axios.get(process.env.REACT_APP_API_URL + '/users').then((result) => {
+    axios.get(process.env.REACT_APP_API_URL + '/teams').then((result) => {
       this.setState({
-        users: result.data.users
+        users: result.data.names
       })
     }).catch((err) => {
       console.log('Errored while trying to get users - ', err.message)
@@ -115,13 +116,21 @@ export default class Games extends React.Component {
 
   render () {
     // Generate a list of all opponents to filter by
-    let opponentOptions = this.state.users.map((user) => {
-      if (user !== this.props.authStore.username) {
-        return (
-          <option key={user} value={user}>{user}</option>
-        )
-      }
-    })
+    let opponentOptions = "Not avaiable"
+    try { 
+      opponentOptions = this.state.users.map((user) => {
+        if (user !== this.props.authStore.username) {
+          return (
+            <option key={user} value={user}>{user}</option>
+          )
+        }
+        else {
+          return null;
+        }
+      })
+    } catch(err) {
+      console.log("No users to map! And here is your error! ", err)
+    }
     let versionOptions = this.props.submissionStore.submissions.map(submission => <option key={submission.version} value={submission.version}>{submission.version}</option>)
     versionOptions.reverse()
     let paginateSection

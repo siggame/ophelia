@@ -82,7 +82,6 @@ export default class SubmissionInfo extends React.Component {
         Build Log
       </a>
     )
-    console.log(latestSubmission.logUrl)
     if (latestSubmission.logUrl !== null) {
       logUrl = (
         <DownloadButton url={latestSubmission.logUrl}

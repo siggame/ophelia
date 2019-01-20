@@ -126,9 +126,9 @@ export default class RegisterView extends Component {
         <form>
           {formError}
           <div className='form-group'>
-            <label htmlFor='username'>Team Name</label>
+            <label htmlFor='username'>User Name</label>
             {userError}
-            <input type='text' className='form-control' name='username' placeholder='Team Name' value={this.state.username} onChange={this.handleChange} />
+            <input type='text' className='form-control' name='username' placeholder='User Name' value={this.state.username} onChange={this.handleChange} />
           </div>
           <div className='form-group'>
             <label htmlFor='email'>Email Address</label>

@@ -3,6 +3,7 @@
 const knex = require('./connect').knex
 const host = require('../vars').SERVER_HOST
 const logEndpoint = require('../vars').LOG_ENDPOINT
+const dbTeams = require('./teams')
 
 /**
  * Joins teams and submissions tables together and returns resulting rows that
@@ -34,10 +35,27 @@ function getSubmissionsByTeamName (teamName) {
   })
 }
 
+function getSubmissionVersion (teamName) {
+  return new Promise((resolve, reject) => {
+    if (teamName === null || typeof teamName === 'undefined') {
+      reject(new Error('TeamName is null or undefined'))
+    }
+    knex('submissions')
+      .join('teams', 'teams.id', '=', 'submissions.team_id')
+      .max('version')
+      .where('teams.name', '=', teamName)
+      .then((submission) => {
+        resolve(submission[0].max)
+      }).catch((err) => {
+        return reject(err)
+      })
+  })
+}
+
 function getSubmissionByID (submissionID) {
   return new Promise((resolve, reject) => {
     if (submissionID === null || typeof submissionID === 'undefined') {
-      reject(new Error('teamName is null or undefined'))
+      reject(new Error('submissionId is null or undefined'))
     }
     const query = knex('submissions')
       .select('id', 'status', 'log_url', 'version', 'created_at', 'updated_at')
@@ -46,11 +64,44 @@ function getSubmissionByID (submissionID) {
       // This will let us contact the correct endpoint to actually retrieve
       // the log url from the arena
       if (submission[0].log_url !== null) {
-        submission[0].log_url = host + logEndpoint + submission[0].log_url
+        submission[0].log_url = submission[0].log_url
       }
       return resolve(submission[0])
     }).catch((err) => {
       return reject(err)
+    })
+  })
+}
+
+function submitSubmission (teamName, nextVersion) {
+  return new Promise((resolve, reject) => {
+    dbTeams.getTeamByName(teamName).then((team) => {
+      knex('submissions')
+        .insert({
+          team_id: team.id,
+          version: nextVersion,
+          status: 'finished'
+        }).then(() => {
+          resolve()
+        }).catch((err) => {
+          reject(err)
+        })
+    })
+  })
+}
+
+function updateSubmission (teamName, status) {
+  return new Promise((resolve, reject) => {
+    dbTeams.getTeamByName(teamName).then((team) => {
+      knex('submissions')
+        .insert({
+          team_id: team.id,
+          status: status
+        }).then(() => {
+          resolve()
+        }).catch((err) => {
+          reject(err)
+        })
     })
   })
 }
@@ -69,5 +120,8 @@ function sortSubmissions (submissionA, submissionB) {
 
 module.exports = {
   getSubmissionsByTeamName,
-  getSubmissionByID
+  getSubmissionByID,
+  getSubmissionVersion,
+  submitSubmission,
+  updateSubmission
 }

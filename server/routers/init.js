@@ -14,6 +14,9 @@ const games = require('./games')
 const login = require('./login')
 const medium = require('./medium')
 const admin = require('./admin')
+const teams = require('./teams')
+const invites = require('./invites')
+const stats = require('./stats')
 
 module.exports = {
   admin,
@@ -21,5 +24,8 @@ module.exports = {
   submissions,
   users,
   login,
-  medium
+  medium,
+  teams,
+  invites,
+  stats
 }

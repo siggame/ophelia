@@ -1,5 +1,4 @@
 import axios from 'axios'
-
 import stores from '../stores'
 import { history } from '../index'
 
@@ -39,7 +38,6 @@ export default class RequestLayer {
       if (filter.result) params.result = filter.result
       params.page = pageNum
       params.pageSize = pageSize
-      console.log('params', params)
       axios.get(process.env.REACT_APP_API_URL + '/games', {
         headers: {
           Authorization: `Bearer ${stores.authStore.token}`
@@ -102,15 +100,7 @@ export default class RequestLayer {
 
   async getCurrentUser () {
     try {
-      return axios.get(`${process.env.REACT_APP_API_URL}/users/${stores.authStore.username}`)
-    } catch (err) {
-      throw err
-    }
-  }
-
-  async getTeamByName (teamName) {
-    try {
-      return axios.get(`${process.env.REACT_APP_API_URL}/users/${teamName}`)
+      return axios.get(`${process.env.REACT_APP_API_URL}/users/${stores.authStore.userId}`)
     } catch (err) {
       throw err
     }
@@ -134,4 +124,161 @@ export default class RequestLayer {
       throw err
     }
   }
+
+    // Team Section
+
+    // Get single team from the name
+    async getTeamByName (teamName) {
+      try {
+        axios.get(`${process.env.REACT_APP_API_URL}/teams/${teamName}`);
+      } catch (err) {
+        throw err;
+      }
+    }
+
+    getTeamName(teamId) {
+      return new Promise((resolve, reject) => {
+        axios.get(`${process.env.REACT_APP_API_URL}/teams/id/${teamId}`).then((result) => {
+          return resolve(result)
+        }).catch((err) => {
+          return reject(err)
+        })
+      })
+    }
+
+    // Get every team
+    async getAllTeams () {
+      try {
+        return axios.get(`${process.env.REACT_APP_API_URL}/teams`);
+      } catch (err) {
+        throw err;
+      }
+    }
+
+    async getAllTeamMates () {
+      try {
+        return axios.get(`${process.env.REACT_APP_API_URL}/users/team`);
+      } catch (err) {
+        throw err;
+      }
+    }
+
+    async kickUser(name) {
+      try {
+        return axios.delete(`${process.env.REACT_APP_API_URL}/teams/${name}`)
+      } catch (err) {
+        throw err;
+      }
+    }
+
+    removeSelfFromTeam() {
+      try {
+        return axios.delete(`${process.env.REACT_APP_API_URL}/teams/${stores.authStore.username}`)
+      } catch(err) {
+        console.log(err)
+        throw (err)
+      }
+    }
+
+    // Grabs all team names based on pagination and filter 
+    fetchTeams(pageNum, pageSize, filter = {}) {
+      return new Promise((resolve, reject) => {
+        if(!stores.authStore.isUserLoggedIn) {
+          return reject(new Error('User must be logged in to fetch teams'))
+        }
+        let params = {};
+        if (filter.names) params.names = filter.names
+        params.page = pageNum;
+        params.pageSize = pageSize;
+        axios.get(process.env.REACT_APP_API_URL + '/teams', {
+          headers: {
+            Authorization: `Bearer ${stores.authStore.token}`
+          },
+          params: params
+        }).then((response) => {
+          return resolve({
+            teams: response.data.names,
+            numPages: response.data.pages
+          })
+        }).catch((err) => {
+          return reject(err)
+        })
+      })
+    }
+
+    // Get the current team a user is on
+    // Ask about getting an endpoint to see if user is on team. 
+    // If they are return team info else return null or something
+    async getCurrentTeam () {
+      try {
+        return axios.get(`${process.env.REACT_APP_API_URL}/teams/members/${stores.authStore.userId}`);
+      } catch (err) {
+        throw err;
+      }
+    }
+
+    // Update Team
+    // TODO:
+    async updateTeam(name, teamCaptainId) {
+      const { authStore } = stores;
+      if (!authStore.isUserLoggedIn) {
+        throw new Error('Must be logged in to do that!');
+      }
+      try {
+        const editData = {}
+        if (name) {editData.name = name}
+        if (teamCaptainId) {editData.teamCaptainId = teamCaptainId}
+        return axios.put(`${process.env.REACT_APP_API_URL}/teams`)
+      } catch (err) {
+        throw err;
+      }
+    }
+
+
+    // Section for Invites
+
+    async fetchInvites() {
+      const { authStore } = stores;
+      if(!authStore.isUserLoggedIn) {
+        throw new Error('Must be logged in to do that!')
+      }
+      try {
+        return axios.get(`${process.env.REACT_APP_API_URL}/invites/users/${stores.authStore.userId}`)
+      } catch (err) {
+        throw err;
+      }
+    }
+
+    async inviteAction(inviteId, accepted) {
+      try {
+        return axios.put(`${process.env.REACT_APP_API_URL}/invites/`, {
+          inviteId, accepted
+        })
+      } catch (err) {
+        throw err;
+      }
+    }
+
+    // Stats Section
+
+    async fetchWinLoss(teamName) {
+      const {authStore} = stores;
+      if (!authStore.isUserLoggedIn) {
+        throw new Error('Must be logged in to do that!')
+      }
+      try {
+        return axios.get(`${process.env.REACT_APP_API_URL}/stats/${teamName}`)
+      } catch (err) {
+        throw err;
+      }
+    }
+
+    async fetchLeaderboard() {
+      try {
+        return axios.get(`${process.env.REACT_APP_API_URL}/stats/leaderboard`)
+      } catch (err) {
+        throw err
+      }
+    }
+
 }

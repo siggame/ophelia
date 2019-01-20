@@ -21,5 +21,5 @@ module.exports = {
   SUBMISSIONS_ENDPOINT: _.defaultTo(process.env.SUBMISSIONS_ENDPOINT, '/tmp'),
   LOG_ENDPOINT: _.defaultTo(process.env.LOG_ENDPOINT, '/tmp'),
   ELIGIBLE_DEFAULT: _.defaultTo(process.env.ELIGIBLE_DEFAULT, false),
-  LANGUAGES: ['cs', 'cpp', 'java', 'js', 'py']
+  LANGUAGES: ['cs', 'cpp', 'java', 'js', 'py', 'lua']
 }

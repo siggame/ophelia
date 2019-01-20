@@ -1,11 +1,9 @@
 'use strict'
-// const config = require('./stuff.json') // How to "import" in JS
 const PG_UNIQUE_ERROR = '23505' // unique_violation error in postgres
-const DB_TEAM_UNIQUE = 'teams_name_unique'
-const DB_EMAIL_UNIQUE = 'teams_contact_email_unique'
+const TEAMS_USERS_FOREIGN = 'teams_users_foreign'
 const DUPLICATE_NAME_MESSAGE = 'Team name is already in use.'
-const DUPLICATE_EMAIL_MESSAGE = 'Email is invalid or already in use.'
-const MISSING_FIELD_MESSAGE = 'All args. must be defined and not empty'
+const ALREADY_ON_A_TEAM = 'User is already on a team.'
+const NO_SUCH_USER = 'No such user exists.'
 const knex = require('./connect').knex
 
 function getTeam (teamId) {
@@ -20,192 +18,134 @@ function getTeam (teamId) {
   })
 }
 
-function isUserAdmin (teamId) {
-  return new Promise((resolve, reject) => {
-    getTeam(teamId).then((team) => {
-      if (typeof team !== 'undefined' && team !== null) {
-        return resolve(team.role === 'admin')
-      }
-      return resolve(false)
-    }).catch((err) => { return reject(err) })
-  })
-}
-
-/**
- * getAllTeamNames - grabs all current teams from the database
- * @returns {Promise} - returns an array of strings if successful that contains all team names in the database.
- */
-function getAllTeamNames () {
-  return new Promise((resolve, reject) => {
-    knex('teams').select('name').then((data) => {
-      let returnData = []
-      data.forEach((row) => {
-        returnData.push(row.name)
-      })
-      return resolve(returnData)
-    }).catch((err) => {
-      return reject(err)
-    })
-  })
-}
-
-function getAllTeams () {
-  return new Promise((resolve, reject) => {
-    knex('teams').select(
-      'id', 'name', 'contact_email', 'contact_name', 'is_eligible', 'role'
-    ).then((data) => {
-      return resolve(data)
-    }).catch((err) => {
-      return reject(err)
-    })
-  })
-}
-
 function getTeamByName (teamName) {
   return new Promise((resolve, reject) => {
-    if (arguments.length !== getTeamByName.length) {
-      return reject(new Error('All arguments required'))
-    }
     knex('teams').where({
       name: teamName
-    }).then((team) => {
-      if (team.length > 1) {
-        reject(new Error('More than one team with same name'))
-      } else {
-        return resolve(team[0])
+    }).then((res) => {
+      if (res.length <= 0) {
+        resolve(null)
       }
-    }).catch((err) => {
-      return reject(err)
-    })
-  })
-}
-
-/**
- * Function to edit a Team row in the database
- * @param teamName name of the team to be modified
- * @param dataToUpdate Object of data to update. Each field is optional but must
- *  have at least one filled out
- *    {
- *      name: String,
- *      email: String,
- *      password: {
- *          epass: String,
- *          salt: String,
- *          iterations: Number
- *      }
- *    }
- * @return {Promise} Resolves on success and rejects if invalid data is provided
- *  as well as when there are any errors
- */
-function editTeam (teamName, dataToUpdate) {
-  const teamData = {}
-  return new Promise((resolve, reject) => {
-    if (arguments.length !== editTeam.length) {
-      return reject(new Error('All arguments required'))
-    }
-    for (const dataName in dataToUpdate) {
-      if (dataToUpdate.hasOwnProperty(dataName)) {
-        switch (dataName) {
-          case 'name':
-            teamData.contact_name = dataToUpdate[dataName]
-            break
-          case 'email':
-            teamData.contact_email = dataToUpdate[dataName]
-            break
-          case 'password':
-            const passInfo = dataToUpdate[dataName]
-            teamData.password = passInfo.epass
-            teamData.salt = passInfo.salt
-            teamData.hash_iterations = passInfo.iterations
-            break
-          case 'is_eligible':
-            teamData.is_eligible = dataToUpdate[dataName]
-            break
-          default:
-            return reject(new Error('Can only edit name, email, and password'))
-        }
-      }
-    }
-    knex('teams').where({
-      name: teamName
-    }).update(teamData).then((res) => {
-      resolve(res)
+      resolve(res[0])
     }).catch((err) => {
       reject(err)
     })
   })
 }
 
-/**
- * Creates a team in the 'teams' table
- * @param teamName string, Unique name of the team being created
- * @param email string, Unique, email of the team being created
- * @param password string, Hashed/Encrypted password for the team
- * @param salt string, salt used to Hash/Encrypt the password
- * @param hashIterations number, number used for PBKDF2 hashing
- * @param role string, role for the user, must be either 'user' or 'admin'
- * @param name string, this is the contact_name of the new team
- * @param isEligible boolean, for whether team is eligible
- * @return {Promise} does not return anything on resolve
- */
-function createTeam (
-  teamName,
-  email,
-  password,
-  salt,
-  hashIterations,
-  role,
-  name,
-  isEligible) {
+function getAllTeamNames () {
   return new Promise((resolve, reject) => {
-    if (typeof teamName === 'undefined' || teamName === '' ||
-            typeof email === 'undefined' || email === '' ||
-            typeof password === 'undefined' || password === '' ||
-            typeof salt === 'undefined' || salt === '' ||
-            typeof hashIterations === 'undefined' ||
-            typeof hashIterations !== 'number' ||
-            typeof role === 'undefined' || role === '' ||
-            typeof name === 'undefined' || name === '' ||
-            typeof isEligible === 'undefined' || typeof isEligible !== 'boolean') {
-      return reject(new Error('All args. must be defined and not empty'))
-    }
-    const userRoles = ['user', 'admin']
-    if (!userRoles.includes(role)) {
-      return reject(new Error('role must be in: ' + userRoles))
-    }
-    knex('teams').insert({
-      name: teamName,
-      contact_email: email,
-      password: password,
-      salt: salt,
-      hash_iterations: hashIterations,
-      role: role,
-      contact_name: name,
-      is_eligible: isEligible
-    }).then(() => {
-      return resolve()
+    knex('teams').select('name').then((data) => {
+      let teamNames = []
+      data.forEach((row) => {
+        teamNames.push(row.name)
+      })
+      return resolve(teamNames)
     }).catch((err) => {
-      if (err.code === PG_UNIQUE_ERROR) {
-        if (err.constraint === DB_TEAM_UNIQUE) {
-          return reject(new Error(DUPLICATE_NAME_MESSAGE))
-        } else if (err.constraint === DB_EMAIL_UNIQUE) {
-          return reject(new Error(DUPLICATE_EMAIL_MESSAGE))
-        }
-      }
       return reject(err)
     })
   })
 }
 
+function createTeam (name, teamCaptainId) {
+  return new Promise((resolve, reject) => {
+    // make sure the user creating this team is not already on a team (
+    knex('teams_users').select().where('user_id', '=', teamCaptainId).then((data) => {
+      if (data.length > 0) {
+        return reject(new Error(ALREADY_ON_A_TEAM))
+      }
+      knex('teams').insert({
+        name: name,
+        is_eligible: true,
+        is_paid: true,
+        is_closed: false,
+        team_captain_id: teamCaptainId
+      }).then(() => {
+        // get the id of the team
+        knex('teams').select().where('team_captain_id', '=', teamCaptainId).then((data) => {
+          // record the captain as part of the team in the teams_users table
+          knex('teams_users').insert({
+            user_id: teamCaptainId,
+            team_id: data[0].id
+          }).then(() => {
+            resolve()
+          }).catch((err) => {
+            reject(err)
+          })
+        })
+      }).catch((err) => {
+        if (err.code === PG_UNIQUE_ERROR) {
+          return reject(new Error(DUPLICATE_NAME_MESSAGE))
+        } else if (err.constraint === TEAMS_USERS_FOREIGN) {
+          return reject(new Error(NO_SUCH_USER))
+        }
+        return reject(err)
+      })
+    })
+  })
+}
+
+function removeUserFromTeam (userId) {
+  return new Promise((resolve, reject) => {
+    knex('teams_users')
+      .where('user_id', userId)
+      .del().then(() => {
+        return resolve()
+      }).catch((err) => {
+        return reject(err)
+      })
+  })
+}
+
+function deleteTeam (teamName) {
+  return new Promise((resolve, reject) => {
+    getTeamByName(teamName).then((team) => {
+      knex('teams_users')
+        .where('team_id', team.id)
+        .del().then(() => {
+          knex('invites')
+            .where('team_id', team.id)
+            .update({
+              is_completed: true
+            }).then(() => {
+              knex('teams')
+                .where('id', team.id)
+                .update({
+                  team_captain_id: null
+                }).then(() => {
+                  return resolve()
+                }).catch((err) => {
+                  return reject(err)
+                })
+            }).catch((err) => {
+              return reject(err)
+            })
+        })
+    })
+  })
+}
+
+function editTeam (teamName, data) {
+  return new Promise((resolve, reject) => {
+    knex('teams')
+      .where('teams.name', teamName)
+      .update(data).then(() => {
+        return resolve()
+      }).catch((err) => {
+        return reject(err)
+      })
+  })
+}
+
 module.exports = {
-  createTeam,
   getTeam,
-  getAllTeams,
-  isUserAdmin,
   getTeamByName,
-  editTeam,
   getAllTeamNames,
-  DUPLICATE_EMAIL_MESSAGE,
+  createTeam,
+  removeUserFromTeam,
+  deleteTeam,
+  editTeam,
+  ALREADY_ON_A_TEAM,
   DUPLICATE_NAME_MESSAGE,
-  MISSING_FIELD_MESSAGE
+  NO_SUCH_USER
 }
