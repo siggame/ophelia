@@ -46,6 +46,7 @@ create table "submissions" (
     "id" serial primary key,
     "team_id" integer not null,
     "version" integer not null,
+    "data" bytea not null,
     "status" text check ("status" in ('queued', 'building', 'finished', 'failed')) not null,
     "submission_url" varchar(255),
     "log_url" varchar(255),

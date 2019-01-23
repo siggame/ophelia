@@ -73,13 +73,14 @@ function getSubmissionByID (submissionID) {
   })
 }
 
-function submitSubmission (teamName, nextVersion) {
+function submitSubmission (teamName, fileData, nextVersion) {
   return new Promise((resolve, reject) => {
     dbTeams.getTeamByName(teamName).then((team) => {
       knex('submissions')
         .insert({
           team_id: team.id,
           version: nextVersion,
+          data: fileData,
           status: 'finished'
         }).then(() => {
           resolve()
@@ -106,6 +107,24 @@ function updateSubmission (teamName, status) {
   })
 }
 
+function downloadSubmission (teamName, version) {
+  return new Promise((resolve, reject) => {
+    if (teamName === null || typeof teamName === 'undefined') {
+      reject(new Error('TeamName is null or undefined'))
+    }
+    knex('submissions')
+      .join('teams', 'teams.id', '=', 'submissions.team_id')
+      .select('data')
+      .where('teams.name', '=', teamName)
+      .where('submissions.version', '=', version)
+      .then((fileData) => {
+        return resolve(fileData[0])
+      }).catch((err) => {
+        return reject(err)
+      })
+  })
+}
+
 function sortSubmissions (submissionA, submissionB) {
   const versionA = submissionA.version
   const versionB = submissionB.version
@@ -123,5 +142,6 @@ module.exports = {
   getSubmissionByID,
   getSubmissionVersion,
   submitSubmission,
-  updateSubmission
+  updateSubmission,
+  downloadSubmission
 }
