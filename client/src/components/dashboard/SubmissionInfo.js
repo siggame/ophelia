@@ -3,10 +3,13 @@ import { inject, observer } from 'mobx-react'
 import React from 'react'
 import { Alert } from 'react-bootstrap'
 import DownloadButton from '../DownloadButton'
-
+import axios from 'axios'
 import UploadButton from '../UploadButton'
 import ButtonRefresh from '../ButtonRefresh'
 import { langs } from '../../vars'
+import DownloadData from '../DownloadData';
+
+const isBinaryFile = require('isbinaryfile')
 
 // TODO: There might be an argument for not having this here - but I'm just not sure. Should do some research into that. - RD
 const langOptions = langs.map(data => <option key={data.slug} value={data.slug}>{data.name}</option>)
@@ -23,10 +26,35 @@ export default class SubmissionInfo extends React.Component {
     }
 
     this.handleLangChange = this.handleLangChange.bind(this)
+    this.handleClick = this.handleClick.bind(this)
+    this.getFile = this.getFile.bind(this)
   }
+
+  getFile(version) {
+		console.log("this got called")
+		return new Promise((resolve, reject) => {
+			axios.get(process.env.REACT_APP_API_URL + '/submissions/' + version)
+				.then((response) => {
+					const data = response.data
+					const buffer = new Buffer(data)
+					isBinaryFile(buffer, 10000, (err, result) => {
+						return resolve({
+							file: data,
+							isBinary: result
+						})
+					})
+				}).catch((err) => {
+					return reject(err)
+				})
+		})
+	}
 
   handleLangChange (event) {
     this.setState({ lang: event.target.value })
+  }
+
+  handleClick(version) {
+    this.getFile(version)
   }
 
   render () {
@@ -82,11 +110,22 @@ export default class SubmissionInfo extends React.Component {
         Build Log
       </a>
     )
-    if (latestSubmission.logUrl !== null) {
+    let zipButton = (
+      <a className='disabled btn btn-info btn-sm' tabIndex={0} style={{ fontWeight: 'bold' }}>Download File</a>
+    )
+    if (latestSubmission.version !== null) {
+      // Call latestSubmission.version to get the correct version number
+      // On click call a get request to get the file
       logUrl = (
         <DownloadButton url={latestSubmission.logUrl}
         html={(<a className='btn btn-info btn-sm' style={{ fontWeight: 'bold' }}>
           Build Log
+        </a>)}/>
+      )
+      zipButton = (
+        <DownloadData version={latestSubmission.version}
+        html={(<a className='btn btn-info btn-sm' style={{ fontweight: 'bold'}}>
+          Download File
         </a>)}/>
       )
 
@@ -112,6 +151,9 @@ export default class SubmissionInfo extends React.Component {
 
             <div className='col-md-4'>
               {logUrl}
+            </div>
+            <div className='col-md-4'>
+              {zipButton}
             </div>
             <div className='col-md-4 text-center'><span style={{ fontWeight: 'bold' }}>Version:</span> {latestSubmission.version}</div>
           </div>

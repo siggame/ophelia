@@ -99,11 +99,11 @@ export class Submission {
   @observable logUrl
   @observable updatedAt
 
-  constructor (version, status, submissionUrl, logUrl, imageName, createdAt, updatedAt) {
+  constructor (version, status, submissionUrl, data, imageName, createdAt, updatedAt) {
     this.version = version
     this.status = status
     this.submissionUrl = submissionUrl
-    this.logUrl = logUrl
+    this.logUrl = data
     this.imageName = imageName
     this.createdAt = createdAt
     this.updatedAt = updatedAt
