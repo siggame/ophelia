@@ -7,7 +7,7 @@ export class LeaderboardList extends React.Component {
     let leaderboard = this.props.leaderboard;
 
     let columns = [
-        { Header: 'Team Name', accessor: 'name' },
+        { Header: 'Team Name', accessor: 'teamName' },
         { Header: 'Wins', accessor: 'wins' },
         { Header: 'Losses', accessor: 'losses' },
         { Header: 'Win/Loss Ratio', accessor: 'ratio' },
