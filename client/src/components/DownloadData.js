@@ -6,20 +6,18 @@ const fileDownload = require('js-file-download')
 export default class DownloadData extends React.Component {
 	getFile(version) {
 		console.log("this got called")
+		var url = process.env.REACT_APP_API_URL + '/submissions/' + version;
+		console.log(url);
 		return new Promise((resolve, reject) => {
-			axios.get(process.env.REACT_APP_API_URL + '/submissions/' + version)
-				.then((response) => {
-					const data = response.data
-					const buffer = new Buffer(data)
-					isBinaryFile(buffer, 10000, (err, result) => {
-						return resolve({
-							file: data,
-							isBinary: result
-						})
-					})
-				}).catch((err) => {
-					return reject(err)
-				})
+			axios({
+				method:'get',
+				url: url,
+				responseType: 'arraybuffer'
+			}).then(function (response) {
+				console.log(response.data);
+				var blob = new Blob([response.data], {type: "application/zip"});
+				fileDownload(blob, "version_" + version + ".zip");
+			})
 		})
 	}
 
@@ -27,18 +25,7 @@ export default class DownloadData extends React.Component {
 		if (this.props.version) {
 			return (
 			  <div onClick={() => {
-				  this.getFile(this.props.version).then((result) => {
-					  let file = result.file
-					  if(result.isBinary) {
-						  const array = new Uint8Array(file.length)
-						  for(let i = 0; i < file.length; i++) {
-							  array[i] = file.charCodeAt(i);
-						  }
-						  console.log(array)
-						  file = new Blob([array], {type: 'application/gzip'});
-					  }
-					  fileDownload(file, "test.zip")
-				  })
+				  this.getFile(this.props.version)
 			  }} style={{ fontWeight: 'bold' }}>
 			  	{this.props.html}
 			  </div>

@@ -66,7 +66,6 @@ export default class RequestLayer {
           Authorization: `Bearer ${stores.authStore.token}`
         }
       }).then((response) => {
-        console.log(response.data.submissions)
         return resolve(response.data.submissions)
       }).catch((err) => {
         return reject(err)
