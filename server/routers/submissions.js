@@ -126,7 +126,7 @@ router.post(path + '/', (req, res, next) => {
         const nextVersion = version + 1
         const newFileName = teamName + '_' + nextVersion + '_' + lang
         console.log(newFileName, file.data)
-        // sendZipFile(fileData, newFileName)
+        sendZipFile(fileData, newFileName)
         submissions.submitSubmission(teamName, fileData, nextVersion).then(() => {
           response.success = true
           response.message = 'Successfully submitted code'
