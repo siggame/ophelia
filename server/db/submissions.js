@@ -73,7 +73,7 @@ function getSubmissionByID (submissionID) {
   })
 }
 
-function submitSubmission (teamName, fileData, nextVersion) {
+function submitSubmission (teamName, fileData, nextVersion, lang) {
   return new Promise((resolve, reject) => {
     dbTeams.getTeamByName(teamName).then((team) => {
       knex('submissions')
@@ -81,10 +81,12 @@ function submitSubmission (teamName, fileData, nextVersion) {
           team_id: team.id,
           version: nextVersion,
           data: fileData,
-          status: 'finished'
+          status: 'finished',
+          lang: lang
         }).then(() => {
           resolve()
         }).catch((err) => {
+          console.log(err)
           reject(err)
         })
     })

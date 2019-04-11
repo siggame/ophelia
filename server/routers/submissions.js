@@ -107,7 +107,6 @@ router.post(path + '/', (req, res, next) => {
 
   // This is the language that the user is submitting their code as
   const lang = req.query.lang
-
   // This is the db ID of the user, stored in their JWT
   const userId = req.user.id
   if (truncated) {
@@ -125,9 +124,8 @@ router.post(path + '/', (req, res, next) => {
         // submitting the next version
         const nextVersion = version + 1
         const newFileName = teamName + '_' + nextVersion + '_' + lang
-        console.log(newFileName, file.data)
-        sendZipFile(fileData, newFileName)
-        submissions.submitSubmission(teamName, fileData, nextVersion).then(() => {
+        console.log(lang)
+        submissions.submitSubmission(teamName, fileData, nextVersion, lang).then(() => {
           response.success = true
           response.message = 'Successfully submitted code'
           return res.status(200).json(response)
