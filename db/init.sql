@@ -47,6 +47,7 @@ create table "submissions" (
     "team_id" integer not null,
     "version" integer not null,
     "data" bytea not null,
+    "lang" text check("lang" in ('cs', 'cpp', 'java', 'js', 'py', 'lua', 'Human')) not null
     "status" text check ("status" in ('queued', 'building', 'finished', 'failed')) not null,
     "submission_url" varchar(255),
     "log_url" varchar(255),

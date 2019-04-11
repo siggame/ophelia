@@ -2,12 +2,12 @@
 
 const validator = require('validator')
 
-const usernameRegex = /^[a-zA-Z0-9_']+$/
-const passwordRegex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9!@#$%^&*]*$/
+const usernameRegex = /^[a-zA-Z0-9_']+$/i
+const passwordRegex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9!@#$%^&*]*$/i
 // changed the regex as below was not working
 // const emailRegex = /^[a-zA-Z0-9_+&*-]+(?:\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]$/
 
-const teamRegex = /[a-zA-Z0-9$_+!*'()]+$/
+const teamRegex = /^[a-zA-Z0-9_$'@#!%-]+$/i
 
 const emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
 
@@ -35,7 +35,7 @@ function checkLength (str, minLen, maxLen) {
  * @returns {boolean}
  */
 function isValidEmail (email) {
-  return !!(checkLength(email, emailMinLength, emailMaxLength) && validator.matches(email, emailRegex))
+  return !!(checkLength(email, emailMinLength, emailMaxLength) && email.match(emailRegex))
 }
 
 /**
