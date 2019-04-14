@@ -41,7 +41,7 @@ export default class NavBar extends React.Component {
               <li><Link className='dashboard' to='/dashboard'>Dashboard</Link></li>
               <li><Link className='leaderboard' to='/leaderboard'>Leaderboard</Link></li>
               <li><a href={process.env.REACT_APP_DOCS_URL}>Docs</a></li>
-              <li><a href={process.env.REACT_APP_GIT_URL}>GitLab</a></li>
+              <li><a href="http://status.megaminerai.com">Status</a></li>
             </ul>
             {rightSection}
           </div>

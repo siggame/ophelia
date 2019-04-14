@@ -142,7 +142,7 @@ export default class RegisterView extends Component {
           <div className='form-group'>
             <label htmlFor='password'>Password</label>
             <div>
-              Must be at least 6 characters and contain:
+              Must be at least 8 characters and contain:
               <ul>
                 <li>an uppercase letter</li>
                 <li>a lowercase letter</li>
