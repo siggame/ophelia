@@ -1,4 +1,4 @@
-create table "users" (
+create table if not exists "users" (
     "id" serial primary key,
     "name" varchar(64) not null unique,
     "contact_email" varchar(64) not null unique,
@@ -15,7 +15,7 @@ create table "users" (
     "updated_at" timestamptz not null default CURRENT_TIMESTAMP
 );
 
-create table "teams" (
+create table if not exists "teams" (
     "id" serial primary key,
     "name" varchar(64) not null unique,
     "is_eligible" boolean not null,
@@ -29,7 +29,7 @@ create table "teams" (
 alter table "teams" add constraint "teams_name_unique" unique ("name");
 alter table "teams" add constraint "teams_users_foreign" foreign key ("team_captain_id") references "users" ("id");
 
-create table "teams_users" (
+create table if not exists "teams_users" (
     "id" serial primary key,
     "user_id" integer not null unique,
     "team_id" integer not null,
@@ -42,7 +42,7 @@ alter table "teams_users" add constraint "teams_users_users_foreign" foreign key
 comment on column "teams_users"."user_id" is 'The user that is on the team';
 comment on column "teams_users"."team_id" is 'The team that the user is on';
 
-create table "submissions" (
+create table if not exists "submissions" (
     "id" serial primary key,
     "team_id" integer not null,
     "version" integer not null,
@@ -60,7 +60,7 @@ comment on column "submissions"."image_name" is 'The docker image of the submiss
 alter table "submissions" add constraint "submissions_team_id_foreign" foreign key ("team_id") references "teams" ("id");
 alter table "submissions" add constraint "submissions_team_id_version_unique" unique ("team_id", "version");
 
-create table "games" (
+create table if not exists "games" (
     "id" serial primary key,
     "status" text check ("status" in ('queued', 'playing', 'finished', 'failed')) not null,
     "win_reason" varchar(255),
@@ -75,7 +75,7 @@ comment on column "games"."winner_id" is 'The id of the winning submission';
 comment on column "games"."log_url" is 'Link to the game log.';
 alter table "games" add constraint "games_winner_id_foreign" foreign key ("winner_id") references "submissions" ("id");
 
-create table "games_submissions" (
+create table if not exists "games_submissions" (
     "id" serial primary key,
     "submission_id" integer not null,
     "game_id" integer not null,
@@ -90,7 +90,7 @@ comment on column "games_submissions"."output_url" is 'Link to the output genera
 alter table "games_submissions" add constraint "games_submissions_submission_id_foreign" foreign key ("submission_id") references "submissions" ("id");
 alter table "games_submissions" add constraint "games_submissions_game_id_foreign" foreign key ("game_id") references "games" ("id");
 
-create table invites (
+create table if not exists "invites" (
     "id" serial primary key,
     "team_id" integer not null,
     "user_id" integer not null,
@@ -104,7 +104,7 @@ alter table "invites" add constraint "invites_users_foreign" foreign key ("user_
 comment on column "invites"."user_id" is 'The user that is on the team';
 comment on column "invites"."team_id" is 'The team that the user is on';
 
-create table submissions_metadata (
+create table if not exists "submissions_metadata" (
     "id" serial primary key,
     "submission_id" integer not null,
     "label" varchar(64),

@@ -1,13 +1,12 @@
 version: '2'
 services:
   db:
-    image: siggame/colisee-db:latest
-    volumes:
-      - /mnt/disks/psql/db:/var/lib/postgresql/data
-    env_file:
-      - ./prod-setup/db.env
+    image: postgres
     ports:
       - '5432:5432'
+    volumes:
+      - ./db/init.sql/:/docker-entrypoint-initdb.d/init.sql
+      - ./postgres-data:/var/lib/postgresql/data
   server:
     build: ./server
     ports:
