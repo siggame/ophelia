@@ -132,6 +132,7 @@ router.delete(path + '/:username', (req, res, next) => {
           // Put disbanding team here if userId and urlUserId are equal?
           users.getUsersTeam(userId).then((teamName) => {
             teams.deleteTeam(teamName).then(() => {
+              response.success = true
               response.message = 'Successfully deleted team ' + teamName
               return res.status(200).json(response)
             }).catch((err) => {
