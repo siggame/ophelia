@@ -22,11 +22,6 @@ function getSubmissionsByTeamName (teamName) {
         'submissions.created_at', 'submissions.updated_at')
       .where('teams.name', '=', teamName)
       .then((submissions) => {
-        for (const submission of submissions) {
-          if (submission.log_url !== null) {
-            submission.log_url = host + logEndpoint + submission.log_url
-          }
-        }
         submissions.sort(sortSubmissions)
         return resolve(submissions)
       }).catch((err) => {
