@@ -198,11 +198,7 @@ router.put(path + '/', (req, res, next) => {
           dataToUpdate.name = body[value]
           break
         case 'contactName':
-          if (!sanitizer.isValidUsername(body[value])) {
-            response.message = 'Not a valid username'
-            return res.status(400).json(response)
-          }
-          dataToUpdate.contact_name = body[value]
+          dataToUpdate.contactName = body[value]
           break
         case 'password':
           if (!sanitizer.isValidPassword(body[value])) {
