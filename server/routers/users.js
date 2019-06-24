@@ -163,7 +163,7 @@ router.get(path + '/:userId', (req, res, next) => {
       response.message = 'User retrieved successfully'
       response.user = {
         name: user.name,
-        email: user.email,
+        email: user.contact_email,
         contactName: user.contact_name
       }
       if (typeof data !== 'undefined') {
