@@ -3,7 +3,7 @@
 const _ = require('lodash')
 
 module.exports = {
-  DB_HOST: _.defaultTo(process.env.DB_HOST, 'localhost'),
+  DB_HOST: _.defaultTo(process.env.DB_HOST, 'db'),
   DB_PORT: _.defaultTo(process.env.DB_PORT, 5432),
   DB_USER: _.defaultTo(process.env.DB_USER, 'postgres'),
   DB_PASS: _.defaultTo(process.env.DB_PASS, ''),

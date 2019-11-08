@@ -39,8 +39,9 @@ Once you make changes to the files on your local machine, refresh the page in yo
 to see your changes.
 
 ## Running the Webserver for Production
-
---
+1. `yarn upgrade` in both server and client
+2. copy `.env_example` and set values
+3. `docker-compose up` in the root
 
 ## Troubleshooting
 

@@ -15,7 +15,7 @@ EXPOSE 3001
 # Set the environment variable to let node know its in a production setting
 # This will enable caching in express among other things. For a dev environment,
 # override this with -e NODE_ENV="development"
-ENV NODE_ENV production
+ENV NODE_ENV development
 
 RUN curl -o- -L https://yarnpkg.com/install.sh | bash
 

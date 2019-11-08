@@ -21,8 +21,8 @@ const routers = require('./routers/init')
 const app = express()
 
 // Enable CORS for the hostname that the client is hosted at
-app.use(cors({origin: hostname}))
-app.options(cors({origin: hostname}))
+app.use(cors())
+app.options(cors())
 // view engine setup
 app.set('components', path.join(__dirname, 'components'))
 

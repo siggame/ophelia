@@ -1,12 +1,15 @@
 version: '2'
 services:
-  webserver:
-    build: .
-    image: siggame/ophelia
-    environment:
-      NODE_ENV: development
+  db:
+    image: postgres
     ports:
-      - '3000:3000'
+      - '5432:5432'
     volumes:
-      - .:/home/siggame/ophelia
-      - /home/siggame/ophelia/node_modules
+      - ./db/init.sql/:/docker-entrypoint-initdb.d/init.sql
+  server:
+    build: ./server
+    ports:
+      - '3001:3001'
+    volumes:
+      - ./server:/home/siggame/ophelia
+
