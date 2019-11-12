@@ -26,14 +26,14 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=America/Chicago
-      - URL=mmai.siggame.io
-      - SUBDOMAINS=,
+      - URL=siggame.io
+      - SUBDOMAINS=mmai,mmai-server,
       - VALIDATION=http
       - DNSPLUGIN=cloudflare #optional
       # - DUCKDNSTOKEN=token #optional
       - EMAIL=siggame@umsystem.edu #optional
       - DHLEVEL=2048 #optional
-      - ONLY_SUBDOMAINS=false #optional
+      - ONLY_SUBDOMAINS=true #optional
       # - EXTRA_DOMAINS=extradomains #optional
       - STAGING=false #optional
     volumes:
