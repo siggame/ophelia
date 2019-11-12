@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 services:
   db:
     image: postgres
@@ -17,24 +17,28 @@ services:
       dockerfile: ./Dockerfile-prod
     ports:
       - '3000:80'
-  reverse-proxy:
-    image: nginx
-    volumes:
-     - ./prod-setup/proxy_servers.template:/etc/nginx/conf.d/mysite.template
-     - /etc/letsencrypt:/etc/ssl:ro
-    ports:
-     - "80:80"
-     - "443:443"
-    links:
-      - client
-      - server
+  reverse_proxy:
+    image: linuxserver/letsencrypt
+    container_name: letsencrypt
+    cap_add:
+      - NET_ADMIN
     environment:
-     - NGINX_CLIENT_HOST=chess.siggame.io
-     - NGINX_SERVER_HOST=chess-server.siggame.io
-     - NGINX_ARENA_HOST=10.128.0.4
-    command: >
-        /bin/bash -c "envsubst
-        '$$NGINX_CLIENT_HOST $$NGINX_SERVER_HOST $$NGINX_ARENA_HOST'
-        < /etc/nginx/conf.d/mysite.template >
-        /etc/nginx/conf.d/default.conf
-        && nginx -g 'daemon off;'"
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Chicago
+      - URL=mmai.siggame.io
+      - SUBDOMAINS=,
+      - VALIDATION=http
+      - DNSPLUGIN=cloudflare #optional
+      # - DUCKDNSTOKEN=token #optional
+      - EMAIL=siggame@umsystem.edu #optional
+      - DHLEVEL=2048 #optional
+      - ONLY_SUBDOMAINS=false #optional
+      # - EXTRA_DOMAINS=extradomains #optional
+      - STAGING=false #optional
+    volumes:
+      - ./.docker/letsencrypt:/config
+    ports:
+      - 443:443
+      - 80:80
+    restart: unless-stopped
