@@ -38,7 +38,7 @@ function getAllTeamNames () {
     knex('teams').select().then((data) => {
       let teamNames = []
       data.forEach((row) => {
-        if (row.team_captain_id) {
+        if (row.team_captain_id && row.is_eligible) {
           teamNames.push(row.name);
         }
       })
