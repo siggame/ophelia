@@ -32,6 +32,18 @@ router.get(path + '/', (req, res) => {
   })
 })
 
+router.get(path + '/free_agents', (req, res) => {
+  const response = {
+    success: false,
+    names: []
+  };
+  users.getFreeAgents().then((data) => {
+    response.success = true;
+    response.names = data;
+    return res.status(200).json(response);
+  });
+})
+
 router.get(path + '/team', (req, res, next) => {
   const response = {
     success: false,
@@ -163,7 +175,7 @@ router.get(path + '/:userId', (req, res, next) => {
       response.message = 'User retrieved successfully'
       response.user = {
         name: user.name,
-        email: user.email,
+        email: user.contact_email,
         contactName: user.contact_name
       }
       if (typeof data !== 'undefined') {
@@ -198,11 +210,7 @@ router.put(path + '/', (req, res, next) => {
           dataToUpdate.name = body[value]
           break
         case 'contactName':
-          if (!sanitizer.isValidUsername(body[value])) {
-            response.message = 'Not a valid username'
-            return res.status(400).json(response)
-          }
-          dataToUpdate.contact_name = body[value]
+          dataToUpdate.contactName = body[value]
           break
         case 'password':
           if (!sanitizer.isValidPassword(body[value])) {

@@ -117,6 +117,23 @@ function getAllUsers () {
   })
 }
 
+function getFreeAgents () {
+  return new Promise((resolve, reject) => {
+    knex.raw(`
+    SELECT u.name
+    FROM users AS u
+    LEFT OUTER JOIN teams_users AS tu
+    ON u.id = tu.user_id
+    WHERE tu.team_id IS NULL
+    AND u.active = true
+    `).then((data) => {
+      return resolve(data.rows)
+    }).catch((err) => {
+      return reject(err)
+    })
+  })
+}
+
 /**
  * Function to edit a User row in the database
  * @param name name of the user to be modified
@@ -209,7 +226,7 @@ function createUser (
             typeof salt === 'undefined' || salt === '' ||
             typeof hashIterations === 'undefined' ||
             typeof role === 'undefined' || role === '' ||
-            typeof contactName === 'undefined' || contactName === '') {
+            typeof contactName === 'undefined') {
       return reject(new Error('All args. must be defined and not empty'))
     }
     const userRoles = ['user', 'admin']
@@ -223,7 +240,8 @@ function createUser (
       salt: salt,
       hash_iterations: hashIterations,
       role: role,
-      contact_name: contactName
+      contact_name: contactName,
+      active: true
     }).then(() => {
       return resolve()
     }).catch((err) => {
@@ -262,6 +280,7 @@ module.exports = {
   getUsersTeam,
   getUser,
   getAllUsers,
+  getFreeAgents,
   isUserAdmin,
   isUserTeamCaptain,
   getUserByName,

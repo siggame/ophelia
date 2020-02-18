@@ -35,10 +35,12 @@ function getTeamByName (teamName) {
 
 function getAllTeamNames () {
   return new Promise((resolve, reject) => {
-    knex('teams').select('name').then((data) => {
+    knex('teams').select().then((data) => {
       let teamNames = []
       data.forEach((row) => {
-        teamNames.push(row.name)
+        if (row.team_captain_id && row.is_eligible) {
+          teamNames.push(row.name);
+        }
       })
       return resolve(teamNames)
     }).catch((err) => {
