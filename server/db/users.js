@@ -223,7 +223,8 @@ function createUser (
       salt: salt,
       hash_iterations: hashIterations,
       role: role,
-      contact_name: contactName
+      contact_name: contactName,
+      active: true
     }).then(() => {
       return resolve()
     }).catch((err) => {
