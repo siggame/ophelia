@@ -3,7 +3,7 @@
 const validator = require('validator')
 
 const usernameRegex = /^[a-zA-Z0-9_']+$/i
-const passwordRegex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9!@#$%^&*]*$/i
+const passwordRegex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).*$/i
 // changed the regex as below was not working
 // const emailRegex = /^[a-zA-Z0-9_+&*-]+(?:\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]$/
 
