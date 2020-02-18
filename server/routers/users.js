@@ -32,6 +32,18 @@ router.get(path + '/', (req, res) => {
   })
 })
 
+router.get(path + '/free_agents', (req, res) => {
+  const response = {
+    success: false,
+    names: []
+  };
+  users.getFreeAgents().then((data) => {
+    response.success = true;
+    response.names = data;
+    return res.status(200).json(response);
+  });
+})
+
 router.get(path + '/team', (req, res, next) => {
   const response = {
     success: false,

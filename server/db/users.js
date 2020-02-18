@@ -117,6 +117,23 @@ function getAllUsers () {
   })
 }
 
+function getFreeAgents () {
+  return new Promise((resolve, reject) => {
+    knex.raw(`
+    SELECT u.name
+    FROM users AS u
+    LEFT OUTER JOIN teams_users AS tu
+    ON u.id = tu.user_id
+    WHERE tu.team_id IS NULL
+    AND u.active = true
+    `).then((data) => {
+      return resolve(data.rows)
+    }).catch((err) => {
+      return reject(err)
+    })
+  })
+}
+
 /**
  * Function to edit a User row in the database
  * @param name name of the user to be modified
@@ -263,6 +280,7 @@ module.exports = {
   getUsersTeam,
   getUser,
   getAllUsers,
+  getFreeAgents,
   isUserAdmin,
   isUserTeamCaptain,
   getUserByName,
