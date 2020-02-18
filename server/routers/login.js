@@ -54,7 +54,7 @@ router.post(path + '/', (req, res, next) => {
     return res.status(400).json(response)
   }
   if (!sanitizer.isValidPassword(password)) {
-    response.message = 'Bad password'
+    response.message = 'Incorrect password'
     return res.status(400).json(response)
   }
   login(username, password).then((result) => {
@@ -62,6 +62,7 @@ router.post(path + '/', (req, res, next) => {
       // If result is false then they gave the wrong username or password
       // If the result is null then they must not exist in the db
       response.success = false
+      response.message = 'Incorrect password';
       return res.status(401).json(response)
     }
     const token = jsonwebtoken.sign({
