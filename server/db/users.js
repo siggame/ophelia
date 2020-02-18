@@ -209,7 +209,7 @@ function createUser (
             typeof salt === 'undefined' || salt === '' ||
             typeof hashIterations === 'undefined' ||
             typeof role === 'undefined' || role === '' ||
-            typeof contactName === 'undefined' || contactName === '') {
+            typeof contactName === 'undefined') {
       return reject(new Error('All args. must be defined and not empty'))
     }
     const userRoles = ['user', 'admin']
