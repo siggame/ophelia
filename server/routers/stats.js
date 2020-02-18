@@ -2,6 +2,7 @@
 
 const express = require('express')
 const router = express.Router()
+const dbUsers = require('../db/init').users
 const dbStats = require('../db/init').stats
 
 // All paths in this file should start with this
@@ -105,8 +106,7 @@ router.get(path + '/leaderboard', (req, res) => {
  * 400 Invalid param inputs
  * 500 Server error
  */
-router.get(path + '/:teamName', (req, res) => {
-  const teamName = req.params.teamName
+router.get(path + '/teamStats', (req, res) => {
   const response = {
     success: false,
     message: '',
@@ -122,14 +122,17 @@ router.get(path + '/:teamName', (req, res) => {
     }
     options.version = parseInt(param)
   }
-  dbStats.getTeamsWins(teamName, options).then((stats) => {
-    response.success = true
-    response.message = 'Statistics successfully retrieved'
-    response.stats = stats
-    return res.status(200).json(response)
-  }).catch((err) => {
-    response.message = 'An error occurred: ' + err.message
-    return res.status(500).json(response)
+  const userId = req.user.id
+  dbUsers.getUsersTeam(userId).then((teamName) => {
+    dbStats.getTeamsWins(teamName, options).then((stats) => {
+      response.success = true
+      response.message = 'Statistics successfully retrieved'
+      response.stats = stats
+      return res.status(200).json(response)
+    }).catch((err) => {
+      response.message = 'An error occurred: ' + err.message
+      return res.status(500).json(response)
+    })
   })
 })
 
