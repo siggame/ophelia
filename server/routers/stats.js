@@ -56,21 +56,34 @@ router.get(path + '/leaderboard', (req, res) => {
   }
   dbStats.getTeamWinCounts().then((wins) => {
     dbStats.getTeamLossCounts().then((losses) => {
-      if (wins.length !== losses.length) {
-        response.message = 'Wins and losses lengths are different for leaderboard'
-        return res.status(500).json(response)
+      const teams = {};
+      const results = [];
+
+      wins.forEach(e => {
+        const team = { winCount: Number(e.winCount) };
+	teams[e.teamName] = team;
+      });
+
+      losses.forEach(e => {
+	const team = teams[e.teamName] || {};
+	team.lossCount = Number(e.lossCount);
+	teams[e.teamName] = team;
+      });
+
+      for (let teamName in teams) {
+        const team = teams[teamName];
+	const lossCount = team.lossCount || 0;
+	const winCount = team.winCount || 0;
+	results.push({
+	  teamName: teamName,
+	  wins: winCount,
+	  losses: lossCount,
+	  ratio: winCount / (winCount + lossCount)
+	});
       }
-      let ldb = wins.map((e, i) => {
-        return {
-          teamName: e['teamName'],
-          wins: Number(e['winCount']),
-          losses: Number(losses[i]['lossCount']),
-          ratio: Number(e['winCount']) / (Number(e['winCount']) + Number(losses[i]['lossCount']))
-        }
-      })
       response.success = true
       response.message = 'Successfully retrieved leaderboard'
-      response.leaderboard = ldb
+      response.leaderboard = results
       return res.status(200).json(response)
     }).catch((err) => {
       response.message = 'An Error occured: ' + err.message
