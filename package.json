@@ -37,7 +37,7 @@
     "standard": "^11.0.0"
   },
   "dependencies": {
-    "decompress": "^4.2.0",
+    "decompress": "^4.2.1",
     "react-paginate": "^5.1.0",
     "yarn": "^1.9.4"
   },
