@@ -23,6 +23,7 @@ function login (username, password) {
     users.getUserByName(username).then((user) => {
       if (!user || typeof user === 'undefined') {
         // If the team is undefined then there must not have been a match
+        console.warn("undefined user");
         return resolve(null)
       } else {
         const encryptedPassword = user.password
@@ -37,6 +38,7 @@ function login (username, password) {
           return resolve(userInfo)
         }
         // If compare failed then they must have given the wrong password
+        console.warn("failed compare");
         return resolve(false)
       }
     }, (err) => {

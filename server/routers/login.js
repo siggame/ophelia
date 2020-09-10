@@ -61,6 +61,7 @@ router.post(path + '/', (req, res, next) => {
     if (result === false || result === null) {
       // If result is false then they gave the wrong username or password
       // If the result is null then they must not exist in the db
+      console.warn("no result");
       response.success = false
       return res.status(401).json(response)
     }
