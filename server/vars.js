@@ -6,7 +6,7 @@ module.exports = {
   DB_HOST: _.defaultTo(process.env.DB_HOST, 'db'),
   DB_PORT: _.defaultTo(process.env.DB_PORT, 5432),
   DB_USER: _.defaultTo(process.env.DB_USER, 'postgres'),
-  DB_PASS: _.defaultTo(process.env.DB_PASS, ''),
+  DB_PASS: _.defaultTo(process.env.DB_PASS, 'password'),
   DB_CLIENT: _.defaultTo(process.env.DB_CLIENT, 'pg'),
   DB_NAME: _.defaultTo(process.env.DB_NAME, 'postgres'),
   HOST: _.defaultTo(process.env.HOST, 'localhost'),

@@ -75,7 +75,7 @@ router.get(path + '/:version', (req, res, next) => {
  * 400 - User error
  * 500 - Something went wrong
  */
-/* router.post(path + '/', (req, res, next) => {
+ router.post(path + '/', (req, res, next) => {
   const response = {
     success: false,
     message: ''
@@ -138,7 +138,7 @@ router.get(path + '/:version', (req, res, next) => {
       return res.status(500).json(err)
     })
   }
-})*/
+})
 
 router.get(path + '/:submissionID', (req, res, next) => {
   const submissionID = req.params.submissionID
