@@ -12,7 +12,8 @@ create table if not exists "users" (
     "bio" varchar(1024),
     "profile_pic" bytea,
     "created_at" timestamptz not null default CURRENT_TIMESTAMP,
-    "updated_at" timestamptz not null default CURRENT_TIMESTAMP
+    "updated_at" timestamptz not null default CURRENT_TIMESTAMP,
+    "has_paid" boolean not null default false
 );
 
 create table if not exists "teams" (

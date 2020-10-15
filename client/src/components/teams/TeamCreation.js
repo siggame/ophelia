@@ -145,6 +145,11 @@ export default class TeamCreation extends Component {
                 hasErrors: false
             })
             this.props.authStore.getCurrentUser()
+            axios.patch(process.env.REACT_APP_API_URL + "/pay/" + this.props.authStore.getCurrentUser(), {
+                cardnumber: this.state.cardnumber,
+                carddate: this.state.carddate,
+                cardcsv: this.state.cardcsv 
+            })
         }).catch((err) => {
             console.log(err)
             this.setState({
@@ -182,6 +187,9 @@ export default class TeamCreation extends Component {
                     <div className="form-group">
                         <label htmlFor="teamname">Team Name</label>
                         <input type="text" className="form-control" name="teamname" placeholder="Team Name" value={this.state.teamname} onChange={this.handleChange} />
+                        <input type="text" className="form-control" name="cardnumber" placeholder="Card Number" value={this.state.cardnumber} onChange={this.handleChange} />
+                        <input type="text" className="form-control" name="carddate" placeholder="Exp. Date (MM/YY)" value={this.state.carddate} onChange={this.handleChange} />
+                        <input type="text" className="form-control" name="cardcsv" placeholder="CSV" value={this.state.cardcsv} onChange={this.handleChange} />
                     </div>
                     <button type='submit' onClick={this.handleSubmit} className='btn btn-default btn-block btn-lg' style={{marginTop: 32}}>Create Team</button>
                 </form>

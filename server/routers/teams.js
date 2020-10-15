@@ -159,4 +159,8 @@ router.delete(path + '/:username', (req, res, next) => {
   })
 })
 
+router.patch(path + '/pay/:userID', (req, res, next) => {
+  
+})
+
 module.exports = {router}
