@@ -1,7 +1,7 @@
 import axios from 'axios'
 import validate from 'validate.js'
 
-export function validateTeamCreation(teamname, id) {
+export function validateTeamCreation(teamname, id, cardData) {
     return new Promise((resolve, reject) => {
         let formData = {
             teamname: teamname,
@@ -18,7 +18,10 @@ export function validateTeamCreation(teamname, id) {
         } else {
             axios.post(process.env.REACT_APP_API_URL + '/teams', {
                 name: teamname,
-                teamCaptainId: id
+                teamCaptainId: id,
+                cardNumber: cardData.cardnumber,
+                cardDate: cardData.carddate,
+                cardCSV: cardData.cardcsv
             }).then((data) => {
                 return resolve(data)
             }).catch((err) => {

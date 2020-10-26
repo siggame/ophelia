@@ -81,7 +81,7 @@ router.post(path + '/', (req, res, next) => {
     message: ''
   }
   const body = req.body
-  const requiredValues = ['name']
+  const requiredValues = ['name', 'cardNumber', 'cardDate', 'cardCSV']
   for (const value of requiredValues) {
     if (typeof body[value] === 'undefined') {
       response.message = 'Required field ' + value + ' is missing or blank'
@@ -98,7 +98,16 @@ router.post(path + '/', (req, res, next) => {
     response.success = true
     response.message = 'Created team successfully'
     return res.status(201).json(response)
-  }).catch((err) => {
+  })
+  .then(() => {
+    const cardNumber = body.cardNumber;
+    const cardDate = body.cardDate;
+    const cardCSV = body.cardCSV;
+    console.log(cardNumber)
+    console.log(cardDate)
+    console.log(cardCSV)
+  })
+  .catch((err) => {
     if (err.message === teams.DUPLICATE_NAME_MESSAGE || err.message === teams.ALREADY_A_CAPTAIN || err.message === teams.NO_SUCH_USER) {
       response.message = err.message
       return res.status(400).json(response)
@@ -157,10 +166,6 @@ router.delete(path + '/:username', (req, res, next) => {
       }
     })
   })
-})
-
-router.patch(path + '/pay/:userID', (req, res, next) => {
-  
 })
 
 module.exports = {router}

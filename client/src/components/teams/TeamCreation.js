@@ -139,17 +139,17 @@ export default class TeamCreation extends Component {
     handleSubmit(event) {
         event.preventDefault();
         this.setState({ loading: true });
-        validateTeamCreation(this.state.teamname, this.props.authStore.userId).then(() => {
+        const cardData = {
+            cardnumber: this.state.cardnumber,
+            carddate: this.state.carddate,
+            cardcsv: this.state.cardcsv
+        };
+        validateTeamCreation(this.state.teamname, this.props.authStore.userId, cardData).then(() => {
             this.setState({
                 formSubmitted: true,
                 hasErrors: false
             })
             this.props.authStore.getCurrentUser()
-            axios.patch(process.env.REACT_APP_API_URL + "/pay/" + this.props.authStore.getCurrentUser(), {
-                cardnumber: this.state.cardnumber,
-                carddate: this.state.carddate,
-                cardcsv: this.state.cardcsv 
-            })
         }).catch((err) => {
             console.log(err)
             this.setState({
@@ -182,14 +182,18 @@ export default class TeamCreation extends Component {
                 {this.state.userTeamName === null ? 
                 <div className='col-md-4 col-md-offset-4'>
                     <h3>Create Team</h3>
-                    <p><strong>*DO NOT LEAVE YOUR TEAM IF YOU WISH TO NOT REPAY (NOT REFUNDABLE & IF YOU LEAVE YOUR TEAM YOU WILL BE ASKED TO REPAY)*</strong></p>
+                    <p>Creating a team will register your team for the tournament.</p>
+                    <p><strong>*DO NOT LEAVE YOUR TEAM IF YOU DO NOT WISH TO REPAY (NOT REFUNDABLE & IF YOU LEAVE YOUR TEAM YOU WILL BE ASKED TO REPAY)*</strong></p>
                     <form>
                         {formError}
                     <div className="form-group">
                         <label htmlFor="teamname">Team Name</label>
                         <input type="text" className="form-control" name="teamname" placeholder="Team Name" value={this.state.teamname} onChange={this.handleChange} />
+                        <label htmlFor="cardnumber">Card Number</label>
                         <input type="text" className="form-control" name="cardnumber" placeholder="Card Number" value={this.state.cardnumber} onChange={this.handleChange} />
+                        <label htmlFor="carddate">Card Date</label>
                         <input type="text" className="form-control" name="carddate" placeholder="Exp. Date (MM/YY)" value={this.state.carddate} onChange={this.handleChange} />
+                        <label htmlFor="cardcsv">Card CSV</label>
                         <input type="text" className="form-control" name="cardcsv" placeholder="CSV" value={this.state.cardcsv} onChange={this.handleChange} />
                     </div>
                     <button type='submit' onClick={this.handleSubmit} className='btn btn-default btn-block btn-lg' style={{marginTop: 32}}>Create Team</button>
