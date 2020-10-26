@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@navjobs/upload": "^3.1.2",
+    "@stripe/stripe-js": "^1.10.0",
     "autoprefixer": "7.1.2",
     "axios": "^0.16.2",
     "babel-core": "6.25.0",
