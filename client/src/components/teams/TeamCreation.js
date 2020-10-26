@@ -141,7 +141,7 @@ export default class TeamCreation extends Component {
     handleSubmit(event) {
         event.preventDefault();
         this.setState({ loading: true });
-        validateTeamCreation(this.state.teamname, this.props.authStore.userId, cardData).then(async () => {
+        validateTeamCreation(this.state.teamname, this.props.authStore.userId).then(async () => {
             const stripe = await stripePromise;
             const {error} = await stripe.redirectToCheckout({
                 lineItems: [{
