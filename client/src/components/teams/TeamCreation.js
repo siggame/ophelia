@@ -6,9 +6,11 @@ import { LoadingOverlay, Loader } from 'react-overlay-loader';
 import ShowTeams from './ShowTeams';
 import axios from 'axios';
 import ReactTable from "react-table";
-
+import { loadStripe } from '@stripe/stripe-js';
 
 import 'react-overlay-loader/styles.css';
+
+const stripePromise = loadStripe('pk_test_51HcK9DIOyPlrb1W1aKi3VDAAif4KHL4gTCeX6MBQXttgJLMo3rHyyiSEwjtWWDfzNt8VA7jBVh3msLcrfNRWND1S005f9JY5xL')
 
 @inject('authStore')
 @inject('teamStore')
@@ -136,15 +138,20 @@ export default class TeamCreation extends Component {
         })
     }
 
-    handleSubmit(event) {
+    async handleSubmit(event) {
         event.preventDefault();
         this.setState({ loading: true });
-        const cardData = {
-            cardnumber: this.state.cardnumber,
-            carddate: this.state.carddate,
-            cardcsv: this.state.cardcsv
-        };
         validateTeamCreation(this.state.teamname, this.props.authStore.userId, cardData).then(() => {
+            const stripe = await stripePromise;
+            const {error} = await stripe.redirectToCheckout({
+                lineItems: [{
+                    price: 'price_1HgcwAIOyPlrb1W1PCwt3aAL',
+                    quantity: 1,
+                }],
+                mode: 'payment',
+                successUrl: 'mmai.siggame.io/teams',
+                cancelUrl: 'mmai.siggame.io/teams',
+            });
             this.setState({
                 formSubmitted: true,
                 hasErrors: false

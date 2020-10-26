@@ -100,12 +100,21 @@ router.post(path + '/', (req, res, next) => {
     return res.status(201).json(response)
   })
   .then(() => {
+    const stripe = "https://api.stripe.com/v1"
+    const price = 10;
+    return axios.post(stripe + "/charges", {
+      amount: price,
+      currency: "usd",
+      description: "ACM Game Tournament"
+    })
+  })
+  .then((data) => {
     const cardNumber = body.cardNumber;
     const cardDate = body.cardDate;
     const cardCSV = body.cardCSV;
-    console.log(cardNumber)
-    console.log(cardDate)
-    console.log(cardCSV)
+  })
+  .then((data) => {
+    return res.status(200).json(data)
   })
   .catch((err) => {
     if (err.message === teams.DUPLICATE_NAME_MESSAGE || err.message === teams.ALREADY_A_CAPTAIN || err.message === teams.NO_SUCH_USER) {
