@@ -182,6 +182,7 @@ export default class TeamCreation extends Component {
                 {this.state.userTeamName === null ? 
                 <div className='col-md-4 col-md-offset-4'>
                     <h3>Create Team</h3>
+                    <p><strong>*DO NOT LEAVE YOUR TEAM IF YOU WISH TO NOT REPAY (NOT REFUNDABLE & IF YOU LEAVE YOUR TEAM YOU WILL BE ASKED TO REPAY)*</strong></p>
                     <form>
                         {formError}
                     <div className="form-group">

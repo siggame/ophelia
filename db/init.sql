@@ -20,7 +20,7 @@ create table if not exists "teams" (
     "id" serial primary key,
     "name" varchar(64) not null unique,
     "is_eligible" boolean not null,
-    "is_paid" boolean not null,
+    "is_paid" boolean not null default false,
     "is_closed" boolean not null,
     "team_captain_id" integer,
     "created_at" timestamptz not null default CURRENT_TIMESTAMP,
