@@ -81,7 +81,7 @@ router.post(path + '/', (req, res, next) => {
     message: ''
   }
   const body = req.body
-  const requiredValues = ['name', 'cardNumber', 'cardDate', 'cardCSV']
+  const requiredValues = ['name']
   for (const value of requiredValues) {
     if (typeof body[value] === 'undefined') {
       response.message = 'Required field ' + value + ' is missing or blank'
@@ -98,25 +98,7 @@ router.post(path + '/', (req, res, next) => {
     response.success = true
     response.message = 'Created team successfully'
     return res.status(201).json(response)
-  })
-  .then(() => {
-    const stripe = "https://api.stripe.com/v1"
-    const price = 10;
-    return axios.post(stripe + "/charges", {
-      amount: price,
-      currency: "usd",
-      description: "ACM Game Tournament"
-    })
-  })
-  .then((data) => {
-    const cardNumber = body.cardNumber;
-    const cardDate = body.cardDate;
-    const cardCSV = body.cardCSV;
-  })
-  .then((data) => {
-    return res.status(200).json(data)
-  })
-  .catch((err) => {
+  }).catch((err) => {
     if (err.message === teams.DUPLICATE_NAME_MESSAGE || err.message === teams.ALREADY_A_CAPTAIN || err.message === teams.NO_SUCH_USER) {
       response.message = err.message
       return res.status(400).json(response)
