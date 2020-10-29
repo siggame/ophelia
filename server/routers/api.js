@@ -2,9 +2,6 @@
 
 const express = require('express')
 const router = express.Router()
-const teams = require('../db/init').teams
-const users = require('../db/init').users
-const sanitizer = require('../utils/sanitizer')
 
 const path = '/api'
 
