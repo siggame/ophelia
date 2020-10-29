@@ -155,6 +155,10 @@ export default class TeamCreation extends Component {
                 if (result.error) {
                     console.log(result.error);
                     console.log(result.error.message);
+                    this.setState({
+                        formSubmitted: true,
+                        hasErrors: true
+                    })
                 }
             });
             this.setState({
@@ -194,19 +198,13 @@ export default class TeamCreation extends Component {
                 {this.state.userTeamName === null ? 
                 <div className='col-md-4 col-md-offset-4'>
                     <h3>Create Team</h3>
-                    <p>Creating a team will register your team for the tournament.</p>
+                    <p>Creating a team will register your team for the tournament, and redirect you to payment.</p>
                     <p><strong>*DO NOT LEAVE YOUR TEAM IF YOU DO NOT WISH TO REPAY (NOT REFUNDABLE & IF YOU LEAVE YOUR TEAM YOU WILL BE ASKED TO REPAY)*</strong></p>
                     <form>
                         {formError}
                     <div className="form-group">
                         <label htmlFor="teamname">Team Name</label>
                         <input type="text" className="form-control" name="teamname" placeholder="Team Name" value={this.state.teamname} onChange={this.handleChange} />
-                        <label htmlFor="cardnumber">Card Number</label>
-                        <input type="text" className="form-control" name="cardnumber" placeholder="Card Number" value={this.state.cardnumber} onChange={this.handleChange} />
-                        <label htmlFor="carddate">Card Date</label>
-                        <input type="text" className="form-control" name="carddate" placeholder="Exp. Date (MM/YY)" value={this.state.carddate} onChange={this.handleChange} />
-                        <label htmlFor="cardcsv">Card CSV</label>
-                        <input type="text" className="form-control" name="cardcsv" placeholder="CSV" value={this.state.cardcsv} onChange={this.handleChange} />
                     </div>
                     <button type='submit' onClick={this.handleSubmit} className='btn btn-default btn-block btn-lg' style={{marginTop: 32}}>Create Team</button>
                 </form>
