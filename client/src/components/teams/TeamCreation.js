@@ -149,8 +149,8 @@ export default class TeamCreation extends Component {
                     quantity: 1,
                 }],
                 mode: 'payment',
-                successUrl: 'https://mmai.siggame.io/teams',
-                cancelUrl: 'https://mmai.siggame.io/teams/cancel',
+                successUrl: 'https://mmai.siggame.io/api/stripe',
+                cancelUrl: 'https://mmai.siggame.io/api/stripe',
             }).then ((result) => {
                 console.log(result);
                 if (result.error) {
@@ -209,7 +209,7 @@ export default class TeamCreation extends Component {
                         <label htmlFor="teamname">Team Name</label>
                         <input type="text" className="form-control" name="teamname" placeholder="Team Name" value={this.state.teamname} onChange={this.handleChange} />
                     </div>
-                    <button type='submit' disabled onClick={this.handleSubmit} className='btn btn-default btn-block btn-lg' style={{marginTop: 32}}>Create Team</button>
+                    <button type='submit' onClick={this.handleSubmit} className='btn btn-default btn-block btn-lg' style={{marginTop: 32}}>Create Team</button>
                 </form>
                 </div>
                 :
