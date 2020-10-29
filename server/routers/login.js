@@ -85,6 +85,6 @@ router.post(path + '/', (req, res, next) => {
 router.post(path + '/test', (req, res, next) => {
   console.log("Test route used.");
   return res.status(400).json({status: 200, message: "Nice!"});
-}
+})
 
 module.exports = {router}
