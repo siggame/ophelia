@@ -142,7 +142,7 @@ export default class TeamCreation extends Component {
         event.preventDefault();
         this.setState({ loading: true });
         validateTeamCreation(this.state.teamname, this.props.authStore.userId).then(async () => {
-            const stripe = Stripe('pk_test_51HcK9DIOyPlrb1W1aKi3VDAAif4KHL4gTCeX6MBQXttgJLMo3rHyyiSEwjtWWDfzNt8VA7jBVh3msLcrfNRWND1S005f9JY5xL');
+            const stripe = await stripePromise;
             const {error} = await stripe.redirectToCheckout({
                 lineItems: [{
                     price: 'price_1HgcwAIOyPlrb1W1PCwt3aAL',
