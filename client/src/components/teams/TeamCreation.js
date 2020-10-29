@@ -158,7 +158,8 @@ export default class TeamCreation extends Component {
                     this.setState({
                         formSubmitted: true,
                         hasErrors: true
-                    })
+                    });
+                    this.props.teamStore.removeSelfFromTeam();
                 }
             });
             this.setState({
