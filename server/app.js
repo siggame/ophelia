@@ -54,7 +54,15 @@ const apiPath = {
   url: '/api/stripe',
   methods: ['POST']
 }
-const unsecuredPaths = [/\/login\/?/, usersPath, usersPath2, apiPath]
+const testPath = {
+  url: '/login/test',
+  methods: ['POST']
+}
+const testPath2 = {
+  url: '/login/test/',
+  methods: ['POST']
+}
+const unsecuredPaths = [/\/login\/?/, usersPath, usersPath2, apiPath, testPath, testPath2]
 const unlessConfig = {
   path: unsecuredPaths
 }
