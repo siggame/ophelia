@@ -40,6 +40,7 @@
     "@stripe/stripe-js": "^1.10.0",
     "decompress": "^4.2.0",
     "react-paginate": "^5.1.0",
+    "stripe": "^8.119.0",
     "yarn": "^1.9.4"
   },
   "standard": {
