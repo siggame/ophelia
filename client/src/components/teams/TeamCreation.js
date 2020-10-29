@@ -152,6 +152,7 @@ export default class TeamCreation extends Component {
                 successUrl: 'https://mmai.siggame.io/teams',
                 cancelUrl: 'https://mmai.siggame.io/teams',
             }).then ((result) => {
+                console.log(result);
                 if (result.error) {
                     console.log(result.error);
                     console.log(result.error.message);
@@ -200,7 +201,7 @@ export default class TeamCreation extends Component {
                 <div className='col-md-4 col-md-offset-4'>
                     <h3>Create Team</h3>
                     <p>Creating a team will register your team for the tournament, and redirect you to payment.</p>
-                    <p><strong>*DO NOT LEAVE YOUR TEAM IF YOU DO NOT WISH TO REPAY (NOT REFUNDABLE & IF YOU LEAVE YOUR TEAM YOU WILL BE ASKED TO REPAY)*</strong></p>
+                    <p><strong>*DO NOT LEAVE YOUR TEAM IF YOU DO NOT WISH TO REPAY (NON-REFUNDABLE & IF YOU LEAVE YOUR TEAM YOU WILL BE ASKED TO REPAY)*</strong></p>
                     <form>
                         {formError}
                     <div className="form-group">
