@@ -17,6 +17,7 @@ const admin = require('./admin')
 const teams = require('./teams')
 const invites = require('./invites')
 const stats = require('./stats')
+const api = require('./api');
 
 module.exports = {
   admin,
@@ -27,5 +28,6 @@ module.exports = {
   medium,
   teams,
   invites,
-  stats
+  stats,
+  api
 }
