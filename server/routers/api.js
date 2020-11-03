@@ -23,7 +23,7 @@ router.post(path + '/stripe', (req, res, next) => {
   }
   console.log(data);
 
-  if (data.paid) {
+  if (data.paid && data.type === 'charge.succeeded') {
     response.success = true;
     response.message = `${data.name} (${data.email}) has paid ${data.amount} (TYPE ${data.type}).`
   } else {
@@ -31,10 +31,7 @@ router.post(path + '/stripe', (req, res, next) => {
     response.message = `${data.name} (${data.email}) has FAILED TO PAY ${data.amount} (TYPE ${data.type}).`
   }
 
-  console.log(response)
-
-  const status = response.success ? 200 : 400;
-  return res.status(status).json(response);
+  return res.status(200).json(response);
 })
 
 module.exports = {router}

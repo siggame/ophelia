@@ -103,12 +103,23 @@ export default class TeamCreation extends Component {
             teamname: '',
             errorMessage: '',
             userTeamName: '',
-            statratio: ''
+            statratio: '',
+            existingTeam: this.props.name
         }
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleLeaveOwnTeam = this.handleLeaveOwnTeam.bind(this);
+
+        if (this.state.existingTeam) {
+            validateTeamCreation(this.state.teamname, this.props.authStore.userId).then(async () => {
+                this.setState({
+                    formSubmitted: true,
+                    hasErrors: false
+                })
+                this.props.authStore.getCurrentUser()
+            })
+        }
     }
 
     componentDidMount() {
@@ -149,7 +160,7 @@ export default class TeamCreation extends Component {
                     quantity: 1,
                 }],
                 mode: 'payment',
-                successUrl: 'https://mmai.siggame.io/teams',
+                successUrl: `https://mmai.siggame.io/teams/?name=${this.state.teamname}`,
                 cancelUrl: 'https://mmai.siggame.io/teams',
             }).then ((result) => {
                 console.log(result);
