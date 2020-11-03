@@ -111,8 +111,8 @@ export default class TeamCreation extends Component {
         this.handleLeaveOwnTeam = this.handleLeaveOwnTeam.bind(this);
 
         if (this.props.location.search && this.props.location.search.indexOf("?name=") > -1) {
-            teamName = this.props.location.search.slice(6);
-            validateTeamCreation(this.state.teamname, this.props.authStore.userId).then(async () => {
+            let teamName = this.props.location.search.slice(6);
+            validateTeamCreation(teamName, this.props.authStore.userId).then(async () => {
                 this.setState({
                     formSubmitted: true,
                     hasErrors: false
