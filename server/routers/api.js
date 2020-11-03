@@ -13,7 +13,7 @@ router.post(path + '/stripe', (req, res, next) => {
 
   const body = req.body
   
-  data = {
+  const data = {
     type: body.type,
     name: body.data.object.billing_details.name,
     email: body.data.object.billing_details.email,
