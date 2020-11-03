@@ -33,7 +33,8 @@ router.post(path + '/stripe', (req, res, next) => {
 
   console.log(response)
 
-  return res.status(response.status).json(response);
+  const status = response.success ? 200 : 400;
+  return res.status(status).json(response);
 })
 
 module.exports = {router}
