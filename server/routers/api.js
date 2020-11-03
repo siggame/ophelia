@@ -13,11 +13,27 @@ router.post(path + '/stripe', (req, res, next) => {
 
   const body = req.body
   
-  console.log(body);
-  response.success = true;
+  data = {
+    type: body.type,
+    name: body.data.object.billing_details.name,
+    email: body.data.object.billing_details.email,
+    phone: body.data.object.billing_details.phone,
+    amount: body.data.object.amount,
+    paid: body.data.object.paid
+  }
+  console.log(data);
 
-  return res.status(200).json(response);
+  if (data.paid) {
+    response.success = true;
+    response.message = `${data.name} (${data.email}) has paid ${data.amount} (TYPE ${data.type}).`
+  } else {
+    response.success = false;
+    response.message = `${data.name} (${data.email}) has FAILED TO PAY ${data.amount} (TYPE ${data.type}).`
+  }
 
+  console.log(response)
+
+  return res.status(response.status).json(response);
 })
 
 module.exports = {router}
