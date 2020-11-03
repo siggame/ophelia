@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 import { Redirect } from 'react-router-dom';
-import { validateTeamCreation } from '../../modules/teams';
+import { validateTeamCreation, checkValidTeamCreation } from '../../modules/teams';
 import { LoadingOverlay, Loader } from 'react-overlay-loader';
 import ShowTeams from './ShowTeams';
 import axios from 'axios';
@@ -141,7 +141,7 @@ export default class TeamCreation extends Component {
     handleSubmit(event) {
         event.preventDefault();
         this.setState({ loading: true });
-        validateTeamCreation(this.state.teamname, this.props.authStore.userId).then(async () => {
+        checkValidTeamCreation(this.state.teamname, this.props.authStore.userId).then(async () => {
             const stripe = await stripePromise;
             const {error} = await stripe.redirectToCheckout({
                 lineItems: [{
@@ -158,9 +158,10 @@ export default class TeamCreation extends Component {
                     console.log(result.error.message);
                     this.setState({
                         formSubmitted: true,
-                        hasErrors: true
+                        hasErrors: true,
+                        loading: false,
+                        errorMessage: result.error.message
                     });
-                    this.props.teamStore.removeSelfFromTeam();
                 }
             });
             this.setState({
@@ -209,7 +210,7 @@ export default class TeamCreation extends Component {
                         <label htmlFor="teamname">Team Name</label>
                         <input type="text" className="form-control" name="teamname" placeholder="Team Name" value={this.state.teamname} onChange={this.handleChange} />
                     </div>
-                    <button type='submit' disabled onClick={this.handleSubmit} className='btn btn-default btn-block btn-lg' style={{marginTop: 32}}>Create Team</button>
+                    <button type='submit' onClick={this.handleSubmit} className='btn btn-default btn-block btn-lg' style={{marginTop: 32}}>Create Team</button>
                 </form>
                 </div>
                 :

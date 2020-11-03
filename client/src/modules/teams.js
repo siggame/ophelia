@@ -1,6 +1,26 @@
 import axios from 'axios'
 import validate from 'validate.js'
 
+export function checkValidTeamCreation(teamname, id) {
+    return new Promise((resolve, reject) => {
+        let formData = {
+            teamname: teamname,
+        }
+        const constraints = {
+            teamname: {
+                presence: true
+            }
+        }
+
+        let errors = validate(formData, constraints);
+        if(errors) {
+            return reject(errors);
+        } else {
+            return resolve();
+        }
+    })
+}
+
 export function validateTeamCreation(teamname, id) {
     return new Promise((resolve, reject) => {
         let formData = {

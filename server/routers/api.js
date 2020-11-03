@@ -14,6 +14,9 @@ router.post(path + '/stripe', (req, res, next) => {
   const body = req.body
   
   console.log(body);
+  response.success = true;
+
+  return res.status(200).json(response);
 
 })
 

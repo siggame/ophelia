@@ -37,8 +37,7 @@ USER root
 # Copy all of the webserver code into the ophelia directory except for things
 # excluded in .dockerignore
 COPY . .
-# Change ownership of everything in ophelia directory to siggame user
-RUN chown -R siggame:siggame $HOME/ophelia/*
+
 # Change back to the siggame user
 USER siggame
 
