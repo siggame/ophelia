@@ -28,7 +28,11 @@ router.post(path + '/stripe', (req, res, next) => {
     response.message = `${data.name} (${data.email}) has paid ${data.amount} (TYPE ${data.type}).`
   } else {
     response.success = false;
-    response.message = `${data.name} (${data.email}) has FAILED TO PAY ${data.amount} (TYPE ${data.type}).`
+    try {
+      response.message = `${data.name} (${data.email}) has FAILED TO PAY ${data.amount} (TYPE ${data.type}).`;
+    } catch (err) {
+      response.message = `Received ${data.type}`;
+    }
   }
 
   return res.status(200).json(response);
