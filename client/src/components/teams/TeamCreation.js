@@ -160,8 +160,8 @@ export default class TeamCreation extends Component {
                     quantity: 1,
                 }],
                 mode: 'payment',
-                successUrl: `https://mmai.siggame.io/teams/?name=${this.state.teamname}`,
-                cancelUrl: 'https://mmai.siggame.io/teams',
+                successUrl: `https://mmai.siggame.io/create-team/?name=${this.state.teamname}`,
+                cancelUrl: 'https://mmai.siggame.io/create-team',
             }).then ((result) => {
                 console.log(result);
                 if (result.error) {
