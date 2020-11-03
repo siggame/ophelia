@@ -10,7 +10,7 @@ import { loadStripe } from '@stripe/stripe-js';
 
 import 'react-overlay-loader/styles.css';
 
-const stripePromise = loadStripe('pk_test_51HcK9DIOyPlrb1W1aKi3VDAAif4KHL4gTCeX6MBQXttgJLMo3rHyyiSEwjtWWDfzNt8VA7jBVh3msLcrfNRWND1S005f9JY5xL')
+const stripePromise = loadStripe('pk_live_rXRE81suFTuEjgWFo76GVW0p')
 
 @inject('authStore')
 @inject('teamStore')
@@ -156,7 +156,7 @@ export default class TeamCreation extends Component {
             const stripe = await stripePromise;
             const {error} = await stripe.redirectToCheckout({
                 lineItems: [{
-                    price: 'price_1HgcwAIOyPlrb1W1PCwt3aAL',
+                    price: 'price_1HjFD2IOyPlrb1W1WsHgQZhL',
                     quantity: 1,
                 }],
                 mode: 'payment',
