@@ -212,7 +212,6 @@ export default class TeamCreation extends Component {
                 {this.state.userTeamName === null ? 
                 <div className='col-md-4 col-md-offset-4'>
                     <h3>Create Team</h3>
-                    <p>Team creation is currently under maintenance. We will let you know when you may make your teams.</p>
                     <p>Creating a team will register your team for the tournament, and redirect you to payment.</p>
                     <p><strong>*DO NOT LEAVE YOUR TEAM IF YOU DO NOT WISH TO REPAY (NON-REFUNDABLE & IF YOU LEAVE YOUR TEAM YOU WILL BE ASKED TO REPAY)*</strong></p>
                     <form>
