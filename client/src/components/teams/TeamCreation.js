@@ -10,7 +10,7 @@ import { loadStripe } from '@stripe/stripe-js';
 
 import 'react-overlay-loader/styles.css';
 
-const stripePromise = loadStripe('pk_live_rXRE81suFTuEjgWFo76GVW0p')
+const stripePromise = loadStripe('pk_test_5K6vSoTGrPyY2cBw3nNSixV300Z8JOVkl7')
 
 @inject('authStore')
 @inject('teamStore')
