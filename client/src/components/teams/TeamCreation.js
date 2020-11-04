@@ -156,7 +156,7 @@ export default class TeamCreation extends Component {
             const stripe = await stripePromise;
             const {error} = await stripe.redirectToCheckout({
                 lineItems: [{
-                    price: 'price_1HjH6bKBeZfFFL05s7C6I4x7',
+                    price: 'price_1HjHBxKBeZfFFL057hmZg7NK',
                     quantity: 1,
                 }],
                 mode: 'payment',
