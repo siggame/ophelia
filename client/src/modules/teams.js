@@ -8,7 +8,11 @@ export function checkValidTeamCreation(teamname, id) {
         }
         const constraints = {
             teamname: {
-                presence: true
+                presence: true,
+                length: {
+                    minimum: 3,
+                    maximum: 60
+                }
             }
         }
 
@@ -16,6 +20,9 @@ export function checkValidTeamCreation(teamname, id) {
         if(errors) {
             return reject(errors);
         } else {
+            if (teamname.indexOf(" ") > -1) {
+                return reject("No spaces in team names!")
+            }
             return resolve();
         }
     })
