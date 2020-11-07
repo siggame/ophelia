@@ -6,5 +6,7 @@ export const langs = [
   {slug: 'java', name: 'Java'},
   {slug: 'py', name: 'Python 3'},
   {slug: 'lua', name: 'Lua'},
-  {slug: 'Human', name: 'Human'}
+  {slug: 'Human', name: 'Human'},
+  {slug: 'ts', name: 'TypeScript'},
+  {slug: 'go', name: 'Golang'}
 ]
